@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - USG</title>
+    <title>Announcements - USG</title>
     <link rel="icon" href="../../assets/logo/usg_2.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -87,6 +87,10 @@
             margin: 5px 0;
             border-left: 3px solid transparent;
             transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -98,6 +102,44 @@
         .nav-link i {
             margin-right: 10px;
             font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link .chevron {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link[aria-expanded="true"] .chevron {
+            transform: rotate(90deg);
+        }
+
+        .dropdown-menu {
+            background: rgba(21, 16, 54, 1);
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+            width: 100%;
+        }
+
+        .dropdown-item {
+            color: rgba(255,255,255,0.8);
+            padding: 10px 25px 10px 50px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            width: 100%;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-left: 5px solid #f9a702;
+            text-decoration: none;
         }
 
         .main-content {
@@ -310,23 +352,17 @@
                         <span>Announcement</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="usg_chat.php">
-                        <i class="bi bi-chat-left-dots"></i>
-                        <span>Chat</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="usg_event.php">
-                        <i class="bi bi-calendar-event"></i>
-                        <span>Event</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-wrench-adjustable"></i>
                         <span>Services</span>
+                        <i class="bi bi-chevron-right chevron"></i>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="usg_attendance.php">Attendance</a></li>
+                        <li><a class="dropdown-item" href="#">Violation</a></li>
+                        <li><a class="dropdown-item" href="#">Lost and Found</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../../dashboard.php">
@@ -347,7 +383,7 @@
             </button>
             <div class="search-box">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search...">
+                    <input type="text" class="form-control" placeholder="Search announcements...">
                     <button class="btn btn-outline-secondary" type="button">
                         <i class="bi bi-search"></i>
                     </button>
@@ -369,14 +405,46 @@
 
         <!-- Content Area -->
         <div class="content-area">
-            <h2 class="mb-4">Announcement</h2>
+            <h2 class="mb-4">Announcements</h2>
 
             <!-- Recent Activity -->
             <div class="recent-activity">
-                <h5 class="mb-3">Create Announcement</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Announcements</h5>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> New Announcement
+                    </button>
+                </div>
                 <div class="activity-list">
                     <div class="activity-item">
-                        
+                        <div class="activity-icon">
+                            <i class="bi bi-megaphone"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6>Welcome to the New Academic Year</h6>
+                            <p class="mb-0">Important information about orientation week and class schedules.</p>
+                            <small class="text-muted">Posted 2 days ago</small>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6>Student Government Elections</h6>
+                            <p class="mb-0">Nominations are now open for student government positions.</p>
+                            <small class="text-muted">Posted 5 days ago</small>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-wrench"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6>Library System Maintenance</h6>
+                            <p class="mb-0">The online library system will be unavailable this weekend for maintenance.</p>
+                            <small class="text-muted">Posted 1 week ago</small>
+                        </div>
                     </div>
                 </div>
             </div>
