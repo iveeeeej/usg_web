@@ -420,7 +420,7 @@
                         <div class="flex-grow-1">
                             <h6>Welcome to the New Academic Year</h6>
                             <p class="mb-0">Important information about orientation week and class schedules.</p>
-                            <small class="text-muted">Posted 2 days ago</small>
+                            <small class="text-muted">Posted days ago</small>
                         </div>
                     </div>
                     <div class="activity-item">
