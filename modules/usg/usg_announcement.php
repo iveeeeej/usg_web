@@ -1,3 +1,8 @@
+<?php
+// Database connection and form processing at the TOP of the file
+require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,6 +194,13 @@
             flex: 1;
         }
 
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
         .recent-activity {
             background: white;
             border-radius: 10px;
@@ -217,6 +229,72 @@
             justify-content: center;
             margin-right: 15px;
             color: #3498db;
+        }
+
+        .announcement-title {
+            color: #1e174a;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .announcement-content {
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .announcement-date {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Modal Custom Styles */
+        .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            background: #1e174a;
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-control:focus {
+            border: 1px solid #ddd;
+            box-shadow: none;
+            padding: 12px;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: #1e174a;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
         }
 
         /* Mobile Menu Toggle */
@@ -281,6 +359,16 @@
                 padding: 20px 15px;
             }
             
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .content-header .btn {
+                align-self: flex-end;
+            }
+            
             .recent-activity {
                 padding: 20px;
             }
@@ -300,6 +388,15 @@
             
             .sidebar-header h4 {
                 font-size: 1rem;
+            }
+            
+            .content-header .btn {
+                align-self: stretch;
+                width: 100%;
+            }
+            
+            .modal-dialog {
+                margin: 10px;
             }
         }
 
@@ -405,48 +502,108 @@
 
         <!-- Content Area -->
         <div class="content-area">
-            <h2 class="mb-4">Announcements</h2>
+            <!-- Display success/error messages -->
+            <?php if (isset($success)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i> <?php echo htmlspecialchars($success); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i> <?php echo htmlspecialchars($error); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($db_error)): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-database-exclamation me-2"></i> <?php echo htmlspecialchars($db_error); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <!-- Header with Title and Button -->
+            <div class="content-header">
+                <h2 class="mb-0">Announcements</h2>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newAnnouncementModal">
+                    <i class="bi bi-plus-circle"></i> New Announcement
+                </button>
+            </div>
 
             <!-- Recent Activity -->
             <div class="recent-activity">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0">Announcements</h5>
-                    <button class="btn btn-primary btn-sm">
-                        <i class="bi bi-plus-circle"></i> New Announcement
-                    </button>
                 </div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-megaphone"></i>
+                
+                <!-- Announcements List -->
+                <div id="announcementsList">
+                    <?php if (!empty($announcements)): ?>
+                        <?php foreach ($announcements as $announcement): ?>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="bi bi-megaphone"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="announcement-title"><?php echo htmlspecialchars($announcement['announcement_title']); ?></h6>
+                                    <p class="announcement-content"><?php echo nl2br(htmlspecialchars($announcement['announcement_content'])); ?></p>
+                                    <small class="announcement-date">
+                                        <i class="bi bi-clock me-1"></i>
+                                        <?php echo date('F j, Y g:i A', strtotime($announcement['announcement_datetime'])); ?>
+                                    </small>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-5">
+                            <i class="bi bi-megaphone display-1 text-muted mb-3"></i>
+                            <p class="text-muted">No announcements yet. Create your first announcement!</p>
                         </div>
-                        <div class="flex-grow-1">
-                            <h6>Welcome to the New Academic Year</h6>
-                            <p class="mb-0">Important information about orientation week and class schedules.</p>
-                            <small class="text-muted">Posted 2 days ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6>Student Government Elections</h6>
-                            <p class="mb-0">Nominations are now open for student government positions.</p>
-                            <small class="text-muted">Posted 5 days ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-wrench"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6>Library System Maintenance</h6>
-                            <p class="mb-0">The online library system will be unavailable this weekend for maintenance.</p>
-                            <small class="text-muted">Posted 1 week ago</small>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Announcement Modal -->
+    <div class="modal fade" id="newAnnouncementModal" tabindex="-1" aria-labelledby="newAnnouncementModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newAnnouncementModalLabel">
+                        <i class="bi bi-megaphone me-2"></i>Create New Announcement
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="announcementForm" method="POST" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="announcementTitle" class="form-label">Title *</label>
+                            <input type="text" class="form-control" id="announcementTitle" name="announcement_title" 
+                                   placeholder="Enter announcement title" required maxlength="255">
+                            <div class="form-text">Maximum 255 characters</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="announcementContent" class="form-label">Content *</label>
+                            <textarea class="form-control" id="announcementContent" name="announcement_content" 
+                                      rows="6" placeholder="Enter announcement content..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="announcementDatetime" class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="announcementDatetime" 
+                                   name="announcement_datetime">
+                            <div class="form-text">Leave empty for current date and time</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveAnnouncementBtn">
+                            <i class="bi bi-save me-1"></i> Save Announcement
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -499,6 +656,49 @@
                     sidebarOverlay.classList.remove('active');
                 }
             });
+
+            // Set default datetime to now for the announcement form
+            const datetimeField = document.getElementById('announcementDatetime');
+            if (datetimeField) {
+                const now = new Date();
+                // Format to YYYY-MM-DDTHH:mm
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                
+                datetimeField.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            // Modal show event - reset form when modal is opened
+            const newAnnouncementModal = document.getElementById('newAnnouncementModal');
+            if (newAnnouncementModal) {
+                newAnnouncementModal.addEventListener('show.bs.modal', function() {
+                    // Set default datetime
+                    if (datetimeField) {
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = String(now.getMonth() + 1).padStart(2, '0');
+                        const day = String(now.getDate()).padStart(2, '0');
+                        const hours = String(now.getHours()).padStart(2, '0');
+                        const minutes = String(now.getMinutes()).padStart(2, '0');
+                        
+                        datetimeField.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                    }
+                });
+            }
+            
+            // Handle form submission with loading state
+            const announcementForm = document.getElementById('announcementForm');
+            if (announcementForm) {
+                announcementForm.addEventListener('submit', function() {
+                    const saveBtn = document.getElementById('saveAnnouncementBtn');
+                    const originalText = saveBtn.innerHTML;
+                    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Saving...';
+                    saveBtn.disabled = true;
+                });
+            }
         });
     </script>
 </body>

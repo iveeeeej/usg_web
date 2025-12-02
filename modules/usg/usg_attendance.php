@@ -184,6 +184,22 @@
             font-weight: bold;
         }
 
+        .form-control, .form-control:focus {
+            border: 1px solid #ddd;
+            box-shadow: none;
+            padding: 12px;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: #1e174a;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
         .content-area {
             padding: 30px;
             flex: 1;

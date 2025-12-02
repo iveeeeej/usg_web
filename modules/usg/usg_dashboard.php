@@ -184,6 +184,22 @@
             font-weight: bold;
         }
 
+        .form-control, .form-control:focus {
+            border: 1px solid #ddd;
+            box-shadow: none;
+            padding: 12px;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: #1e174a;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
         .content-area {
             padding: 30px;
             flex: 1;
@@ -412,38 +428,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0">Announcements</h5>
                 </div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-megaphone"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6>Welcome to the New Academic Year</h6>
-                            <p class="mb-0">Important information about orientation week and class schedules.</p>
-                            <small class="text-muted">Posted days ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6>Student Government Elections</h6>
-                            <p class="mb-0">Nominations are now open for student government positions.</p>
-                            <small class="text-muted">Posted 5 days ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-wrench"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6>Library System Maintenance</h6>
-                            <p class="mb-0">The online library system will be unavailable this weekend for maintenance.</p>
-                            <small class="text-muted">Posted 1 week ago</small>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
