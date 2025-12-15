@@ -358,13 +358,13 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link" href="usg_dashboard.php">
-                        <i class="bi bi-house-door"></i>
+                        <i class="bi bi-house-door-fill"></i>
                         <span>Home</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="usg_announcement.php">
-                        <i class="bi bi-megaphone"></i>
+                        <i class="bi bi-megaphone-fill"></i>
                         <span>Announcement</span>
                     </a>
                 </li>
@@ -382,7 +382,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../../dashboard.php">
-                        <i class="bi bi-box-arrow-right"></i>
+                        <i class="bi bi-arrow-left-square-fill"></i>
                         <span>Logout</span>
                     </a>
                 </li>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -214,21 +214,21 @@
                      <img src="assets/logo/societree_1.png" alt="Logo" class="logo">
                     
                     <!-- Login Form -->
-                    <form action="dashboard.php" method="POST">
+                    <form id="loginForm">
                         <div class="mb-3">
                             <h1 class="welcome-text">WELCOME</h1>
                         </div>
                         <div class="mb-3">
                             <label for="idNumber" class="form-label">ID NUMBER</label>
-                            <input type="text" class="form-control" id="idNumber" placeholder="Enter your ID number">
+                            <input type="text" class="form-control" id="idNumber" name="student_id" placeholder="Enter your ID number" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">PASSWORD</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                         </div>
-                        <button type="submit" class="btn-login">LOGIN</button>
+                        <button type="submit" class="btn-login" id="loginBtn">LOGIN</button>
                         <div class="text-center">
-                            <a href="#" class="forgot-password">FORGOT PASSWORD?</a>
+                            <a href="#" class="forgot-password" id="openForgot">FORGOT PASSWORD?</a>
                         </div>
                     </form>
                 </div>
@@ -236,13 +236,11 @@
 
         </div>
     </div>
-
+    <?php include __DIR__ . '/partials/forgot_password_modal.php'; ?>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     
     <!-- Custom JavaScript -->
-    <script>
-        
-    </script>
+    <script src="assets/js/login.js"></script>`r`n    <script src="assets/js/forgot_password.js"></script>
 </body>
 </html>

@@ -1,9 +1,17 @@
+<?php
+// Include the announcement functions at the top of usg_dashboard.php
+require_once(__DIR__ . '/../../backend/usg_announcement_retrieve.php');
+
+// Fetch recent announcements (e.g., last 5)
+$recentAnnouncements = getRecentAnnouncements(5);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements - USG</title>
+    <title>Dashboard - USG</title>
     <link rel="icon" href="../../assets/logo/usg_2.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -205,18 +213,83 @@
             flex: 1;
         }
 
+        /* Dashboard Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e174a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Recent Activity / Announcements */
         .recent-activity {
             background: white;
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
         }
 
         .activity-item {
             padding: 15px 0;
             border-bottom: 1px solid #ecf0f1;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .activity-item:last-child {
@@ -233,6 +306,38 @@
             justify-content: center;
             margin-right: 15px;
             color: #3498db;
+            flex-shrink: 0;
+        }
+
+        .announcement-title {
+            color: #1e174a;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .announcement-content {
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .announcement-date {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .no-announcements {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-announcements i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
         }
 
         /* Mobile Menu Toggle */
@@ -297,6 +402,11 @@
                 padding: 20px 15px;
             }
             
+            .stats-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
             .recent-activity {
                 padding: 20px;
             }
@@ -358,13 +468,13 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link active" href="usg_dashboard.php">
-                        <i class="bi bi-house-door"></i>
+                        <i class="bi bi-house-door-fill"></i>
                         <span>Home</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="usg_announcement.php">
-                        <i class="bi bi-megaphone"></i>
+                        <i class="bi bi-megaphone-fill"></i>
                         <span>Announcement</span>
                     </a>
                 </li>
@@ -382,7 +492,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../../dashboard.php">
-                        <i class="bi bi-box-arrow-right"></i>
+                        <i class="bi bi-arrow-left-square-fill"></i>
                         <span>Logout</span>
                     </a>
                 </li>
@@ -399,7 +509,7 @@
             </button>
             <div class="search-box">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search announcements...">
+                    <input type="text" class="form-control" placeholder="Search...">
                     <button class="btn btn-outline-secondary" type="button">
                         <i class="bi bi-search"></i>
                     </button>
@@ -421,14 +531,90 @@
 
         <!-- Content Area -->
         <div class="content-area">
-            <h2 class="mb-4">Announcements</h2>
+            <!-- Welcome Header -->
+            <div class="mb-4">
+                <h1>Welcome back!</h1>
+                <p class="text-muted">Here's what's happening with your USG dashboard today.</p>
+            </div>
 
-            <!-- Recent Activity -->
-            <div class="recent-activity">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">Announcements</h5>
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="stat-value"><?php echo count($recentAnnouncements); ?></div>
+                    <div class="stat-label">Total Announcements</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-value">Under construction</div>
+                    <div class="stat-label">Coming soon</div>
                 </div>
                 
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="stat-value">Under construction</div>
+                    <div class="stat-label">Coming soon</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="stat-value">Under construction</div>
+                    <div class="stat-label">Coming soon</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity / Announcements -->
+            <div class="recent-activity">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Recent Announcements</h5>
+                    <a href="usg_announcement.php" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-arrow-right me-1"></i> View All
+                    </a>
+                </div>
+                
+                <div id="announcementsList">
+                    <?php if (!empty($recentAnnouncements)): ?>
+                        <?php foreach ($recentAnnouncements as $announcement): ?>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="bi bi-megaphone"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="announcement-title"><?php echo htmlspecialchars($announcement['announcement_title']); ?></h6>
+                                    <p class="announcement-content">
+                                        <?php 
+                                        // Truncate content if too long
+                                        $content = htmlspecialchars($announcement['announcement_content']);
+                                        if (strlen($content) > 150) {
+                                            echo substr($content, 0, 150) . '...';
+                                        } else {
+                                            echo $content;
+                                        }
+                                        ?>
+                                    </p>
+                                    <small class="announcement-date">
+                                        <i class="bi bi-clock me-1"></i>
+                                        <?php echo date('F j, Y g:i A', strtotime($announcement['announcement_datetime'])); ?>
+                                    </small>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="no-announcements">
+                            <i class="bi bi-megaphone"></i>
+                            <p>No announcements yet. Check back later!</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -481,6 +667,30 @@
                     sidebarOverlay.classList.remove('active');
                 }
             });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-box input');
+            const searchButton = document.querySelector('.search-box button');
+            
+            if (searchInput && searchButton) {
+                searchButton.addEventListener('click', function() {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        alert('Searching for: ' + searchTerm);
+                        // You can implement actual search logic here
+                    }
+                });
+                
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const searchTerm = searchInput.value.trim();
+                        if (searchTerm) {
+                            alert('Searching for: ' + searchTerm);
+                            // You can implement actual search logic here
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>

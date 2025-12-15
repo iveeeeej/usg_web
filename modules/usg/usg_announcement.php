@@ -1,6 +1,6 @@
 <?php
 // Database connection and form processing at the TOP of the file
-require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
+require_once(__DIR__ . '/../../backend/usg_announcement_store.php');
 ?>
 
 <!DOCTYPE html>
@@ -307,6 +307,33 @@ require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
             cursor: pointer;
         }
 
+        /* Custom badge colors for announcement types */
+        .bg-event {
+            background-color: #fd7e14 !important;
+        }
+
+        .bg-cleaning {
+            background-color: #5e4c47 !important;
+        }
+        
+        .bg-seminar {
+            background-color: #0097b2 !important;
+        }
+        
+        .bg-workshop {
+            background-color: #6f42c1 !important;
+        }
+
+        .activity-item {
+            position: relative;
+        }
+
+        .activity-item .badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            font-weight: 500;
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
@@ -439,13 +466,13 @@ require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link" href="usg_dashboard.php">
-                        <i class="bi bi-house-door"></i>
+                        <i class="bi bi-house-door-fill"></i>
                         <span>Home</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="usg_announcement.php">
-                        <i class="bi bi-megaphone"></i>
+                        <i class="bi bi-megaphone-fill"></i>
                         <span>Announcement</span>
                     </a>
                 </li>
@@ -463,7 +490,8 @@ require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../../dashboard.php">
-                        <i class="bi bi-box-arrow-right"></i>
+                        <i class="bi bi-arrow-left-square-fill"></i>
+                        
                         <span>Logout</span>
                     </a>
                 </li>
@@ -541,13 +569,37 @@ require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
                 <!-- Announcements List -->
                 <div id="announcementsList">
                     <?php if (!empty($announcements)): ?>
-                        <?php foreach ($announcements as $announcement): ?>
+                        <?php 
+                        // Type badges styling and labels
+                        $type_labels = [
+                            'event' => ['badge' => 'bg-event', 'label' => 'Event'],
+                            'cleaning' => ['badge' => 'bg-cleaning', 'label' => 'Cleaning'],
+                            'meeting' => ['badge' => 'bg-info', 'label' => 'Meeting'],
+                            'seminar' => ['badge' => 'bg-seminar', 'label' => 'Seminar'],
+                            'workshop' => ['badge' => 'bg-workshop', 'label' => 'Workshop'],
+                            'maintenance' => ['badge' => 'bg-secondary', 'label' => 'Maintenance'],
+                            'urgent' => ['badge' => 'bg-danger', 'label' => 'Urgent'],
+                            'important' => ['badge' => 'bg-warning', 'label' => 'Important']
+                        ];
+                        ?>
+                        
+                        <?php foreach ($announcements as $announcement): 
+                            $type = $announcement['announcement_type'] ?? '';
+                            $type_info = $type_labels[$type] ?? ['badge' => 'bg-secondary', 'label' => ucfirst($type)];
+                        ?>
                             <div class="activity-item">
                                 <div class="activity-icon">
                                     <i class="bi bi-megaphone"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="announcement-title"><?php echo htmlspecialchars($announcement['announcement_title']); ?></h6>
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="announcement-title mb-0"><?php echo htmlspecialchars($announcement['announcement_title']); ?></h6>
+                                        <?php if (!empty($type)): ?>
+                                            <span class="badge rounded-pill <?php echo $type_info['badge']; ?>">
+                                                <?php echo $type_info['label']; ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
                                     <p class="announcement-content"><?php echo nl2br(htmlspecialchars($announcement['announcement_content'])); ?></p>
                                     <small class="announcement-date">
                                         <i class="bi bi-clock me-1"></i>
@@ -579,14 +631,29 @@ require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
                 </div>
                 <form id="announcementForm" method="POST" action="">
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="announcementTitle" class="form-label">Title *</label>
-                            <input type="text" class="form-control" id="announcementTitle" name="announcement_title" 
-                                   placeholder="Enter announcement title" required maxlength="255">
-                            <div class="form-text">Maximum 255 characters</div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="announcementTitle" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="announcementTitle" name="announcement_title" 
+                                       placeholder="Enter announcement title" required maxlength="255">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="announcementType" class="form-label">Type</label>
+                                <select class="form-select" id="announcementType" name="announcement_type" required>
+                                    <option value="" selected disabled>Select announcement type</option>
+                                    <option value="event">Event</option>
+                                    <option value="cleaning">Cleaning</option>
+                                    <option value="meeting">Meeting</option>
+                                    <option value="seminar">Seminar</option>
+                                    <option value="workshop">Workshop</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="important">Important</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="announcementContent" class="form-label">Content *</label>
+                            <label for="announcementContent" class="form-label">Content</label>
                             <textarea class="form-control" id="announcementContent" name="announcement_content" 
                                       rows="6" placeholder="Enter announcement content..." required></textarea>
                         </div>
@@ -594,7 +661,7 @@ require_once(__DIR__ . '/../../backend/usg_announcement_backend.php');
                             <label for="announcementDatetime" class="form-label">Date & Time</label>
                             <input type="datetime-local" class="form-control" id="announcementDatetime" 
                                    name="announcement_datetime">
-                            <div class="form-text">Leave empty for current date and time</div>
+                            <div class="form-text">Set date and time</div>
                         </div>
                     </div>
                     <div class="modal-footer">

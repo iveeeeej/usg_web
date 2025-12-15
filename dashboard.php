@@ -214,7 +214,7 @@
         
         <!-- Organization Card 2 -->
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-            <a href="modules/elecom/elecom_dashboard.php" class="text-decoration-none">
+            <a href="modules/elecom/router.php" class="text-decoration-none">
                 <div class="card organization-card h-100">
                     <div class="card-body text-center">
                         <div class="organization-icon mb-3">
