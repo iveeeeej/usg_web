@@ -1,12 +1,82 @@
+<?php
+// Database connection and data retrieval at the TOP of the file
+require_once(__DIR__ . '/../../db_connection.php');
+
+// Check if $pdo exists (created in db_connection.php)
+if (!isset($pdo)) {
+    $db_error = "Database connection failed";
+    $attendance_data = [];
+} else {
+    try {
+        // Get filter parameters from GET/POST request
+        $name = isset($_REQUEST['name']) ? trim($_REQUEST['name']) : '';
+        $id = isset($_REQUEST['id']) ? trim($_REQUEST['id']) : '';
+        $course = isset($_REQUEST['course']) ? trim($_REQUEST['course']) : '';
+        $year = isset($_REQUEST['year']) ? trim($_REQUEST['year']) : '';
+        $section = isset($_REQUEST['section']) ? trim($_REQUEST['section']) : '';
+        $role = isset($_REQUEST['role']) ? trim($_REQUEST['role']) : '';
+
+        // Build SQL query with filters using prepared statements
+        $sql = "SELECT * FROM usg_attendace WHERE 1=1";
+        $params = [];
+
+        if (!empty($name)) {
+            $sql .= " AND (first_name LIKE ? OR last_name LIKE ?)";
+            $params[] = "%$name%";
+            $params[] = "%$name%";
+        }
+
+        if (!empty($id)) {
+            $sql .= " AND id_number LIKE ?";
+            $params[] = "%$id%";
+        }
+
+        if (!empty($course)) {
+            $sql .= " AND course LIKE ?";
+            $params[] = "%$course%";
+        }
+
+        if (!empty($year)) {
+            $sql .= " AND year = ?";
+            $params[] = $year;
+        }
+
+        if (!empty($section)) {
+            $sql .= " AND section LIKE ?";
+            $params[] = "%$section%";
+        }
+
+        if (!empty($role)) {
+            $sql .= " AND role LIKE ?";
+            $params[] = "%$role%";
+        }
+
+        $sql .= " ORDER BY id_number ASC";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $attendance_data = $stmt->fetchAll();
+        
+    } catch (PDOException $e) {
+        $db_error = "Database error: " . $e->getMessage();
+        $attendance_data = [];
+    } catch (Exception $e) {
+        $db_error = "Error: " . $e->getMessage();
+        $attendance_data = [];
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements - USG</title>
+    <title>Attendance Management - USG</title>
     <link rel="icon" href="../../assets/logo/usg_2.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
@@ -205,34 +275,102 @@
             flex: 1;
         }
 
-        .recent-activity {
+        .attendance-card {
             background: white;
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
 
-        .activity-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #ecf0f1;
-            display: flex;
-            align-items: center;
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
-        .activity-item:last-child {
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn-filter {
+            background-color: #1e174a;
+            color: white;
+            padding: 10px 25px;
+        }
+
+        .btn-filter:hover {
+            background-color: #2a2069;
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 25px;
+        }
+
+        .btn-reset:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead {
+            background-color: #1e174a;
+            color: white;
+        }
+
+        .table th {
             border-bottom: none;
+            font-weight: 600;
         }
 
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ecf0f1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: #3498db;
+        .table tbody tr:hover {
+            background-color: rgba(30, 23, 74, 0.05);
+        }
+
+        .badge-student {
+            background-color: #28a745;
+        }
+
+        .badge-officer {
+            background-color: #007bff;
+        }
+
+        .badge-admin {
+            background-color: #dc3545;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #1e174a 0%, #2a2069 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stats-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stats-card p {
+            margin: 0;
+            opacity: 0.9;
         }
 
         /* Mobile Menu Toggle */
@@ -271,6 +409,10 @@
             .search-box {
                 width: 200px;
             }
+            
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -297,23 +439,16 @@
                 padding: 20px 15px;
             }
             
-            .recent-activity {
-                padding: 20px;
+            .attendance-card {
+                padding: 15px;
+            }
+            
+            .stats-card h3 {
+                font-size: 2rem;
             }
         }
 
         @media (max-width: 576px) {
-            .activity-item {
-                flex-direction: column;
-                align-items: flex-start;
-                text-align: left;
-            }
-            
-            .activity-icon {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-            
             .sidebar-header h4 {
                 font-size: 1rem;
             }
@@ -333,6 +468,12 @@
         
         .sidebar-overlay.active {
             display: block;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
         }
     </style>
 </head>
@@ -375,7 +516,7 @@
                         <i class="bi bi-chevron-right chevron"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="usg_attendance.php">Attendance</a></li>
+                        <li><a class="dropdown-item active" href="usg_attendance.php">Attendance</a></li>
                         <li><a class="dropdown-item" href="#">Violation</a></li>
                         <li><a class="dropdown-item" href="#">Lost and Found</a></li>
                     </ul>
@@ -398,12 +539,12 @@
                 <i class="bi bi-list"></i>
             </button>
             <div class="search-box">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search announcements...">
-                    <button class="btn btn-outline-secondary" type="button">
+                <form method="GET" action="" class="input-group">
+                    <input type="text" class="form-control" name="globalSearch" placeholder="Search attendance records..." value="<?php echo isset($_GET['globalSearch']) ? htmlspecialchars($_GET['globalSearch']) : ''; ?>">
+                    <button class="btn btn-outline-secondary" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
-                </div>
+                </form>
             </div>
             <div class="user-info">
                 <div class="notifications">
@@ -421,14 +562,201 @@
 
         <!-- Content Area -->
         <div class="content-area">
-            <h2 class="mb-4">Attendance</h2>
-
+            <h2 class="mb-4">Attendance Management</h2>
             
+            <!-- Display error messages -->
+            <?php if (isset($db_error)): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i> <?php echo htmlspecialchars($db_error); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($error)): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-database-exclamation me-2"></i> <?php echo htmlspecialchars($error); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 id="totalRecords">
+                            <?php echo isset($attendance_data) ? count($attendance_data) : '0'; ?>
+                        </h3>
+                        <p>Total Records</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 id="totalStudents">
+                            <?php echo isset($attendance_data) ? count($attendance_data) : '0'; ?>
+                        </h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 id="bsitCount">
+                            <?php 
+                            if (isset($attendance_data)) {
+                                $bsitCount = 0;
+                                foreach ($attendance_data as $record) {
+                                    if (isset($record['course']) && $record['course'] === 'BSIT') {
+                                        $bsitCount++;
+                                    }
+                                }
+                                echo $bsitCount;
+                            } else {
+                                echo '0';
+                            }
+                            ?>
+                        </h3>
+                        <p>BSIT Students</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 id="thirdYearCount">
+                            <?php 
+                            if (isset($attendance_data)) {
+                                $thirdYearCount = 0;
+                                foreach ($attendance_data as $record) {
+                                    if (isset($record['year']) && $record['year'] == 3) {
+                                        $thirdYearCount++;
+                                    }
+                                }
+                                echo $thirdYearCount;
+                            } else {
+                                echo '0';
+                            }
+                            ?>
+                        </h3>
+                        <p>3rd Year Students</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Card -->
+            <div class="attendance-card">
+                <h4 class="mb-4">Attendance Records</h4>
+                
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h5 class="mb-3">Filter Records</h5>
+                    <form method="GET" action="">
+                        <div class="filter-row">
+                            <div>
+                                <label for="filterName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="filterName" name="name" placeholder="Search by name..." value="<?php echo htmlspecialchars($name); ?>">
+                            </div>
+                            <div>
+                                <label for="filterId" class="form-label">ID Number</label>
+                                <input type="text" class="form-control" id="filterId" name="id" placeholder="Search by ID..." value="<?php echo htmlspecialchars($id); ?>">
+                            </div>
+                            <div>
+                                <label for="filterCourse" class="form-label">Course</label>
+                                <select class="form-select" id="filterCourse" name="course">
+                                    <option value="">All Courses</option>
+                                    <option value="BSIT" <?php echo ($course === 'BSIT') ? 'selected' : ''; ?>>BSIT</option>
+                                    <option value="BSCS" <?php echo ($course === 'BSCS') ? 'selected' : ''; ?>>BSCS</option>
+                                    <option value="BSIS" <?php echo ($course === 'BSIS') ? 'selected' : ''; ?>>BSIS</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="filterYear" class="form-label">Year Level</label>
+                                <select class="form-select" id="filterYear" name="year">
+                                    <option value="">All Years</option>
+                                    <option value="1" <?php echo ($year === '1') ? 'selected' : ''; ?>>1st Year</option>
+                                    <option value="2" <?php echo ($year === '2') ? 'selected' : ''; ?>>2nd Year</option>
+                                    <option value="3" <?php echo ($year === '3') ? 'selected' : ''; ?>>3rd Year</option>
+                                    <option value="4" <?php echo ($year === '4') ? 'selected' : ''; ?>>4th Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div>
+                                <label for="filterSection" class="form-label">Section</label>
+                                <input type="text" class="form-control" id="filterSection" name="section" placeholder="Enter section..." value="<?php echo htmlspecialchars($section); ?>">
+                            </div>
+                            <div>
+                                <label for="filterRole" class="form-label">Role</label>
+                                <select class="form-select" id="filterRole" name="role">
+                                    <option value="">All Roles</option>
+                                    <option value="student" <?php echo ($role === 'student') ? 'selected' : ''; ?>>Student</option>
+                                    <option value="officer" <?php echo ($role === 'officer') ? 'selected' : ''; ?>>Officer</option>
+                                    <option value="admin" <?php echo ($role === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                                </select>
+                            </div>
+                            <div class="d-flex align-items-end">
+                                <button class="btn btn-filter me-2" type="submit" id="applyFilters">
+                                    <i class="bi bi-funnel"></i> Apply Filters
+                                </button>
+                                <a href="usg_attendance.php" class="btn btn-reset">
+                                    <i class="bi bi-arrow-clockwise"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Attendance Table -->
+                <div class="table-responsive" id="attendanceTableContainer">
+                    <table class="table table-hover" id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>ID Number</th>
+                                <th>Full Name</th>
+                                <th>Course</th>
+                                <th>Year</th>
+                                <th>Section</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTableBody">
+                            <?php if (isset($attendance_data) && !empty($attendance_data)): ?>
+                                <?php foreach ($attendance_data as $item): 
+                                    // Determine badge class based on role
+                                    $badgeClass = 'badge-student';
+                                    if (isset($item['role'])) {
+                                        if ($item['role'] === 'officer') $badgeClass = 'badge-officer';
+                                        if ($item['role'] === 'admin') $badgeClass = 'badge-admin';
+                                    }
+                                ?>
+                                    <tr>
+                                        <td><?php echo isset($item['id_number']) ? htmlspecialchars($item['id_number']) : ''; ?></td>
+                                        <td><?php echo (isset($item['first_name']) && isset($item['last_name'])) ? htmlspecialchars($item['first_name'] . ' ' . $item['last_name']) : ''; ?></td>
+                                        <td><?php echo isset($item['course']) ? htmlspecialchars($item['course']) : ''; ?></td>
+                                        <td><?php echo isset($item['year']) ? htmlspecialchars($item['year']) : ''; ?></td>
+                                        <td><?php echo isset($item['section']) ? htmlspecialchars($item['section']) : ''; ?></td>
+                                        <td><span class="badge <?php echo $badgeClass; ?>"><?php echo isset($item['role']) ? htmlspecialchars($item['role']) : ''; ?></span></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="no-data">
+                                            <i class="bi bi-inbox fs-1"></i>
+                                            <h4 class="mt-3">No attendance records found</h4>
+                                            <p class="text-muted">Try adjusting your filters or check back later.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
@@ -445,20 +773,16 @@
             });
             
             // Close sidebar methods:
-            
-            // 1. Close button click
             closeSidebar.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 sidebarOverlay.classList.remove('active');
             });
             
-            // 2. Overlay click
             sidebarOverlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 sidebarOverlay.classList.remove('active');
             });
 
-            // 3. Auto-close when clicking menu links
             document.querySelectorAll('.sidebar .nav-link').forEach(link => {
                 link.addEventListener('click', function() {
                     if (window.innerWidth <= 992) {
@@ -468,12 +792,27 @@
                 });
             });
             
-            // 4. Window resize (close on desktop)
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 992) {
                     sidebar.classList.remove('active');
                     sidebarOverlay.classList.remove('active');
                 }
+            });
+
+            // Initialize DataTable if there's data
+            $(document).ready(function() {
+                $('#attendanceTable').DataTable({
+                    pageLength: 10,
+                    lengthMenu: [10, 25, 50, 100],
+                    order: [[0, 'asc']],
+                    language: {
+                        search: "Search records:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "Showing 0 to 0 of 0 entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)"
+                    }
+                });
             });
         });
     </script>
