@@ -13,6 +13,9 @@
 }
 
 @layer components {
+
+    /* Sidebar styles */
+
     .sidebar {
         width: 20rem;
         transition: width 0.25s ease;
@@ -25,6 +28,8 @@
         display: none;
     }
 
+    /* Sidebar header styles */
+
     .sidebar-title {
         @apply text-[15px] text-[#1e174a] font-oswald font-semibold leading-tight;
     }
@@ -33,6 +38,8 @@
         margin-left: auto;
         margin-right: auto;
     }
+
+    /* Sidebar menu styles */
 
     .sidebar-section-title {
         @apply text-[11px] font-medium uppercase tracking-wider text-gray-400 mb-2;
@@ -76,6 +83,8 @@
     .sidebar-collapsed .sidebar-text {
         display: none;
     }
+
+    /* Sidebar + Navbar behavior */
 
     main {
         transition: margin-left 0.25s ease;

@@ -558,6 +558,8 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* Sidebar styles */
+
 .\!sidebar {
   width: 20rem !important;
   transition: width 0.25s ease !important;
@@ -576,6 +578,8 @@ body {
   display: none;
 }
 
+/* Sidebar header styles */
+
 .sidebar-title {
   font-size: 15px;
   font-weight: 600;
@@ -589,6 +593,8 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* Sidebar menu styles */
 
 .sidebar-section-title {
   margin-bottom: 0.5rem;
@@ -663,16 +669,14 @@ body {
   display: none;
 }
 
+/* Sidebar + Navbar behavior */
+
 main {
   transition: margin-left 0.25s ease;
 }
 
 .sidebar-collapsed + main {
   margin-left: 5rem;
-}
-
-.static {
-  position: static;
 }
 
 .fixed {
@@ -683,85 +687,20 @@ main {
   position: relative;
 }
 
-.m-0 {
-  margin: 0px;
-}
-
 .m-auto {
   margin: auto;
-}
-
-.my-2 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
-.mb-3 {
-  margin-bottom: 0.75rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
-.me-1 {
-  margin-inline-end: 0.25rem;
-}
-
-.me-2 {
-  margin-inline-end: 0.5rem;
-}
-
-.me-3 {
-  margin-inline-end: 0.75rem;
 }
 
 .ml-80 {
   margin-left: 20rem;
 }
 
-.mt-1 {
-  margin-top: 0.25rem;
-}
-
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.mt-3 {
-  margin-top: 0.75rem;
-}
-
-.mt-4 {
-  margin-top: 1rem;
-}
-
 .block {
   display: block;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 .flex {
   display: flex;
-}
-
-.table {
-  display: table;
 }
 
 .hidden {
@@ -784,16 +723,8 @@ main {
   flex: 1 1 0%;
 }
 
-.resize {
-  resize: both;
-}
-
 .flex-col {
   flex-direction: column;
-}
-
-.flex-wrap {
-  flex-wrap: wrap;
 }
 
 .items-center {
@@ -810,10 +741,6 @@ main {
 
 .gap-2 {
   gap: 0.5rem;
-}
-
-.gap-3 {
-  gap: 0.75rem;
 }
 
 .gap-4 {
@@ -844,24 +771,12 @@ main {
   overflow-y: auto;
 }
 
-.rounded {
-  border-radius: 0.25rem;
-}
-
 .rounded-full {
   border-radius: 9999px;
 }
 
 .rounded-lg {
   border-radius: 0.5rem;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-0 {
-  border-width: 0px;
 }
 
 .border-b {
@@ -904,10 +819,6 @@ main {
   padding: 0.5rem;
 }
 
-.p-3 {
-  padding: 0.75rem;
-}
-
 .p-6 {
   padding: 1.5rem;
 }
@@ -937,42 +848,6 @@ main {
   padding-bottom: 0.75rem;
 }
 
-.pb-1 {
-  padding-bottom: 0.25rem;
-}
-
-.pb-2 {
-  padding-bottom: 0.5rem;
-}
-
-.ps-2 {
-  padding-inline-start: 0.5rem;
-}
-
-.ps-3 {
-  padding-inline-start: 0.75rem;
-}
-
-.ps-4 {
-  padding-inline-start: 1rem;
-}
-
-.pt-2 {
-  padding-top: 0.5rem;
-}
-
-.pt-3 {
-  padding-top: 0.75rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-end {
-  text-align: end;
-}
-
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -994,20 +869,6 @@ main {
 
 .text-white\/70 {
   color: rgb(255 255 255 / 0.7);
-}
-
-.opacity-75 {
-  opacity: 0.75;
-}
-
-.shadow-sm {
-  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.filter {
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition-\[margin-left\] {

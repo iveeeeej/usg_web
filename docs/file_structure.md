@@ -1,12 +1,13 @@
-# File Tree: societree_usg
+# File Tree: societree_web
 
-**Generated:** 2/5/2026, 9:04:54 PM
-**Root Path:** `c:\xampp\htdocs\societree_usg`
+**Generated:** 2/6/2026, 9:01:04 PM
+**Root Path:** `c:\xampp\htdocs\societree_web`
 
 ```
 ├── 📁 assets
 │   ├── 📁 css
-│   │   └── 🎨 style.css
+│   │   ├── 🎨 app.css
+│   │   └── 🎨 input.css
 │   ├── 📁 img
 │   │   ├── 🖼️ sample_img.jpg
 │   │   ├── 🖼️ sample_img2.jpg
@@ -36,22 +37,23 @@
 │       ├── 🖼️ usg_2.png
 │       ├── 🖼️ ustp_1.png
 │       └── 🖼️ ustp_2.png
-├── 📁 backend
-│   ├── 📁 backend_access
-│   ├── 📁 backend_afprotech
-│   ├── 📁 backend_arcu
-│   ├── 📁 backend_elecom
-│   ├── 📁 backend_pafe
-│   ├── 📁 backend_redcross
-│   ├── 📁 backend_site
-│   └── 📁 backend_usg
+├── 📁 database
 ├── 📁 docs
-│   └── 📝 file_structure.md
+│   ├── 📝 file_structure.md
+│   └── 📝 frontend-guidelines.md
 ├── 📁 modules
+│   ├── 📁 backend
+│   │   ├── 📁 backend_access
+│   │   ├── 📁 backend_afprotech
+│   │   ├── 📁 backend_arcu
+│   │   ├── 📁 backend_elecom
+│   │   ├── 📁 backend_pafe
+│   │   ├── 📁 backend_redcross
+│   │   ├── 📁 backend_site
+│   │   └── 📁 backend_usg
 │   ├── 📁 components
+│   │   ├── 🐘 navbar.php
 │   │   └── 🐘 sidebar.php
-│   ├── 📁 css
-│   │   └── 🎨 app.css
 │   ├── 📁 org_access
 │   │   ├── 🐘 access_announcement.php
 │   │   ├── 🐘 access_dashboard.php
