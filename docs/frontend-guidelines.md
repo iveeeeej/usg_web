@@ -64,7 +64,7 @@ Tailwind CSS is used ONLY inside the `modules/` directory.
 - ❌ NEVER add Tailwind CDN (`@tailwindcss/browser`)
 - ❌ NEVER mix CDN Tailwind with compiled Tailwind
 - ✅ ALWAYS edit `modules/css/input.css`
-- ✅ ALWAYS run Tailwind in watch mode while developing: [```cmd: npx tailwindcss -i ./modules/css/input.css -o ./assets/css/app.css --watch]
+- ✅ ALWAYS run Tailwind in watch mode while developing: [**```cmd: npx tailwindcss -i ./modules/css/input.css -o ./assets/css/app.css --watch**]
 
 ---
 

@@ -13,12 +13,38 @@
 }
 
 @layer components {
+    .sidebar {
+        width: 20rem;
+        transition: width 0.25s ease;
+    }
+
+    .sidebar-collapsed {
+        width: 5rem;
+    }
+    .sidebar-collapsed .sidebar-brand {
+        display: none;
+    }
+
     .sidebar-title {
-        @apply text-[13px] font-oswald font-semibold leading-tight;
+        @apply text-[15px] text-[#1e174a] font-oswald font-semibold leading-tight;
+    }
+
+    .sidebar-collapsed .sidebar-toggle-btn {
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .sidebar-section-title {
         @apply text-[11px] font-medium uppercase tracking-wider text-gray-400 mb-2;
+    }
+
+    .sidebar-collapsed .sidebar-section-title {
+        display: none;
+    }
+
+    .sidebar-collapsed .sidebar-toggle-btn svg {
+        transform: rotate(180deg);
+        transition: transform 0.25s ease;
     }
 
     .sidebar-link {
@@ -33,12 +59,30 @@
         @apply bg-gray-100 font-semibold shadow-sm;
     }
 
+    .sidebar-collapsed .sidebar-link {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .sidebar-icon {
         @apply w-5 h-5 flex items-center justify-center;
     }
 
     .sidebar-text {
-        @apply text-[12] leading-none;
+        @apply text-[12px] leading-none;
+    }
+
+    .sidebar-collapsed .sidebar-text {
+        display: none;
+    }
+
+    main {
+        transition: margin-left 0.25s ease;
+    }
+
+    .sidebar-collapsed + main {
+        margin-left: 5rem;
     }
 }
 
