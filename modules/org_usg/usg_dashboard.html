@@ -117,6 +117,31 @@
             padding: 0 25px;
         }
 
+        /* Collapsible section title */
+        .sidebar-section-title.collapsible {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: color 0.2s ease;
+        }
+
+        .sidebar-section-title.collapsible:hover {
+            color: #6b7280;
+        }
+
+        .section-chevron {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section.collapsed .section-chevron {
+            transform: rotate(-90deg);
+        }
+
         /* Sidebar link overrides — dual-class with nav-link for JS compat */
         .sidebar-link.nav-link {
             border-left: none;
@@ -164,6 +189,13 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .sidebar-section.collapsed ul {
+            max-height: 0;
         }
 
         .nav-link {
@@ -260,9 +292,48 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-left: auto;
         }
 
-        .user-avatar {
+        /* User Avatar Dropdown */
+        .user-avatar-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 160px;
+            padding: 8px 0;
+            display: none;
+            z-index: 1001;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            color: #1e174a;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .user-dropdown a:hover {
+            background: #f3f4f6;
+        }
+
+        /* .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -272,7 +343,7 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-        }
+        } */
 
         .form-control,
         .form-control:focus {
@@ -625,10 +696,32 @@
                             <span class="sidebar-text">Dashboard</span>
                         </a>
                     </li>
+                </ul>
+            </div>
+
+            <!-- Section: Management -->
+            <div class="sidebar-section" data-section="management">
+                <p class="sidebar-section-title collapsible">Management
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
+                <ul>
                     <li>
                         <a href="#" class="nav-link sidebar-link">
                             <span class="sidebar-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-plus-icon lucide-calendar-plus"><path d="M16 19h6"/><path d="M16 2v4"/><path d="M19 16v6"/><path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5"/><path d="M3 10h18"/><path d="M8 2v4"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-calendar-plus-icon lucide-calendar-plus">
+                                    <path d="M16 19h6" />
+                                    <path d="M16 2v4" />
+                                    <path d="M19 16v6" />
+                                    <path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5" />
+                                    <path d="M3 10h18" />
+                                    <path d="M8 2v4" />
+                                </svg>
                             </span>
                             <span class="sidebar-text">Event</span>
                         </a>
@@ -652,8 +745,13 @@
             </div>
 
             <!-- Section: Community -->
-            <div class="sidebar-section">
-                <p class="sidebar-section-title">Community</p>
+            <div class="sidebar-section" data-section="community">
+                <p class="sidebar-section-title collapsible">Community
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
                 <ul>
                     <li>
                         <a href="#" class="nav-link sidebar-link">
@@ -673,7 +771,13 @@
                     <li>
                         <a href="#" class="nav-link sidebar-link">
                             <span class="sidebar-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-icon lucide-message-circle"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-message-circle-icon lucide-message-circle">
+                                    <path
+                                        d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+                                </svg>
                             </span>
                             <span class="sidebar-text">General Discussion</span>
                         </a>
@@ -682,8 +786,13 @@
             </div>
 
             <!-- Section: Services -->
-            <div class="sidebar-section">
-                <p class="sidebar-section-title">Services</p>
+            <div class="sidebar-section" data-section="services">
+                <p class="sidebar-section-title collapsible">Services
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
                 <ul>
                     <li>
                         <a href="usg_attendance.php" class="nav-link sidebar-link">
@@ -780,8 +889,13 @@
             </div>
 
             <!-- Section: Legislative -->
-            <div class="sidebar-section">
-                <p class="sidebar-section-title">Legislative</p>
+            <div class="sidebar-section" data-section="legislative">
+                <p class="sidebar-section-title collapsible">Legislative
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
                 <ul>
                     <li>
                         <a href="#" class="nav-link sidebar-link">
@@ -802,8 +916,13 @@
             </div>
 
             <!-- Section: Reports -->
-            <div class="sidebar-section">
-                <p class="sidebar-section-title">Reports</p>
+            <div class="sidebar-section" data-section="reports">
+                <p class="sidebar-section-title collapsible">Reports
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
                 <ul>
                     <li>
                         <a href="#" class="nav-link sidebar-link">
@@ -908,24 +1027,37 @@
                     <path d="M4 19h16" />
                 </svg>
             </button>
-            <!-- <div class="search-box">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search...">
-                    <button class="btn btn-outline-secondary" type="button">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </div> -->
+
             <div class="user-info">
-                <div class="notifications">
-                    <i class="bi bi-bell fs-5"></i>
+                <div class="notifications" style="color: white;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-bell-icon lucide-bell">
+                        <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+                        <path
+                            d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+                    </svg>
                 </div>
-                <div class="user-avatar">
-                    <i class="bi bi-person-circle"></i>
-                </div>
-                <div class="user-details">
-                    <div class="user-name">Name</div>
-                    <div class="user-role">Student</div>
+                <div class="user-avatar-wrapper" id="userAvatarWrapper">
+                    <div class="user-avatar" style="color: white;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-circle-user-icon lucide-circle-user">
+                            <circle cx="12" cy="12" r="10" />
+                            <circle cx="12" cy="10" r="3" />
+                            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                        </svg>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#">
+                            <i class="bi bi-person"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="../../index.html">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -934,13 +1066,15 @@
         <div class="content-area">
             <!-- Stats Cards -->
             <div class="stats-cards">
-                <!-- <div class="stat-card">
+                <div class="stat-card">
                     <div class="stat-icon">
                         <i class="bi bi-megaphone"></i>
                     </div>
-                    <div class="stat-label"><?php echo count($recentAnnouncements); ?></div>
+                    <div class="stat-label">
+
+                    </div>
                     <div class="stat-value">Total Announcements</div>
-                </div> -->
+                </div>
 
                 <div class="stat-card">
                     <div class="stat-icon">
@@ -974,67 +1108,6 @@
                     <a href="usg_announcement.php" class="btn btn-sm btn-secondary">
                         <i class="bi bi-arrow-right me-1"></i> View All
                     </a>
-                </div>
-
-                <div id="announcementsList">
-                    <?php if (!empty($recentAnnouncements)): ?>
-                    <?php 
-                        // Type badges styling and labels - SAME as usg_announcement.php
-                        $type_labels = [
-                            'event' => ['badge' => 'bg-event', 'label' => 'Event'],
-                            'cleaning' => ['badge' => 'bg-cleaning', 'label' => 'Cleaning'],
-                            'meeting' => ['badge' => 'bg-info', 'label' => 'Meeting'],
-                            'seminar' => ['badge' => 'bg-seminar', 'label' => 'Seminar'],
-                            'workshop' => ['badge' => 'bg-workshop', 'label' => 'Workshop'],
-                            'maintenance' => ['badge' => 'bg-secondary', 'label' => 'Maintenance'],
-                            'urgent' => ['badge' => 'bg-danger', 'label' => 'Urgent'],
-                            'important' => ['badge' => 'bg-warning', 'label' => 'Important']
-                        ];
-                        ?>
-
-                    <?php foreach ($recentAnnouncements as $announcement): 
-                            $type = $announcement['announcement_type'] ?? '';
-                            $type_info = $type_labels[$type] ?? ['badge' => 'bg-secondary', 'label' => ucfirst($type)];
-                        ?>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-megaphone"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="announcement-title mb-0">
-                                    <?php echo htmlspecialchars($announcement['announcement_title']); ?>
-                                </h6>
-                                <?php if (!empty($type)): ?>
-                                <span class="badge rounded-pill <?php echo $type_info['badge']; ?>">
-                                    <?php echo $type_info['label']; ?>
-                                </span>
-                                <?php endif; ?>
-                            </div>
-                            <p class="announcement-content">
-                                <?php 
-                                        $content = htmlspecialchars($announcement['announcement_content']);
-                                        // Truncate content if too long for dashboard view
-                                        if (strlen($content) > 200) {
-                                            echo substr($content, 0, 200) . '...';
-                                        } else {
-                                            echo $content;
-                                        }
-                                        ?>
-                            </p>
-                            <small class="announcement-date">
-                                <i class="bi bi-clock me-1"></i>
-                                <?php echo date('F j, Y g:i A', strtotime($announcement['announcement_datetime'])); ?>
-                            </small>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                    <?php else: ?>
-                    <div class="text-center py-5">
-                        <i class="bi bi-megaphone display-1 text-muted mb-3"></i>
-                        <p class="text-muted">No announcements yet. Check back later!</p>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -1091,6 +1164,61 @@
                 }
             });
         });
+
+        // ── Collapsible Sidebar Sections with localStorage ──
+        (function () {
+            const STORAGE_KEY = 'sidebar-sections';
+
+            // Load saved state (default: all expanded)
+            function loadState() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+                } catch (e) {
+                    return {};
+                }
+            }
+
+            function saveState(state) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            }
+
+            const state = loadState();
+            const sections = document.querySelectorAll('.sidebar-section[data-section]');
+
+            sections.forEach(function (section) {
+                const key = section.getAttribute('data-section');
+                const title = section.querySelector('.sidebar-section-title.collapsible');
+                if (!title) return;
+
+                // Apply saved state (collapsed = true means collapsed)
+                if (state[key] === true) {
+                    section.classList.add('collapsed');
+                }
+
+                // Toggle on click
+                title.addEventListener('click', function () {
+                    section.classList.toggle('collapsed');
+                    const currentState = loadState();
+                    currentState[key] = section.classList.contains('collapsed');
+                    saveState(currentState);
+                });
+            });
+        })();
+
+        // ── User Avatar Dropdown ──
+        (function () {
+            const wrapper = document.getElementById('userAvatarWrapper');
+            const dropdown = document.getElementById('userDropdown');
+
+            wrapper.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function () {
+                dropdown.classList.remove('show');
+            });
+        })();
     </script>
 </body>
 
