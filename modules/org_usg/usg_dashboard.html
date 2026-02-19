@@ -8,7 +8,6 @@
     <link rel="icon" href="../../assets/logo/usg_2.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../org_usg/components/css/base.css">
     <link rel="stylesheet" href="../org_usg/components/css/navbar.css">
     <link rel="stylesheet" href="../org_usg/components/css/sidebar.css">
@@ -27,29 +26,12 @@
             font-weight: bold;
         } */
 
-        .form-control,
-        .form-control:focus {
-            border: 1px solid #ddd;
-            box-shadow: none;
-            padding: 12px;
-            border-radius: 5px;
-        }
-
-        .form-control:focus {
-            border-color: #1e174a;
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
         .content-area {
             padding: 30px;
             flex: 1;
         }
 
-        /* Dashboard Cards */
+        /* Dashboard - Main Content Cards */
         .stats-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -70,8 +52,8 @@
         }
 
         /* .stat-icon {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -83,6 +65,7 @@
         .stat-card:nth-child(1) .stat-icon {
             background: rgba(52, 152, 219, 0.1);
             color: #3498db;
+            color: #2ecc71;
         }
 
         .stat-card:nth-child(2) .stat-icon {
@@ -148,23 +131,6 @@
         .announcement-date {
             color: #888;
             font-size: 0.9rem;
-        }
-
-        /* Custom badge colors for announcement types */
-        .bg-event {
-            background-color: #fd7e14 !important;
-        }
-
-        .bg-cleaning {
-            background-color: #5e4c47 !important;
-        }
-
-        .bg-seminar {
-            background-color: #0097b2 !important;
-        }
-
-        .bg-workshop {
-            background-color: #6f42c1 !important;
         }
 
         .no-announcements {
@@ -309,7 +275,7 @@
                 </p>
                 <ul>
                     <li>
-                        <a href="#" class="nav-link sidebar-link">
+                        <a href="usg_announcement.html" class="nav-link sidebar-link">
                             <span class="sidebar-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -625,7 +591,6 @@
                 <div class="stat-card">
                     <div class="stat-label">Under construction</div>
                     <div class="stat-value">00</div>
-                    
                 </div>
 
                 <div class="stat-card">
@@ -648,13 +613,21 @@
                 <div class="d-flex justify-content-between align-items-center mb-3" style="color: #6C757D;">
                     <h3 class="mb-0">Announcements</h3>
                     <a href="#" class="btn btn-sm btn-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-view-icon lucide-view"><path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2"/><path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/></svg> View All
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-view-icon lucide-view">
+                            <path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
+                            <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
+                            <circle cx="12" cy="12" r="1" />
+                            <path
+                                d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0" />
+                        </svg> View All
                     </a>
                 </div>
             </div>
         </div>
 
-        
+
     </div>
 
     <!-- Bootstrap JS and dependencies -->

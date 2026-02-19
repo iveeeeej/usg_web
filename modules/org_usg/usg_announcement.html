@@ -14,12 +14,24 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
+        /* .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #080204;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        } */
+
         .content-area {
             padding: 30px;
             flex: 1;
         }
 
-        /* Dashboard Cards */
+        /* Dashboard - Main Content Cards */
         .stats-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -35,75 +47,25 @@
             transition: transform 0.3s ease;
         }
 
-        /* Horizontal Header Style Card */
-        .stat-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            border-radius: 12px;
-            padding: 18px 25px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: none;
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
-        /* Event Logs */
-        .event-log {
-            background: white;
+        /* .stat-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        .stat-label {
-            color: #6C757D;
-            font-size: 1rem;
-        }
-
-        /* Title */
-        .stat-title {
-            margin: 0;
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #212529;
-        }
-
-        /* Right side icon */
-        .stat-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            background: #1e174a;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
         }
 
-        .add-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border: none;
-            border-radius: 8px;
-            background: #f9a702;
-            color: white;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .add-btn:hover {
-            background: #e69500;
-        }
-
-
-        /* .stat-card:nth-child(1) .stat-icon {
+        .stat-card:nth-child(1) .stat-icon {
             background: rgba(52, 152, 219, 0.1);
             color: #3498db;
+            color: #2ecc71;
         }
 
         .stat-card:nth-child(2) .stat-icon {
@@ -121,8 +83,58 @@
             color: #f1c40f;
         } */
 
+        .stat-label {
+            color: #6C757D;
+            font-size: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: black;
+            margin-bottom: 5px;
+        }
+
+        /* Recent Activity / Announcements */
+        .recent-activity {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #3498db;
+        }
+
+        .announcement-title {
+            color: #1e174a;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .announcement-content {
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .announcement-date {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
         /* Custom badge colors for announcement types */
-        /* .bg-event {
+        .bg-event {
             background-color: #fd7e14 !important;
         }
 
@@ -136,7 +148,45 @@
 
         .bg-workshop {
             background-color: #6f42c1 !important;
-        } */
+        }
+
+        .no-announcements {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6C757D;
+        }
+
+        .no-announcements i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 20px 15px;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .recent-activity {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .activity-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .sidebar-header h4 {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -555,29 +605,26 @@
 
             <!-- Stats Cards -->
             <div class="stats-cards">
-                <div class="stat-card stat-card-header">
-                    <div class="stat-left">
-                        <h4 class="stat-title">Event</h4>
-                    </div>
-                    <div class="stat-right">
-                        <button class="add-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M8 12h8" />
-                                <path d="M12 8v8" />
-                            </svg>
-                            Add
-                        </button>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-label">Under construction</div>
+                    <div class="stat-value">00</div>
                 </div>
             </div>
 
-
-            <div class="event-log">
+            <div class="recent-activity">
                 <div class="d-flex justify-content-between align-items-center mb-3" style="color: #6C757D;">
-                    <div class="stat-label">Log</div>
+                    <h3 class="mb-0">Announcements</h3>
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-view-icon lucide-view">
+                            <path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
+                            <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
+                            <circle cx="12" cy="12" r="1" />
+                            <path
+                                d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0" />
+                        </svg> View All
+                    </a>
                 </div>
             </div>
         </div>
