@@ -1,6 +1,6 @@
 # File Tree: usg_web
 
-**Generated:** 2/17/2026, 8:17:22 PM
+**Generated:** 2/20/2026, 11:17:11 PM
 **Root Path:** `c:\xampp\htdocs\usg_web`
 
 ```
@@ -10,9 +10,6 @@
 │   │   ├── 🖼️ sample_img2.jpg
 │   │   ├── 🖼️ sample_img3.jpg
 │   │   └── 🖼️ societree_img.png
-│   ├── 📁 js
-│   │   ├── 📄 forgot_password.js
-│   │   └── 📄 login.js
 │   └── 📁 logo
 │       ├── 🖼️ elecom_1.png
 │       ├── 🖼️ elecom_2.png
@@ -32,22 +29,25 @@
 │   ├── 📝 06_api_design_guidelines.md
 │   ├── 📝 07_security_and_permissions.md
 │   ├── 📝 08_mobile_integration.md
-│   └── 📝 09_development_phases.md
+│   ├── 📝 09_development_phases.md
+│   ├── 📝 10_project_timeline_and_execution_plan.md
+│   └── 📝 file_structure.md
 ├── 📁 modules
 │   ├── 📁 backend
-│   │   ├── 📁 backend_access
-│   │   ├── 📁 backend_afprotech
-│   │   ├── 📁 backend_arcu
-│   │   ├── 📁 backend_elecom
-│   │   ├── 📁 backend_pafe
-│   │   ├── 📁 backend_redcross
-│   │   ├── 📁 backend_site
 │   │   └── 📁 backend_usg
-│   ├── 📁 components
-│   ├── 📁 org_elecom
 │   └── 📁 org_usg
+│       ├── 📁 components
+│       │   ├── 📁 css
+│       │   │   ├── 🎨 base.css
+│       │   │   ├── 🎨 navbar.css
+│       │   │   └── 🎨 sidebar.css
+│       │   └── 📁 js
+│       │       └── 📄 sidebar.js
+│       ├── 🌐 usg_announcement.html
 │       ├── 🌐 usg_dashboard.html
-│       └── 🌐 usg_event.html
+│       ├── 🌐 usg_event.html
+│       ├── 🌐 usg_gen_assembly.html
+│       └── 📄 usg_gen_discussion
 ├── 🌐 dashboard.html
 └── 🌐 index.html
 ```

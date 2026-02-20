@@ -1,8 +1,8 @@
 # API Design Guidelines
 
-## 1. REST Standards
+---
 
-Use standard HTTP methods:
+## 1. REST Standards
 
 GET → Retrieve
 POST → Create
@@ -11,28 +11,33 @@ DELETE → Remove
 
 ---
 
-## 2. Example Endpoints
+## 2. Role Access Rules
+
+ADMIN:
+- Full access to administrative endpoints.
+
+STUDENT:
+- Limited to student-related endpoints only.
+
+---
+
+## 3. Example Endpoints
 
 POST /api/auth/login
 GET /api/events/
 POST /api/events/{id}/attendance/
-GET /api/user/profile/
+GET /api/profile/
 POST /api/borrow/request/
 GET /api/payments/history/
 
----
-
-## 3. Authentication
-
-Use JWT authentication.
-
-Access token required for all protected endpoints.
+ADMIN endpoints must validate role.
 
 ---
 
 ## 4. Validation Rules
 
-- All input validated
-- No trust on frontend validation
-- Location verified server-side
-- Attendance cut-off enforced server-side
+- All input validated server-side.
+- Geolocation verified using PostGIS.
+- Attendance cutoff strictly enforced.
+- Duplicate attendance prevented.
+- Borrow status transitions validated.

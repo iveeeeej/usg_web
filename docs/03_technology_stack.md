@@ -1,5 +1,7 @@
 # Technology Stack
 
+---
+
 ## Backend
 
 Framework: Django
@@ -7,7 +9,17 @@ API Layer: Django REST Framework
 Language: Python 3.11+
 Authentication: Django Auth + JWT
 Database: PostgreSQL
-GIS Support (Optional): PostGIS
+GIS Support: PostGIS (for geolocation validation)
+
+Django is responsible for:
+- Authentication
+- Authorization
+- Business logic
+- File handling
+- Security validation
+- Analytics processing
+
+Supabase is NOT used.
 
 ---
 
@@ -19,7 +31,7 @@ Languages:
 - JavaScript
 
 Framework:
-- Bootstrap or Tailwind CSS
+- Bootstrap
 
 Template Engine:
 - Django Templates
@@ -42,9 +54,6 @@ Primary DBMS: PostgreSQL
 Reason:
 - Strong relational integrity
 - Advanced indexing
-- JSON support
-- GIS capability for geolocation validation
+- JSONB support
+- PostGIS geospatial validation
 - Production-grade reliability
-
-Supabase will NOT be used as backend logic provider.
-Authentication and business logic are handled by Django.

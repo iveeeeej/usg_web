@@ -1,46 +1,84 @@
 # Security and Permissions
 
-## 1. Role-Based Access Control (RBAC)
+---
 
-Use Django Groups + Permissions.
+## 1. Role Model
 
-Roles:
-- Super Admin
-- Organization Admin
-- Officer
-- Student
+Only two roles exist:
 
-Each view must verify:
+- ADMIN
+- STUDENT
 
-- Authentication
-- Role permission
-- Organization scope
+There is no Super Admin.
+
+All ADMIN accounts have full system authority.
 
 ---
 
-## 2. Geolocation Validation
+## 2. Authorization Enforcement
 
-Attendance must verify:
+Every protected endpoint must verify:
 
-- Student identity
-- Event active session
-- Within campus coordinate boundary
-- Within allowed time window
-
----
-
-## 3. File Upload Security
-
-- Restrict file types
-- Limit file size
-- Store files securely
-- Prevent direct execution
+1. Authentication
+2. Role validation
+3. Resource ownership (if STUDENT)
 
 ---
 
-## 4. Payment Security
+## 3. Attendance Security
 
-Payment validation must:
-- Verify transaction ID
-- Confirm payment status
-- Prevent duplicate processing
+Attendance validation uses multi-layer security:
+
+1. Verify JWT authentication
+2. Verify user role (STUDENT)
+3. Ensure user.is_verified = true
+4. Verify active attendance session
+5. Validate geofence using PostGIS
+6. Validate time cutoff
+7. Perform server-side face embedding comparison
+8. Confirm liveness challenge completion
+9. Prevent duplicate scans
+
+Biometric verification:
+
+- Face image is captured via mobile camera.
+- Image is transmitted securely to backend.
+- Backend generates embedding using pre-trained model.
+- Embedding compared to stored template.
+- Match must exceed configured similarity threshold.
+
+The similarity threshold must be:
+
+- Configurable in system settings
+- Tested during development
+- Tuned to minimize false positives and false negatives
+
+---
+
+## 4. File Upload Security
+
+- Restrict file types (PDF, DOCX, etc.)
+- Enforce file size limits
+- Store in secure media directory
+- Prevent script execution
+
+---
+
+## 5. Payment Security
+
+- Verify transaction reference
+- Prevent duplicate transactions
+- Store immutable payment logs
+- Do not auto-trust client confirmation
+
+---
+
+## 6. Logging
+
+Critical actions must be logged:
+
+- Event creation
+- Attendance session opening
+- Borrow approval
+- Payment confirmation
+- Report submission
