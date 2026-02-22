@@ -1,25 +1,10 @@
 # File Tree: usg_web
 
-**Generated:** 2/20/2026, 11:17:11 PM
-**Root Path:** `c:\xampp\htdocs\usg_web`
+**Generated:** 2/22/2026, 7:32:27 PM
+**Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
-├── 📁 assets
-│   ├── 📁 img
-│   │   ├── 🖼️ sample_img.jpg
-│   │   ├── 🖼️ sample_img2.jpg
-│   │   ├── 🖼️ sample_img3.jpg
-│   │   └── 🖼️ societree_img.png
-│   └── 📁 logo
-│       ├── 🖼️ elecom_1.png
-│       ├── 🖼️ elecom_2.png
-│       ├── 🖼️ societree_1.png
-│       ├── 🖼️ societree_2.png
-│       ├── 🖼️ usg_1.png
-│       ├── 🖼️ usg_2.png
-│       ├── 🖼️ ustp_1.png
-│       └── 🖼️ ustp_2.png
-├── 📁 database
+├── 📁 backend
 ├── 📁 docs
 │   ├── 📝 01_project_overview.md
 │   ├── 📝 02_system_architecture.md
@@ -32,24 +17,35 @@
 │   ├── 📝 09_development_phases.md
 │   ├── 📝 10_project_timeline_and_execution_plan.md
 │   └── 📝 file_structure.md
-├── 📁 modules
-│   ├── 📁 backend
-│   │   └── 📁 backend_usg
-│   └── 📁 org_usg
-│       ├── 📁 components
-│       │   ├── 📁 css
-│       │   │   ├── 🎨 base.css
-│       │   │   ├── 🎨 navbar.css
-│       │   │   └── 🎨 sidebar.css
-│       │   └── 📁 js
-│       │       └── 📄 sidebar.js
-│       ├── 🌐 usg_announcement.html
-│       ├── 🌐 usg_dashboard.html
-│       ├── 🌐 usg_event.html
-│       ├── 🌐 usg_gen_assembly.html
-│       └── 📄 usg_gen_discussion
-├── 🌐 dashboard.html
-└── 🌐 index.html
+└── 📁 frontend
+    ├── 📁 assets
+    │   ├── 📁 img
+    │   │   ├── 🖼️ sample_img.jpg
+    │   │   ├── 🖼️ sample_img2.jpg
+    │   │   ├── 🖼️ sample_img3.jpg
+    │   │   └── 🖼️ societree_img.png
+    │   └── 📁 logo
+    │       ├── 🖼️ societree.png
+    │       ├── 🖼️ societree_2.png
+    │       ├── 🖼️ usg.png
+    │       ├── 🖼️ usg_2.png
+    │       ├── 🖼️ ustp_1.png
+    │       └── 🖼️ ustp_2.png
+    ├── 📁 org_usg
+    │   ├── 📁 components
+    │   │   ├── 📁 css
+    │   │   │   ├── 🎨 base.css
+    │   │   │   ├── 🎨 navbar.css
+    │   │   │   └── 🎨 sidebar.css
+    │   │   └── 📁 js
+    │   │       └── 📄 sidebar.js
+    │   ├── 🌐 usg_announcement.html
+    │   ├── 🌐 usg_dashboard.html
+    │   ├── 🌐 usg_event.html
+    │   ├── 🌐 usg_gen_assembly.html
+    │   └── 🌐 usg_gen_discussion.html
+    ├── 🌐 dashboard.html
+    └── 🌐 index.html
 ```
 
 ---

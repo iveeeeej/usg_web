@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SocieTREE</title>
-    <link rel="icon" href="assets/logo/societree_1.png" type="image/png">
+    <link rel="icon" href="../frontend/assets/logo/societree.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
@@ -192,7 +192,7 @@
             <!-- For desktop: Image and caption on the right -->
             <div class="col-md-6 d-none d-md-block p-0">
                 <div class="image-container">
-                    <img src="assets/img/societree_img.png" alt="Side Image" class="side-image">
+                    <img src="../frontend/assets/img/societree_img.png" alt="Side Image" class="side-image">
                     <div class="image-caption">
                         <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERS</span></h2>
                     </div>
@@ -202,7 +202,7 @@
             <!-- For mobile: Image and caption first -->
             <div class="col-12 d-md-none">
                 <div class="image-container">
-                    <img src="assets/img/societree_img.png" alt="Side Image" class="side-image">
+                    <img src="../frontend/assets/img/societree_img.png" alt="Side Image" class="side-image">
                 </div>
                 <div class="image-caption">
                     <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERS</span></h2>
@@ -213,7 +213,7 @@
             <div class="col-md-6 d-flex justify-content-center align-items-center">
                 <div class="login-card">
                     <!-- Logo -->
-                    <img src="assets/logo/societree_1.png" alt="Logo" class="logo">
+                    <img src="../frontend/assets/logo/societree.png" alt="Logo" class="logo">
 
                     <!-- Login Form -->
                     <form id="loginForm">
@@ -230,7 +230,7 @@
                             <input type="password" class="form-control" id="password" name="password"
                                 placeholder="Enter your password">
                         </div>
-                        <button type="submit" class="btn-login" id="loginBtn">LOGIN</button>
+                        <button type="button" class="btn-login" id="loginBtn" onclick="window.location.href='dashboard.html'">LOGIN</button>
                         <div class="text-center">
                             <a href="#" class="forgot-password" id="openForgot">FORGOT PASSWORD?</a>
                         </div>
