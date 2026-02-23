@@ -52,17 +52,13 @@ All ADMIN accounts can access all modules.
 
 ## 4. High-Level Flow
 
-Student Mobile App
+Admin Web (HTML/CSS/JS)
         ↓
-REST API (Django REST Framework)
+JavaScript fetch() with JWT
         ↓
-Business Logic Layer (Service functions)
+Django REST API
         ↓
-PostgreSQL Database
-
-Admin Web
-        ↓
-Django Template Rendering
+Service Layer
         ↓
 ORM
         ↓

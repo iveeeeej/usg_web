@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SocieTREE</title>
     <link rel="icon" href="../frontend/assets/logo/societree.png" type="image/png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
-        *{
-        font-family: "Oswald", sans-serif;
-        font-weight: 500;
-        font-style: normal;
+        * {
+            font-family: "Oswald", sans-serif;
+            font-weight: 500;
+            font-style: normal;
         }
 
         body {
@@ -194,7 +195,7 @@
                 <div class="image-container">
                     <img src="../frontend/assets/img/societree_img.png" alt="Side Image" class="side-image">
                     <div class="image-caption">
-                        <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERS</span></h2>
+                        <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERSSS</span></h2>
                     </div>
                 </div>
             </div>
@@ -230,7 +231,8 @@
                             <input type="password" class="form-control" id="password" name="password"
                                 placeholder="Enter your password">
                         </div>
-                        <button type="button" class="btn-login" id="loginBtn" onclick="window.location.href='dashboard.html'">LOGIN</button>
+                        <button type="button" class="btn-login" id="loginBtn"
+                            onclick="window.location.href='dashboard.html'">LOGIN</button>
                         <div class="text-center">
                             <a href="#" class="forgot-password" id="openForgot">FORGOT PASSWORD?</a>
                         </div>
@@ -244,6 +246,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+
+    <script>
+        async function loadDashboard() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/api/admin/dashboard/");
+
+                if (!response.ok) {
+                    console.log("Access denied or not logged in");
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("API Response:", data);
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        loadDashboard();
+    </script>
+
 </body>
 
 </html>

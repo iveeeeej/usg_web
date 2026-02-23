@@ -64,6 +64,11 @@ User includes:
 ADMIN users have full system authority.
 Position does not affect authorization.
 
+Authentication Model:
+- student_id is used as login identifier for both ADMIN and STUDENT.
+- Email is used for recovery and verification.
+- Password is initially set to student_id but must be changeable.
+
 ---
 
 ## 4. Biometric Identity Model

@@ -21,6 +21,11 @@ Django is responsible for:
 
 Supabase is NOT used.
 
+Authentication Implementation:
+- Custom User model (student_id as USERNAME_FIELD)
+- JWT via djangorestframework-simplejwt
+- Token-based authorization for web and mobile
+
 ---
 
 ## Web Frontend
@@ -33,8 +38,9 @@ Languages:
 Framework:
 - Bootstrap
 
-Template Engine:
-- Django Templates
+Frontend Rendering:
+- Static HTML + JavaScript
+- API-driven rendering (no server-side templates for admin dashboard)
 
 ---
 
