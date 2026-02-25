@@ -452,7 +452,9 @@ Service Layer (future modules)
 ↓
 ORM
 ↓
-PostgreSQL
+SQLite (current)
+↓
+PostgreSQL (planned migration)
 
 Mobile (Future)
 ↓

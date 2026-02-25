@@ -44,12 +44,11 @@ Establish the backend architecture and identity system.
 √ Establish base API structure
     • API-first architecture
     • /api/token/
-    • /api/token/
     • Role-based permission class
 - Implement basic logging configuration
 
 Deliverable:
-Working authentication system with database connectivity.
+Working authentication system with SQLite (PostgreSQL migration pending).
 
 ---
 
