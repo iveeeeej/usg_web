@@ -4,33 +4,49 @@
 
 ## 1. REST Standards
 
-GET → Retrieve
-POST → Create
-PUT → Update
-DELETE → Remove
+GET → Retrieve  
+POST → Create  
+PUT → Update  
+DELETE → Remove  
 
 ---
 
-## 2. Role Access Rules
+## 2. Authentication
 
-ADMIN:
+Login Endpoint:
+
+POST /api/token/
+
+Returns:
+- access token
+- refresh token
+
+Token Refresh:
+
+POST /api/token/refresh/
+
+All protected endpoints require:
+
+Authorization: Bearer <access_token>
+
+JWT authentication is mandatory for both Web and Mobile.
+
+---
+
+## 3. Role Access Rules
+
+OFFICER:
 - Full access to administrative endpoints.
 
 STUDENT:
 - Limited to student-related endpoints only.
 
----
+Example protected endpoint:
 
-## 3. Example Endpoints
-
-POST /api/auth/login
-GET /api/events/
-POST /api/events/{id}/attendance/
-GET /api/profile/
-POST /api/borrow/request/
-GET /api/payments/history/
-
-ADMIN endpoints must validate role.
+GET /api/admin/dashboard/
+Requires:
+- Authenticated user
+- role == OFFICER
 
 ---
 
@@ -41,3 +57,4 @@ ADMIN endpoints must validate role.
 - Attendance cutoff strictly enforced.
 - Duplicate attendance prevented.
 - Borrow status transitions validated.
+- Biometric similarity threshold enforced.

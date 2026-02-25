@@ -1,10 +1,29 @@
 # File Tree: usg_web
 
-**Generated:** 2/22/2026, 7:32:27 PM
+**Generated:** 2/25/2026, 9:39:07 AM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
 ├── 📁 backend
+│   ├── 📁 accounts
+│   │   ├── 📁 migrations
+│   │   │   ├── 🐍 0001_initial.py
+│   │   │   └── 🐍 __init__.py
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 admin.py
+│   │   ├── 🐍 apps.py
+│   │   ├── 🐍 models.py
+│   │   ├── 🐍 permissions.py
+│   │   ├── 🐍 tests.py
+│   │   └── 🐍 views.py
+│   ├── 📁 config
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 asgi.py
+│   │   ├── 🐍 settings.py
+│   │   ├── 🐍 urls.py
+│   │   └── 🐍 wsgi.py
+│   ├── 📄 db.sqlite3
+│   └── 🐍 manage.py
 ├── 📁 docs
 │   ├── 📝 01_project_overview.md
 │   ├── 📝 02_system_architecture.md

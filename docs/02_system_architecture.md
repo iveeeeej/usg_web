@@ -4,35 +4,36 @@
 
 ## 1. Architecture Overview
 
-Campus Connect follows a layered architecture designed for a single-organization governance system.
+Campus Connect follows a layered, API-first architecture designed for a single-organization governance system.
 
 Client Layer:
-- Web Admin Interface (HTML, CSS, JavaScript)
+- Web Officer Interface (HTML, CSS, JavaScript)
 - Mobile Student Application (Flutter)
 
 Application Layer:
 - Django Backend
 - Django REST Framework (API Layer)
+- JWT Authentication (SimpleJWT)
 
 Data Layer:
 - PostgreSQL Database
+- PostGIS (Geolocation validation)
 
 This system is NOT multi-tenant.
-It is designed exclusively for the USG of USTP-Oroquieta.
 
 ---
 
 ## 2. Architectural Pattern
 
-- Django MVT (Model-View-Template)
-- RESTful API architecture for mobile integration
-- Two-role authorization model (ADMIN / STUDENT)
+- Django MVT (backend internal structure)
+- API-driven frontend architecture
+- JWT-based authentication (stateless)
+- Two-role authorization model (OFFICER / STUDENT)
 - Modular Django app structure
-- Service-layer business logic
+- Service-layer business logic separation
 
-There is no Super Admin layer.
-
-ADMIN users have full system access.
+The Web Officer Dashboard does NOT use Django template rendering.
+It communicates exclusively through REST API calls secured by JWT.
 
 ---
 
@@ -40,19 +41,24 @@ ADMIN users have full system access.
 
 There are only two roles:
 
-- ADMIN (Full system authority)
+- OFFICER (Full system authority)
 - STUDENT (Limited interaction access)
 
-The `position` field is informational and organizational.
-It does NOT restrict module access.
+Authorization enforcement is handled via:
 
-All ADMIN accounts can access all modules.
+- JWT Authentication
+- Custom DRF Permission Classes
+- Server-side role validation
+
+The `position` field is informational only.
+
+All OFFICER accounts have equal module access.
 
 ---
 
 ## 4. High-Level Flow
 
-Admin Web (HTML/CSS/JS)
+Officer Web (HTML/CSS/JS)
         ↓
 JavaScript fetch() with JWT
         ↓
@@ -62,7 +68,13 @@ Service Layer
         ↓
 ORM
         ↓
-Database
+PostgreSQL Database
+
+Mobile (Flutter)
+        ↓
+JWT-secured API calls
+        ↓
+Django REST API
 
 ---
 
@@ -77,5 +89,4 @@ Database
 - announcements
 - discussions
 - reports
-- campus_map
 - analytics

@@ -173,6 +173,40 @@
     </style>
 </head>
 
+<script>
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+        window.location.href = "../index.html";
+    }
+
+    async function validateOfficer() {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/officer/dashboard/", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("access_token");
+                window.location.href = "../index.html";
+                return;
+            }
+
+            const data = await response.json();
+            console.log("Officer validated:", data);
+
+        } catch (error) {
+            console.error("Error:", error);
+            window.location.href = "../index.html";
+        }
+    }
+
+    validateOfficer();
+</script>
+
 <body>
 
     <!-- Sidebar Overlay for Mobile -->
@@ -574,7 +608,7 @@
                             <i class="bi bi-person"></i>
                             <span>Profile</span>
                         </a>
-                        <a href="../index.html">
+                        <a href="#" onclick="logout()">
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Logout</span>
                         </a>
@@ -636,6 +670,14 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script src="../org_usg/components/js/sidebar.js"></script>
+
+    <script>
+        function logout() {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            window.location.href = "../index.html";
+        }
+    </script>
 
 </body>
 

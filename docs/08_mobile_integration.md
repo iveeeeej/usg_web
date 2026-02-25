@@ -4,17 +4,20 @@
 
 ## 1. Authentication Flow
 
-1. User logs in
-2. Backend returns JWT
-3. Token stored securely
+1. User logs in via /api/token/
+2. Backend returns JWT access + refresh tokens
+3. Access token stored securely
 4. Token attached to every API request
 
-Role returned in payload:
-- ADMIN
+Role returned is derived from authenticated user:
+- OFFICER
 - STUDENT
 
 Mobile primarily serves STUDENT role.
-ADMIN uses Web interface.
+
+Even if OFFICER logs in via mobile, no administrative modules are exposed.
+
+Administrative operations must be performed via Web Officer Dashboard.
 
 ---
 

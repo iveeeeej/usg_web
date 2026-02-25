@@ -231,8 +231,7 @@
                             <input type="password" class="form-control" id="password" name="password"
                                 placeholder="Enter your password">
                         </div>
-                        <button type="button" class="btn-login" id="loginBtn"
-                            onclick="window.location.href='dashboard.html'">LOGIN</button>
+                        <button type="submit" class="btn-login">LOGIN</button>
                         <div class="text-center">
                             <a href="#" class="forgot-password" id="openForgot">FORGOT PASSWORD?</a>
                         </div>
@@ -248,24 +247,44 @@
         crossorigin="anonymous"></script>
 
     <script>
-        async function loadDashboard() {
-            try {
-                const response = await fetch("http://127.0.0.1:8000/api/admin/dashboard/");
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-                if (!response.ok) {
-                    console.log("Access denied or not logged in");
-                    return;
-                }
+            const student_id = document.getElementById("idNumber").value;
+            const password = document.getElementById("password").value;
+
+            if (!student_id || !password) {
+                alert("Please enter ID and password.");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/api/token/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        student_id: student_id,
+                        password: password
+                    })
+                });
 
                 const data = await response.json();
-                console.log("API Response:", data);
+
+                if (response.ok) {
+                    localStorage.setItem("access_token", data.access);
+                    localStorage.setItem("refresh_token", data.refresh);
+
+                    window.location.href = "org_usg/usg_dashboard.html";
+                } else {
+                    alert(data.detail || "Login failed");
+                }
 
             } catch (error) {
-                console.error("Error:", error);
+                alert("Server error");
             }
-        }
-
-        loadDashboard();
+        });
     </script>
 
 </body>

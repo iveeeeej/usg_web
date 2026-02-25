@@ -21,20 +21,34 @@ project_root/
 
 ---
 
+## Authentication Model
+
+- Custom User model
+- USERNAME_FIELD = student_id
+- JWT authentication via djangorestframework-simplejwt
+- Stateless token-based authentication
+- No session-based authentication for Web Officer dashboard
+
+All protected endpoints require:
+
+Authorization: Bearer <access_token>
+
+---
+
 ## Authorization Model
 
 Two roles only:
-- ADMIN (full access)
+- OFFICER (full access)
 - STUDENT (restricted)
 
-Role validation must be performed in:
+Role validation is enforced via:
 
-- View decorators
-- API permission classes
-- Service-layer functions
+- DRF Permission Classes (e.g., IsOfficer)
+- request.user.role checks
+- Server-side validation
 
 Position field does not restrict access.
-It is informational.
+It is informational only.
 
 ---
 
@@ -46,16 +60,16 @@ All critical logic must be inside:
 - Model methods
 - Permission validators
 
-Never:
-- Inside templates
-- Inside frontend JavaScript
+Never inside:
+- Templates
+- Frontend JavaScript
 
 ---
 
 ## Validation Philosophy
 
 - All important validation is server-side.
-- Never trust frontend data.
+- Frontend is never trusted.
 
 ---
 
@@ -67,13 +81,13 @@ Responsibilities:
 
 - Face registration during account verification
 - Liveness challenge validation
-- Face embedding generation (backend inference)
+- Face embedding generation (backend inference only)
 - Embedding comparison
 - Similarity threshold evaluation
 
 Important:
 
-- Mobile device captures image only.
-- Embedding generation occurs on the backend.
-- Final verification decision is made server-side.
-- Embedding data is never exposed through API responses.
+- Mobile captures image only.
+- Embedding generation occurs on backend.
+- Decision is made server-side.
+- Embeddings are never exposed in API responses.

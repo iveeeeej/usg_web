@@ -6,12 +6,14 @@
 
 Only two roles exist:
 
-- ADMIN
+- OFFICER
 - STUDENT
 
-There is no Super Admin.
+There is no Super Admin at application level.
 
-All ADMIN accounts have full system authority.
+Django superuser exists only for backend management and does not grant application authority.
+
+All OFFICER accounts have full system authority.
 
 ---
 

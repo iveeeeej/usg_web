@@ -11,6 +11,8 @@ The system replaces fragmented and manual processes with a structured digital wo
 
 This system is designed specifically for ONE USG organization and is not multi-tenant.
 
+The backend follows an API-first architecture secured with JWT authentication.
+
 ---
 
 ## 2. Core Objectives
@@ -21,7 +23,7 @@ This system is designed specifically for ONE USG organization and is not multi-t
 - Enable digital service workflows (borrow, payment, lost & found)
 - Improve accountability through data logging
 - Provide analytics for decision-making
-- Integrate web admin + mobile student interface
+- Integrate secure web (OFFICER) + mobile (STUDENT) interfaces
 
 ---
 
@@ -29,7 +31,8 @@ This system is designed specifically for ONE USG organization and is not multi-t
 
 The system has ONLY TWO primary roles:
 
-### 1. ADMIN
+### 1. OFFICER
+
 USG Officers who manage and operate the system.
 
 Capabilities:
@@ -42,27 +45,27 @@ Capabilities:
 - Monitor payments
 - View analytics
 
-Each ADMIN user has an internal position field (organizational designation).
+Each OFFICER has a `position` field (organizational designation).
 
 Examples:
 - PRESIDENT
 - VICE_PRESIDENT
-- GENERAL SECRETARY
-- ASSOCIATE SECRETARY
+- GENERAL_SECRETARY
 - TREASURER
 - AUDITOR
 - PIO
-- IT REPRESENTATIVE
-- BTLED REPRESENTATIVE
-- BFPT REPRESENTATIVE
+- IT_REPRESENTATIVE
+- BTLED_REPRESENTATIVE
+- BFPT_REPRESENTATIVE
 
-Position is informational and organizational only.
+Position is informational only.
 
-Admin members have access to all modules regardless of the position.
+All OFFICER accounts have full access to all administrative modules regardless of position.
 
 ---
 
 ### 2. STUDENT
+
 Regular students who interact with the system.
 
 Capabilities:
@@ -82,4 +85,11 @@ This system supports a single-organization governance model.
 
 There is no system-level Super Admin.
 
-Administrative authority is fully handled by the USG ADMIN role.
+Django `is_superuser` exists only for development and backend administration.
+
+Application-level authority is strictly controlled by:
+
+- role = OFFICER
+- role = STUDENT
+
+Authorization is enforced via JWT-secured REST endpoints.
