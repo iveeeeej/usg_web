@@ -1,6 +1,6 @@
 # File Tree: usg_web
 
-**Generated:** 2/25/2026, 9:39:07 AM
+**Generated:** 2/25/2026, 3:22:12 PM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
@@ -25,6 +25,7 @@
 │   ├── 📄 db.sqlite3
 │   └── 🐍 manage.py
 ├── 📁 docs
+│   ├── 📝 00_Foundation_Setup_Documentation.md
 │   ├── 📝 01_project_overview.md
 │   ├── 📝 02_system_architecture.md
 │   ├── 📝 03_technology_stack.md
@@ -34,7 +35,6 @@
 │   ├── 📝 07_security_and_permissions.md
 │   ├── 📝 08_mobile_integration.md
 │   ├── 📝 09_development_phases.md
-│   ├── 📝 10_project_timeline_and_execution_plan.md
 │   └── 📝 file_structure.md
 └── 📁 frontend
     ├── 📁 assets
