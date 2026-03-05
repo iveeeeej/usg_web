@@ -14,509 +14,422 @@ Connect system.
 
 This includes:
 
--   Python environment setup
--   Virtual environment configuration
--   Django project initialization
--   Dependency installation
--   Custom User model implementation
--   JWT authentication setup
--   Role-based authorization (OFFICER / STUDENT)
--   Officer-only protected endpoint
--   CORS configuration
--   Frontend integration via JavaScript fetch()
--   Secure login/logout flow
--   Structural endpoint renaming
--   Validation improvements
-
-This document serves as:
-
--   Rebuild guide
--   Architecture reference
--   Capstone technical documentation
--   Development baseline
+- Django project structure
+- PostgreSQL database integration
+- Required PostgreSQL extensions (UUID, PostGIS, pgvector if needed)
+- Custom User model
+- Role-based access system (OFFICER / STUDENT)
+- JWT authentication
+- Admin panel setup
+- Environment configuration (dev / prod)
+- Base API structure
+- Logging configuration
 
 ------------------------------------------------------------------------
 
 # 2. Development Environment Setup
 
-## 2.1 Python Installation
+## 2.1 Tools Installed
 
-Verified Python installation:
+- Python (Version used: 3.14.3)
+- VS Code
+- PostgreSQL (Version used: PostgreSQL 18)
+- pgAdmin 4
 
-    python --version
+## 2.2 Virtual Environment Setup
 
-Confirmed version:
-
-    Python 3.14.3
-
-## 2.2 Project Folder Structure (Initial State)
-
-Project root:
-
-    usg_web/
-        backend/
-        frontend/
-
-Backend contains Django project.
-Frontend contains HTML/CSS/JS.
-
-------------------------------------------------------------------------
-
-# 3. Virtual Environment Setup
-
-## 3.1 Create Virtual Environment
-
-Inside `backend/`:
+Create a virtual environment in the backend folder:
 
     python -m venv venv
 
-This created:
+Activate it:
 
-    backend/venv/
+Windows PowerShell:
 
-## 3.2 Activate Virtual Environment (Windows)
+    venv\Scripts\Activate.ps1
 
-From `backend/` directory:
+Windows CMD:
 
-    venv\Scripts\activate
-
-Terminal shows:
-
-    (venv)
-
-This confirms activation.
-
-Virtual environment must be activated before running Django.
+    venv\Scripts\activate.bat
 
 ------------------------------------------------------------------------
 
-# 4. Django Installation and Initialization
+# 3. Backend Setup (Django Project)
 
-## 4.1 Install Django
+## 3.1 Install Required Python Packages
 
-Inside activated venv:
+Install Django + key dependencies:
 
-    pip install django
+    pip install django djangorestframework djangorestframework-simplejwt django-cors-headers
 
-## 4.2 Create Django Project
+Additional infra dependencies (implemented):
 
-Inside `backend/`:
+    pip install python-dotenv
+    pip install psycopg2-binary
+
+------------------------------------------------------------------------
+
+# 4. Create Django Project Structure
+
+Inside backend directory:
 
     django-admin startproject config .
 
-This created:
-
-    backend/
-        manage.py
-        config/
-            settings.py
-            urls.py
-
-## 4.3 Apply Initial Migrations
-
-    python manage.py migrate
-
-Applied default Django migrations:
-
--   admin
--   auth
--   contenttypes
--   sessions
-
-## 4.4 Run Development Server
+Verify server runs:
 
     python manage.py runserver
 
-Server runs at:
-
-    http://127.0.0.1:8000/
-
 ------------------------------------------------------------------------
 
-# 5. Installed Dependencies
+# 5. Create Core Django Apps
 
-Installed:
-
-    pip install djangorestframework
-    pip install djangorestframework-simplejwt
-    pip install django-cors-headers
-
-Final dependency stack includes:
-
--   Django
--   Django REST Framework
--   SimpleJWT
--   django-cors-headers
-
-------------------------------------------------------------------------
-
-# 6. Django REST Framework Configuration
-
-In `config/settings.py`:
-
-Added to `INSTALLED_APPS`:
-
-``` python
-'rest_framework',
-'corsheaders',
-'accounts',
-```
-
-Configured REST Framework:
-
-``` python
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-```
-
-------------------------------------------------------------------------
-
-# 7. CORS Configuration
-
-Problem encountered: browser blocked requests due to:
-
-    Access-Control-Allow-Origin error
-
-Cause:
-
-Frontend served via:
-
-    http://127.0.0.1:5500
-
-Backend served via:
-
-    http://127.0.0.1:8000
-
-Different origins require CORS permission.
-
-## 7.1 CORS Fix Implementation
-
-Added to `INSTALLED_APPS`:
-
-``` python
-'corsheaders',
-```
-
-Added to top of `MIDDLEWARE`:
-
-``` python
-'corsheaders.middleware.CorsMiddleware',
-```
-
-Added to bottom of `settings.py`:
-
-``` python
-CORS_ALLOW_ALL_ORIGINS = True
-```
-
-Restarted server.
-
-CORS issue resolved.
-
-------------------------------------------------------------------------
-
-# 8. Custom User Model Implementation
-
-Created app:
+Create the accounts app:
 
     python manage.py startapp accounts
 
-In `settings.py`:
-
-``` python
-AUTH_USER_MODEL = 'accounts.User'
-```
-
-This replaced Django's default User model.
-
-## 8.1 Identity Model Design
-
-Primary login field:
-
-    student_id
-
-Configured:
-
-    USERNAME_FIELD = 'student_id'
-
-Email is used for:
-
--   Password recovery
--   Account verification
--   Mobile verification confirmation
-
-Password:
-
--   Initially same as student_id
--   Can be changed by user
+Add it to INSTALLED_APPS.
 
 ------------------------------------------------------------------------
 
-# 9. Role Model Design
+# 6. Configure Django REST Framework (DRF)
 
-Only two roles exist:
+Add DRF to installed apps:
 
--   OFFICER
--   STUDENT
+    "rest_framework",
 
-No Super Admin role exists at application level.
+JWT Auth via SimpleJWT:
 
-Position field examples:
-
--   PRESIDENT
--   VICE_PRESIDENT
--   TREASURER
--   AUDITOR
--   SECRETARY
--   etc.
-
-Position is informational only.
-
-All OFFICER accounts have full module access.
-
-Authorization depends strictly on:
-
-    request.user.role
+    REST_FRAMEWORK = {
+        "DEFAULT_AUTHENTICATION_CLASSES": (
+            "rest_framework_simplejwt.authentication.JWTAuthentication",
+        ),
+    }
 
 ------------------------------------------------------------------------
 
-# 10. JWT Authentication Setup
+# 7. CORS Setup
 
-## 10.1 Login Endpoint
+Install and configure django-cors-headers:
 
-    POST /api/token/
+- Add "corsheaders" to INSTALLED_APPS
+- Add "corsheaders.middleware.CorsMiddleware" to MIDDLEWARE (preferably near the top)
 
-Body:
+During development:
 
-``` json
-{
-  "student_id": "value",
-  "password": "value"
-}
-```
-
-Response:
-
-``` json
-{
-  "refresh": "...",
-  "access": "..."
-}
-```
-
-## 10.2 Token Usage
-
-Protected endpoint requires:
-
-    Authorization: Bearer <access_token>
-
-Authentication class:
-
-    JWTAuthentication
-
-Stateless authentication model implemented.
+    CORS_ALLOW_ALL_ORIGINS = True
 
 ------------------------------------------------------------------------
 
-# 11. Role-Based Permission Enforcement
+# 7.2 Environment Configuration (Dev/Prod) + .env Loading (Implemented)
 
-Created custom permission class:
+To prevent hardcoding secrets and database credentials, the settings
+configuration was upgraded from a single `config/settings.py` file into a
+settings package:
 
-``` python
-class IsOfficer(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.role == "OFFICER"
-```
+    backend/config/settings/
+        base.py
+        dev.py
+        prod.py
+        __init__.py
 
-Applied to protected view:
+Runtime selection:
 
-    /api/officer/dashboard/
+- `manage.py` defaults to `config.settings.dev`
+- `wsgi.py` and `asgi.py` default to `config.settings.prod`
 
-## 11.1 Response Behavior
+A `.env` file is stored in:
 
--   401 → No token provided
--   403 → Token valid but role != OFFICER
--   200 → Authorized OFFICER
+    backend/.env
 
-------------------------------------------------------------------------
+and loaded at startup in `base.py` using `python-dotenv`.
 
-# 12. Endpoint Structural Adjustment
+Environment variables used:
 
-Initially endpoint was:
+- DJANGO_SECRET_KEY
+- DJANGO_DEBUG
+- DJANGO_ALLOWED_HOSTS
+- DJANGO_TIME_ZONE
+- CORS_ALLOW_ALL_ORIGINS
+- DJANGO_LOG_LEVEL
+- DB_ENGINE, DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
 
-    /api/admin/dashboard/
+Notes:
 
-Renamed to:
-
-    /api/officer/dashboard/
-
-Reason:
-
-Consistency with role model (OFFICER).
-
-Updated:
-
--   Backend urls.py
--   Frontend fetch call
--   Documentation
+- `.env` is not automatically loaded by Django; it must be loaded using
+  `load_dotenv(...)` in `base.py`.
+- `.env` must be placed in `backend/.env` to match the configured path.
 
 ------------------------------------------------------------------------
 
-# 13. Superuser Creation
+## 7.2.1 Settings Package Migration Steps (Exact Implementation)
 
-Created using:
+This subsection records the exact change that made `config.settings.dev` and
+`config.settings.prod` work correctly.
+
+### Why this change was required
+
+- We needed `config.settings.dev` and `config.settings.prod` to exist.
+- Python cannot treat `config/settings.py` as both a file module and a package.
+  If `config/settings.py` exists, `config.settings.dev` will fail because
+  `config.settings` points to the file, not a folder package.
+
+### Step-by-step migration performed
+
+1) Rename the original settings file:
+
+    backend/config/settings.py  →  backend/config/old_settings.py
+
+2) Create a settings package folder:
+
+    backend/config/settings/
+        __init__.py
+        base.py
+        dev.py
+        prod.py
+
+3) Update the settings module used by runtime entrypoints:
+
+- In `backend/manage.py`:
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
+
+- In `backend/config/wsgi.py`:
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
+
+- In `backend/config/asgi.py`:
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
+
+### Verification
+
+Run:
+
+    python manage.py check
+
+Expected result:
+
+    System check identified no issues (0 silenced).
+
+------------------------------------------------------------------------
+
+# 8. Custom User Model
+
+A custom user model is implemented in `accounts/models.py`.
+
+Key identity field:
+
+- student_id (unique)
+
+Role field:
+
+- role (OFFICER / STUDENT)
+
+Reminder:
+
+- Django `is_staff` / `is_superuser` are for Django Admin only.
+- Application authority is based on `role`.
+
+AUTH_USER_MODEL is set in settings:
+
+    AUTH_USER_MODEL = "accounts.User"
+
+------------------------------------------------------------------------
+
+# 9. Role System (OFFICER / STUDENT)
+
+Role-based access is implemented:
+
+- OFFICER users can access officer-only endpoints
+- STUDENT users are blocked from officer-only endpoints
+
+------------------------------------------------------------------------
+
+# 10. JWT Authentication
+
+JWT endpoints are provided:
+
+- POST /api/token/
+- POST /api/token/refresh/
+
+Clients use:
+
+Authorization: Bearer <access_token>
+
+------------------------------------------------------------------------
+
+# 11. Django Admin Panel Setup
+
+Admin panel is enabled (default):
+
+- /admin
+
+A Django superuser can be created:
 
     python manage.py createsuperuser
 
 Important:
 
-Django superuser is for admin panel only.
-
-Application authority depends strictly on:
-
-    role = OFFICER
-
-Superuser does not override application-level permission logic.
+- This superuser is stored in the current active database.
+- When switching from SQLite → PostgreSQL, the old SQLite superuser does
+  not automatically exist in PostgreSQL; a new one must be created (or
+  user data migrated).
 
 ------------------------------------------------------------------------
 
-# 14. Frontend Officer Login Implementation
+# 12. Base API Structure
 
-Frontend served via:
+Example protected endpoint exists:
 
-    http://127.0.0.1:5500
+- GET /api/officer/dashboard/  (OFFICER-only)
 
-## 14.1 Login Flow (index.html)
+------------------------------------------------------------------------
 
-1.  Officer enters student_id and password
-2.  JavaScript sends POST to /api/token/
-3.  On success:
-    -   Store access_token
-    -   Store refresh_token
-    -   Redirect to dashboard
+# 13. Officer Web Login Proof (HTML)
 
-Validation added:
+A minimal proof-of-flow was implemented:
 
-``` javascript
-if (!student_id || !password) {
-    alert("Please enter ID and password.");
-    return;
-}
-```
+- index.html: login using student_id/password, calls /api/token/
+- usg_dashboard.html: uses stored access token to call protected endpoint
 
-## 14.2 Protected Dashboard (usg_dashboard.html)
+Result:
 
-On page load:
+- Login works
+- Dashboard redirect works
+- Protected endpoint access works for OFFICER
 
-1.  Retrieve access_token from localStorage
+------------------------------------------------------------------------
 
-2.  If missing → redirect to login
+# 14. Logging Configuration (Implemented)
 
-3.  Call:
+Basic logging was implemented using:
 
-    GET /api/officer/dashboard/
+- Console logs (for local dev)
+- Rotating file logs to:
 
-If:
+    backend/logs/django.log
 
--   401 → remove token, redirect
--   403 → remove token, redirect
--   200 → allow dashboard access
+Folder requirement:
 
-## 14.3 Logout Implementation
+    backend/logs/
 
-Logout clears:
+Log level is configurable via:
 
-``` javascript
-localStorage.removeItem("access_token");
-localStorage.removeItem("refresh_token");
-```
+- DJANGO_LOG_LEVEL=INFO (in `.env`)
 
-Then redirects to login page.
+Verification:
+
+1) Ensure folder exists:
+
+    backend/logs/
+
+2) Run server:
+
+    python manage.py runserver
+
+3) Perform a login and dashboard access.
+
+Expected:
+- A file is created/updated at `backend/logs/django.log`
+- Logs include runserver reload notices and request/auth activity
+
+------------------------------------------------------------------------
+
+# 14.4 PostgreSQL Migration (Implemented)
+
+Database backend was migrated from SQLite to PostgreSQL.
+
+Key change:
+
+- `DATABASES` is now environment-driven using `.env`:
+
+  ENGINE/NAME/USER/PASSWORD/HOST/PORT
+
+Critical detail (local setup):
+
+- pgAdmin server connection used `localhost` and port `5433`.
+- Django `.env` must match the same host/port to connect to the correct
+  running PostgreSQL instance.
+
+Verification steps:
+
+- `python manage.py shell` → `from django.conf import settings; print(settings.DATABASES)`
+- `python manage.py migrate` applies migrations to PostgreSQL
+- Officer login + dashboard remains functional after migration
+
+------------------------------------------------------------------------
+
+## 14.4.1 Sample `.env` (Local Development)
+
+This reflects the working local PostgreSQL connection configuration used
+in development.
+
+    DJANGO_SECRET_KEY=your-long-secret
+    DJANGO_DEBUG=True
+    DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+    DJANGO_TIME_ZONE=Asia/Manila
+
+    CORS_ALLOW_ALL_ORIGINS=True
+    DJANGO_LOG_LEVEL=INFO
+
+    DB_ENGINE=django.db.backends.postgresql
+    DB_NAME=campus_connect
+    DB_USER=postgres
+    DB_PASSWORD=12345 (local dev only password)
+    DB_HOST=localhost
+    DB_PORT=5433
+
+Critical local note:
+
+- Your pgAdmin server registration is running PostgreSQL on port **5433**
+  (not the default 5432).
+- If Django uses DB_PORT=5432, it may connect to a different PostgreSQL instance,
+  causing authentication failures even if the username/password is correct.
 
 ------------------------------------------------------------------------
 
 # 15. Current Architecture State
 
-Officer Web (HTML + JS)
+Frontend (HTML prototype)
 ↓
-JWT via fetch()
+JWT Auth (SimpleJWT)
 ↓
 Django REST API
 ↓
-Permission Class
-↓
-Service Layer (future modules)
+Custom User + Role-based Access
 ↓
 ORM
 ↓
-SQLite (current)
-↓
-PostgreSQL (planned migration)
+PostgreSQL (current)
 
-Mobile (Future)
-↓
-JWT-secured API
-↓
-Same backend
+------------------------------------------------------------------------
+
+# 15.1 Phase 1 Infrastructure Additions (Completed)
+
+✔ PostgreSQL configured and connected (env-driven DATABASES)
+✔ Settings split into base/dev/prod
+✔ `.env` loading via python-dotenv
+✔ Rotating file logging (backend/logs/django.log)
 
 ------------------------------------------------------------------------
 
 # 16. Phase 0 Completed Items
 
-✔ Virtual environment configured
-✔ Django initialized
-✔ REST Framework installed
-✔ SimpleJWT integrated
-✔ CORS configured
-✔ Custom User model implemented
-✔ student_id login field
-✔ OFFICER / STUDENT role model
-✔ Custom permission class
-✔ Officer-only protected endpoint
-✔ Separate officer login page
-✔ Protected dashboard
-✔ Proper logout flow
-✔ Endpoint naming aligned
+- Setup Django project structure
+- Implement custom User model
+- Implement role system
+- Implement JWT authentication
+- Configure Django admin panel
+- Establish base API structure
+- Implement basic logging configuration (implemented as part of infra add-ons)
+- Configure PostgreSQL database (implemented as part of infra add-ons)
 
 ------------------------------------------------------------------------
 
-# 17. What Is Not Yet Implemented
+# 17. Next Development Step
 
--   Events module
--   Attendance system
--   Violation system
--   Payment module
--   Reports module
--   Biometric face recognition module
--   Mobile Flutter integration
+Proceed to Phase 2 modules after foundation + infra are stable:
 
-These begin in Phase 1.
-
-------------------------------------------------------------------------
-
-# 18. Architectural Decisions Locked
-
--   API-first architecture
--   Stateless JWT authentication
--   Server-side role enforcement
--   Frontend not trusted for access control
--   No application-level super admin
--   Single-organization governance model
-
-------------------------------------------------------------------------
-
-End of Phase 0 Documentation
-
-This is now your official technical baseline.
-
-From this point forward:
-
-Whenever we modify architecture
-→ We update documentation immediately.
-
-You are building this like a real engineering system.
-
-When you're ready, we move into Phase 1 -- Events Module.
+- Events Module
+- Attendance foundation
+- Mobile integration workflows

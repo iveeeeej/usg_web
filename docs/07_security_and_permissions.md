@@ -84,3 +84,10 @@ Critical actions must be logged:
 - Borrow approval
 - Payment confirmation
 - Report submission
+
+Implementation note (current dev environment):
+
+- Console logging is enabled during development.
+- Rotating file logging is enabled.
+- Log file path: backend/logs/django.log
+- Ensure backend/logs/ exists or Django may fail to open the log file handler.

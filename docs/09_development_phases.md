@@ -22,8 +22,8 @@ Establish the backend architecture and identity system.
     • accounts/ app created
     • Server runs successfully
     • Custom user configured
-- Configure PostgreSQL database
-- Enable required extensions (UUID, PostGIS, pgvector if used)
+√ Configure PostgreSQL database
+- Enable required extensions (UUID, PostGIS, pgvector) when needed
 √ Implement custom User model
     • AUTH_USER_MODEL set
     • student_id as USERNAME_FIELD
@@ -35,20 +35,20 @@ Establish the backend architecture and identity system.
     • /api/token/ working
     • /api/officer/dashboard/ protected
     • Bearer token validated
-~ Configure Django admin panel
+√ Configure Django admin panel
     • Can access /admin/
-    x • You have not customized admin
-    x • You have not registered custom User properly (if you haven’t yet)
-    x • You haven’t configured list_display, filters, etc.
-- Setup environment configuration (dev / production)
+    • You have not customized admin
+    • You have not registered custom User properly (if you haven’t yet)
+    • You haven’t configured list_display, filters, etc.
+√ Setup environment configuration (dev / production)
 √ Establish base API structure
     • API-first architecture
     • /api/token/
     • Role-based permission class
-- Implement basic logging configuration
+√ Implement basic logging configuration
 
 Deliverable:
-Working authentication system with SQLite (PostgreSQL migration pending).
+Working authentication system with PostgreSQL (SQLite no longer the primary workflow).
 
 ---
 

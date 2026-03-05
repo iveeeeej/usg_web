@@ -4,20 +4,51 @@
 
 ## Project Layout
 
-project_root/
-    manage.py
+Root Path:
+    c:\Users\Acer\Projects\web\usg_web
+
+Actual repo structure (generated 3/5/2026):
+
+backend/
+    accounts/
+        migrations/
+            0001_initial.py
+            __init__.py
+        admin.py
+        apps.py
+        models.py
+        permissions.py
+        views.py
     config/
-    apps/
-        accounts/
-        events/
-        attendance/
-        violations/
-        payments/
-        borrow/
-        announcements/
-        discussions/
-        reports/
-        analytics/
+        settings/
+            __init__.py
+            base.py
+            dev.py
+            prod.py
+        __init__.py
+        asgi.py
+        old_settings.py
+        urls.py
+        wsgi.py
+    logs/
+    db.sqlite3
+    manage.py
+
+docs/
+    00_Foundation_Setup_Documentation.md
+    01_project_overview.md
+    02_system_architecture.md
+    03_technology_stack.md
+    04_database_design_principles.md
+    05_backend_structure.md
+    06_api_design_guidelines.md
+    07_security_and_permissions.md
+    08_mobile_integration.md
+    09_development_phases.md
+    file_structure.md
+
+frontend/
+    (static HTML/CSS/JS officer UI)
 
 ---
 

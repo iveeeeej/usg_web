@@ -6,7 +6,7 @@
 
 Framework: Django
 API Layer: Django REST Framework
-Language: Python 3.11+
+Language: Python 3.14.3
 Authentication: Django Auth + JWT
 Database: PostgreSQL
 GIS Support: PostGIS (for geolocation validation)
@@ -25,6 +25,12 @@ Authentication Implementation:
 - Custom User model (student_id as USERNAME_FIELD)
 - JWT via djangorestframework-simplejwt
 - Token-based authorization for web and mobile
+
+Environment Configuration:
+- python-dotenv (.env loading)
+
+PostgreSQL Driver:
+- psycopg2-binary
 
 ---
 

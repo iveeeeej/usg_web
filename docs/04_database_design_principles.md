@@ -40,8 +40,8 @@ CampusLocation
 
 Note:
 - There is no separate Role table.
-- User contains a `role` field (ADMIN or STUDENT).
-- User contains a `position` field (informational for ADMIN).
+- User contains a `role` field (OFFICER or STUDENT).
+- User contains a `position` field (informational for OFFICER).
 
 ---
 
@@ -53,19 +53,19 @@ User includes:
 - student_id (unique for students)
 - email (unique)
 - password_hash
-- role (ADMIN or STUDENT)
-- position (nullable, ADMIN only)
+- role (OFFICER  or STUDENT)
+- position (nullable, OFFICER only)
 - is_active
 - is_verified (boolean, default false)
 - verified_at (timestamp, nullable)
 - created_at
 - updated_at
 
-ADMIN users have full system authority.
+OFFICER users have full system authority.
 Position does not affect authorization.
 
 Authentication Model:
-- student_id is used as login identifier for both ADMIN and STUDENT.
+- student_id is used as login identifier for both OFFICER and STUDENT.
 - Email is used for recovery and verification.
 - Password is initially set to student_id but must be changeable.
 
@@ -105,7 +105,7 @@ Biometric Rules:
 
 ## 5. Example Relationships
 
-User (ADMIN)
+User (OFFICER)
     → creates Events
     → creates Announcements
     → approves BorrowRequests
@@ -144,7 +144,7 @@ BorrowRequest
     → belongs to BorrowItem
 
 Report
-    → created by ADMIN
+    → created by OFFICER
     → structured content (JSON or controlled fields)
 
 ---

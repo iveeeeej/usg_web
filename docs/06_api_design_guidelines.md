@@ -43,7 +43,7 @@ STUDENT:
 
 Example protected endpoint:
 
-GET /api/admin/dashboard/
+GET /api/officer/dashboard/
 Requires:
 - Authenticated user
 - role == OFFICER

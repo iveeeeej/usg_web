@@ -1,0 +1,8 @@
+2026-03-05 22:14:13,193 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-05 22:16:56,290 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\config\settings\base.py changed, reloading.
+2026-03-05 22:16:57,027 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-05 22:17:09,138 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\config\settings\base.py changed, reloading.
+2026-03-05 22:17:09,923 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-05 22:18:00,024 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\config\settings\base.py changed, reloading.
+2026-03-05 22:18:01,011 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-05 22:20:36,650 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
