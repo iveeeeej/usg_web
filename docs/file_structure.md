@@ -1,6 +1,6 @@
 # File Tree: usg_web
 
-**Generated:** 3/12/2026, 12:55:57 PM
+**Generated:** 3/12/2026, 2:06:31 PM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
@@ -47,11 +47,8 @@
     │   │   ├── 🖼️ sample_img.jpg
     │   │   ├── 🖼️ sample_img2.jpg
     │   │   ├── 🖼️ sample_img3.jpg
-    │   │   ├── 🖼️ sample_img4.png
-    │   │   └── 🖼️ societree_img.png
+    │   │   └── 🖼️ sample_img4.png
     │   └── 📁 logo
-    │       ├── 🖼️ societree.png
-    │       ├── 🖼️ societree_2.png
     │       ├── 🖼️ usg.png
     │       ├── 🖼️ usg_2.png
     │       ├── 🖼️ ustp_1.png
@@ -69,7 +66,6 @@
     │   ├── 🌐 usg_event.html
     │   ├── 🌐 usg_gen_assembly.html
     │   └── 🌐 usg_gen_discussion.html
-    ├── 🌐 dashboard.html
     └── 🌐 index.html
 ```
 
