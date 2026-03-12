@@ -1,12 +1,21 @@
 # Development Phases
 
 The development roadmap follows a layered implementation strategy.
-Each phase builds on the previous one, ensuring architectural stability,
-security enforcement, and controlled feature expansion.
+Each phase builds on the previous one to maintain architectural stability,
+clear scope control, and gradual feature expansion.
+
+This roadmap aligns with the current Campus Connect direction:
+
+- single USG organization only
+- two application roles only: OFFICER and STUDENT
+- role-based access using JWT-secured APIs
+- attendance based on authenticated student access, active session QR, and geolocation
+- payment tracking implemented first before direct online gateway automation
+- biometrics treated as a future enhancement, not part of the current core scope
 
 Legend:
     √ - Complete
-    ~ - Incomplete/Partially Complete
+    ~ - Incomplete / Partially Complete
     x - Not Complete
 
 ---
@@ -14,179 +23,504 @@ Legend:
 ## Phase 1 – Foundation & Core Infrastructure
 
 Objective:
-Establish the backend architecture and identity system.
+Establish the backend architecture, identity model, authentication flow,
+and core development environment required for all later modules.
 
+Status:
+√ Mostly Complete
+
+Completed / Established:
 √ Setup Django project structure
-    • Django initialized
+    • Django project initialized
     • config/ created
     • accounts/ app created
-    • Server runs successfully
-    • Custom user configured
+    • server runs successfully
+
 √ Configure PostgreSQL database
-- Enable required extensions (UUID, PostGIS, pgvector) when needed
+    • PostgreSQL is now the active primary database
+    • environment-based DATABASES configuration is implemented
+    • local PostgreSQL connection has been verified
+
 √ Implement custom User model
-    • AUTH_USER_MODEL set
-    • student_id as USERNAME_FIELD
+    • AUTH_USER_MODEL configured
+    • student_id used as login identifier
     • role field added
-    • position field included
+    • position field included for OFFICER reference
+
 √ Implement role system (OFFICER / STUDENT)
+    • application authority is role-based
+    • OFFICER-only endpoint protection exists
+    • STUDENT is separated from officer-only logic
+
 √ Implement JWT authentication
-    • SimpleJWT installed
+    • SimpleJWT installed and configured
     • /api/token/ working
-    • /api/officer/dashboard/ protected
-    • Bearer token validated
+    • /api/token/refresh/ available
+    • Bearer token authentication validated
+
 √ Configure Django admin panel
-    • Can access /admin/
-    • You have not customized admin
-    • You have not registered custom User properly (if you haven’t yet)
-    • You haven’t configured list_display, filters, etc.
+    • /admin/ accessible
+    • custom User registered
+    • admin access working for backend maintenance
+
 √ Setup environment configuration (dev / production)
+    • settings package structure created
+    • base.py / dev.py / prod.py in place
+    • .env loading implemented
+
 √ Establish base API structure
-    • API-first architecture
-    • /api/token/
-    • Role-based permission class
+    • API-first architecture established
+    • initial protected endpoint exists
+    • role-based permission foundation is in place
+
 √ Implement basic logging configuration
+    • console logging enabled for development
+    • rotating file logging configured
+    • backend/logs/django.log in use
+
+Remaining refinement:
+~ Improve Django admin usability
+    • add list_display
+    • add list filters
+    • add search fields
+    • add cleaner admin forms if needed
+
+~ Harden environment handling
+    • validate production-only settings
+    • verify deployment-ready secret handling
+    • confirm CORS policy for non-dev environments
 
 Deliverable:
-Working authentication system with PostgreSQL (SQLite no longer the primary workflow).
+A stable backend foundation with PostgreSQL, JWT authentication, role-based access,
+environment-based settings, and reusable API structure.
 
 ---
 
-## Phase 2 – Governance Core (Attendance Foundation)
+## Phase 2 – Governance and Communication Core
 
 Objective:
-Build the core event and attendance system without biometrics.
+Build the foundational governance and communication modules used by the
+single USG organization for visibility, coordination, and centralized updates.
 
-- Implement Events module
-- Implement AttendanceSession model
-- Implement QR session generation
-- Implement geolocation validation using PostGIS
-- Implement time cutoff enforcement
-- Implement duplicate attendance prevention
-- Implement violation auto-assignment logic
-- Implement Feedback system
-- Develop corresponding REST API endpoints
-- Integrate Flutter event listing
-- Integrate QR scanning capability in mobile app
-- Integrate geolocation capture from mobile
+Status:
+x Not Complete
+
+Scope:
+- Officer dashboard foundation
+- Events module
+- USG calendar / event scheduling view
+- General Assembly management
+- Announcements module
+- Discussion Forum foundation
+- Notification / system alert foundation
+
+Tasks:
+x Implement Dashboard module
+    • summary cards
+    • recent activity feed
+    • quick officer visibility into major records
+    • event and announcement highlights
+
+x Implement Events module
+    • create, update, publish, archive events
+    • store date, time, venue, description
+    • attach required event-related files if applicable
+
+x Implement calendar-oriented event scheduling
+    • display USG event schedule
+    • support meeting / assembly visibility
+    • maintain single-organization calendar behavior
+
+x Implement General Assembly module
+    • create assembly sessions
+    • manage title, date, time, venue, description
+    • target organization-wide or selected internal audiences when needed
+
+x Implement Announcements module
+    • officers create official announcements
+    • students can view announcements
+    • announcement visibility and status managed centrally
+
+x Implement Discussion Forum foundation
+    • discussion threads
+    • comments / replies
+    • post ownership and moderation rules
+    • centralized in-system communication flow
+
+x Implement notification / alert foundation
+    • announcement-related notifications
+    • event-related reminders or updates
+    • request status notifications where applicable
+
+x Develop corresponding REST API endpoints
+x Connect officer web interfaces
+x Define basic mobile read/view integration for student-facing communication features
 
 Deliverable:
-Fully functional attendance system (QR + Geolocation).
+A working governance and communication layer that centralizes updates,
+events, assemblies, and in-system discussion inside one USG platform.
 
 ---
 
-## Phase 3 – Biometric Identity Verification Layer
+## Phase 3 – Attendance and Accountability Core
 
 Objective:
-Secure attendance with backend-based face verification.
+Implement the official attendance workflow and related accountability features
+without biometrics.
 
-- Create UserFaceProfile model
-- Add is_verified and verified_at fields to User
-- Implement account verification endpoint
-- Integrate backend face detection library
-- Implement face embedding generation (ML inference only)
-- Implement randomized liveness challenge flow
-- Implement server-side embedding comparison
-- Implement configurable similarity threshold
-- Enforce is_verified requirement before attendance
-- Integrate Flutter camera capture for verification
-- Securely transmit captured image to backend
-- Integrate biometric validation into attendance workflow
+Status:
+x Not Complete
+
+Scope:
+- AttendanceSession model
+- AttendanceRecord model
+- Session QR attendance flow
+- Geolocation validation
+- Time cutoff rules
+- Duplicate prevention
+- Violation automation
+- Feedback submission
+- Event participation summaries
+
+Tasks:
+x Implement AttendanceSession model
+    • session status
+    • open / close timing
+    • sign-in configuration
+    • attendance cutoff configuration
+
+x Implement AttendanceRecord workflow
+    • one attendance record per student per session
+    • attendance timestamps
+    • attendance status validation
+
+x Implement QR session generation
+    • QR identifies the active session or attendance instance
+    • QR is not based on school-ID QR as the final core flow
+
+x Implement geolocation validation using PostGIS
+    • validate whether student is within allowed location boundary
+    • reject attendance outside the approved area
+
+x Implement time cutoff enforcement
+    • sign-in window rules
+    • configurable late or missed attendance handling
+
+x Implement duplicate attendance prevention
+    • prevent repeated sign-ins in the same session
+    • validate one-record-per-session logic
+
+x Implement violation auto-assignment logic
+    • generate violation or accountability records for missed obligations
+    • support service-hour related consequences where applicable
+
+x Implement event feedback module
+    • allow students to submit feedback after event completion
+    • store ratings and comments when required
+
+x Implement attendance and participation summaries
+    • officer-side session summaries
+    • count present / absent / late outcomes
+    • event-level participation visibility
+
+x Develop corresponding REST API endpoints
+x Integrate Flutter event listing
+x Integrate mobile QR scanning capability
+x Integrate mobile geolocation capture
+x Integrate student attendance history view
 
 Deliverable:
-Multi-layer attendance security:
-JWT + Role + Geolocation + Biometric + Liveness.
+A fully functional attendance and accountability system based on
+JWT-authenticated student access, active session QR validation,
+geolocation checks, cutoff rules, and accountability tracking.
 
 ---
 
-## Phase 4 – Service Workflows
+## Phase 4 – Student Services Core
 
 Objective:
-Implement non-attendance service modules.
+Build the non-attendance student service workflows and student summary visibility.
 
-- Borrow item management
-- Borrow request workflow (PENDING → APPROVED → RETURNED/REJECTED)
-- Lost & Found module
-- Payment tracking (manual recording first)
-- Payment status transitions
-- Implement corresponding REST endpoints
-- Integrate Flutter service interfaces
+Status:
+x Not Complete
+
+Scope:
+- Borrow
+- Lost & Found
+- Payment tracking
+- Campus Tour
+- Profile summary
+
+Tasks:
+x Implement Borrow item management
+    • create and manage available items
+    • define borrowable inventory information
+
+x Implement Borrow request workflow
+    • submit request
+    • review request
+    • approve / reject request
+    • track return status
+    • enforce valid status transitions:
+      PENDING → APPROVED → RETURNED / REJECTED
+
+x Implement Lost & Found module
+    • create lost / found records
+    • item description
+    • image support if applicable
+    • location found
+    • claim status tracking
+
+x Implement Payment tracking module
+    • record required contributions
+    • record violation-related payment entries
+    • link payment records to student profile
+    • support payment status monitoring
+
+x Implement manual / tracked payment confirmation flow
+    • allow tracked recording first
+    • support administrative confirmation workflow
+    • avoid making gateway integration a blocker for current core scope
+
+x Implement Campus Tour module
+    • create campus location records
+    • display building / office / facility information
+    • support simple interactive location viewing
+
+x Implement Profile Summary module
+    • attendance summary
+    • violations / service-hour summary
+    • payment summary
+    • borrow / request summary
+    • overall account status summary
+
+x Develop corresponding REST API endpoints
+x Integrate Flutter service interfaces
+x Integrate student profile summary screens
 
 Deliverable:
-Complete student service functionality.
+A complete student services layer with request workflows, payment tracking,
+campus location access, and consolidated student record visibility.
 
 ---
 
-## Phase 5 – Reports & Structured Templates
+## Phase 5 – Legislative Records and Structured Reporting
 
 Objective:
-Implement controlled reporting system for ADMIN users.
+Implement the governance records and structured report system for OFFICER users.
 
-- Structured report forms (AWFP, President, Financial, etc.)
-- Enforced report format templates
-- Restricted editable fields
-- Dynamic tables (auto-generated sections)
-- File attachment support (if required)
-- Report submission validation
-- Report locking after submission (if required)
-- Report version tracking (if revisions allowed)
-- Audit logging for report creation and updates
-- Implement report-related API endpoints
+Status:
+x Not Complete
+
+Scope:
+- Resolution management
+- AWFP
+- President’s Report
+- Financial Report
+- Auditor’s Report
+- Accomplishment Report
+- structured reporting rules
+
+Tasks:
+x Implement Resolution module
+    • create and manage resolution records
+    • organize official legislative outputs
+    • store status and filing metadata where needed
+
+x Implement structured report categories
+    • Annual Work and Financial Plan (AWFP)
+    • President’s Report
+    • Financial Report
+    • Auditor’s Report
+    • Accomplishment Report
+
+x Implement structured report templates
+    • predefined format per report type
+    • guided data entry
+    • controlled sections only
+
+x Implement restricted editing rules
+    • preserve template structure
+    • allow edits only in approved input regions
+    • prevent arbitrary layout modification
+
+x Implement dynamic table sections
+    • row-based data entry where needed
+    • repeatable structured sections
+
+x Implement file attachment support if required
+x Implement report submission validation
+x Implement report locking after submission if required
+x Implement report version tracking if revisions are allowed
+x Implement audit logging for report creation and updates
+x Develop report-related REST API endpoints
 
 Deliverable:
-Governance-compliant reporting module.
+A governance-compliant records and reporting module using structured templates
+instead of unrestricted document editing.
 
 ---
 
-## Phase 6 – Analytics & Data Insights
+## Phase 6 – Analytics, Monitoring, and Decision Support
 
 Objective:
-Provide decision-support metrics.
+Provide organized summaries and decision-support metrics for officers.
 
-- Attendance percentage calculations
-- Violation accumulation summaries
+Status:
+x Not Complete
+
+Scope:
+- Dashboard analytics
+- Attendance analytics
+- Violation summaries
 - Payment summaries
-- Historical comparison reports
-- Aggregation query optimization
-- Admin dashboard analytics integration
+- service workflow monitoring
+- historical comparison support
+
+Tasks:
+x Implement attendance percentage calculations
+x Implement event participation analytics
+x Implement violation accumulation summaries
+x Implement service-hour monitoring summaries
+x Implement payment summaries and balance visibility
+x Implement service request monitoring views
+x Implement feedback result summaries
+x Implement historical comparison reporting where applicable
+x Optimize aggregation queries for dashboard use
+x Integrate analytics into officer dashboard and report support views
 
 Deliverable:
-Data-driven governance dashboard.
+A data-informed governance dashboard and reporting support layer that improves
+visibility, review, and decision-making.
 
 ---
 
-## Phase 7 – Mobile Application Stabilization
+## Phase 7 – Mobile Application Integration and Stabilization
 
 Objective:
-Refine and align mobile features with backend security model.
+Refine and align mobile behavior with the finalized backend scope and student workflows.
 
-- Finalize Flutter authentication flow
-- Finalize account verification UI/UX
-- Finalize biometric attendance capture flow
-- Implement secure error handling and retry logic
-- Optimize image upload size and compression
-- Validate edge cases (network drop, failed match, GPS inaccuracy)
-- Conduct integration testing across all modules
+Status:
+x Not Complete
+
+Scope:
+- authentication flow
+- attendance flow
+- service interfaces
+- profile views
+- reliability and error handling
+
+Tasks:
+x Finalize Flutter authentication flow
+    • login
+    • token storage
+    • refresh flow
+    • logout handling
+
+x Finalize mobile event and announcement views
+x Finalize General Assembly visibility on mobile if required
+x Finalize student attendance participation flow
+    • session QR scan
+    • geolocation capture
+    • attendance success / failure feedback
+    • retry-safe UX
+
+x Finalize mobile service screens
+    • borrow
+    • lost & found
+    • payment records
+    • campus tour
+    • profile summary
+
+x Implement secure error handling and retry logic
+x Validate edge cases
+    • network interruption
+    • expired token
+    • GPS inaccuracy
+    • session closed
+    • duplicate sign-in attempt
+
+x Conduct end-to-end integration testing across web, mobile, API, and database layers
 
 Deliverable:
-Fully synchronized mobile + backend ecosystem.
+A fully synchronized mobile + backend ecosystem aligned with the current
+Campus Connect scope.
 
 ---
 
-## Phase 8 – Hardening, Security Audit & Deployment
+## Phase 8 – Hardening, Quality Assurance, and Deployment
 
 Objective:
-Prepare system for production-level stability.
+Prepare the system for production-level stability, maintainability, and controlled deployment.
 
-- Conduct security audit
-- Validate biometric threshold tuning
-- Perform penetration testing (basic level)
-- Optimize database indexing
-- Performance testing for concurrent attendance scans
-- Implement structured logging and monitoring
-- Configure production environment
-- Deploy backend and database
-- Final integration testing
+Status:
+x Not Complete
+
+Tasks:
+x Conduct security audit of authentication, authorization, and protected endpoints
+x Review input validation across all modules
+x Perform basic penetration testing
+x Optimize database indexing and query performance
+x Conduct performance testing for concurrent attendance scans
+x Validate logging coverage for critical actions
+x Implement monitoring and production logging strategy
+x Finalize environment-specific configuration
+x Prepare production database and backend deployment
+x Conduct final cross-module integration testing
+x Prepare deployment checklist and rollback plan
 
 Deliverable:
-Production-ready system.
+A production-ready system with validated security, reliable performance,
+and deployment readiness.
+
+---
+
+## Phase 9 – Future Enhancements
+
+Objective:
+Document advanced features that may be added after the current core scope is stable.
+
+Status:
+x Not Complete / Future Scope
+
+Possible Enhancements:
+x Biometric identity verification for attendance reinforcement
+    • face verification
+    • liveness challenge
+    • secure biometric template handling
+    • optional extra attendance-security layer
+
+x Direct third-party payment gateway integration
+    • online payment callback handling
+    • automatic transaction verification
+    • secure reference validation
+
+x Additional automation features
+    • advanced workflow notifications
+    • deeper analytics visualizations
+    • extended report automation
+    • more advanced student-engagement features
+
+Deliverable:
+A clearly separated enhancement track that extends the system without
+distorting the current core implementation scope.
+
+---
+
+## Roadmap Summary
+
+Phase ordering is intentionally structured as:
+
+1. Foundation first
+2. Governance and communication core
+3. Attendance and accountability core
+4. Student service workflows
+5. Legislative records and structured reporting
+6. Analytics and decision support
+7. Mobile integration and stabilization
+8. Hardening and deployment
+9. Future enhancements
+
+This ordering ensures that Campus Connect is built first as a complete
+single-organization governance and service platform before advanced
+enhancement features are considered.

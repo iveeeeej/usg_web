@@ -2,7 +2,7 @@
 
 ## Campus Connect (USG e-Governance System)
 
-### Phase 0 -- Core Infrastructure Completion
+### Phase 1 -- Core Infrastructure Completion
 
 ------------------------------------------------------------------------
 

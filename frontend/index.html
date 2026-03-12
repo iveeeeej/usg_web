@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SocieTREE</title>
-    <link rel="icon" href="../frontend/assets/logo/societree.png" type="image/png">
+    <title>Login - University of Student Government</title>
+    <link rel="icon" href="../frontend/assets/logo/usg.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <style>
@@ -35,13 +35,14 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            top: -50px;
+            left: 70px;
         }
 
         .side-image {
-            width: 70%;
-            height: 70%;
-            object-fit: cover;
-            transform: translateX(100px) translateY(-60px);
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .image-caption {
@@ -91,7 +92,7 @@
         }
 
         .btn-login {
-            background-color: #8BC53F;
+            background-color: #1e174a;
             color: white;
             border: none;
             border-radius: 25px;
@@ -134,7 +135,7 @@
                 width: 90%;
                 height: auto;
                 object-fit: contain;
-                transform: none;
+                transform: none; /* Ensure no transform on mobile */
             }
 
             .image-caption {
@@ -193,9 +194,9 @@
             <!-- For desktop: Image and caption on the right -->
             <div class="col-md-6 d-none d-md-block p-0">
                 <div class="image-container">
-                    <img src="../frontend/assets/img/societree_img.png" alt="Side Image" class="side-image">
+                    <img src="../frontend/assets/img/sample_img4.png" alt="Side Image" class="side-image">
                     <div class="image-caption">
-                        <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERSSS</span></h2>
+                        <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERS</span></h2>
                     </div>
                 </div>
             </div>
@@ -203,7 +204,7 @@
             <!-- For mobile: Image and caption first -->
             <div class="col-12 d-md-none">
                 <div class="image-container">
-                    <img src="../frontend/assets/img/societree_img.png" alt="Side Image" class="side-image">
+                    <img src="../frontend/assets/img/sample_img4.png" alt="Side Image" class="side-image">
                 </div>
                 <div class="image-caption">
                     <h2>THE INNOVATORS OF TOMORROW, <span class="highlight-text">TRAILBLAZERS</span></h2>
@@ -214,7 +215,7 @@
             <div class="col-md-6 d-flex justify-content-center align-items-center">
                 <div class="login-card">
                     <!-- Logo -->
-                    <img src="../frontend/assets/logo/societree.png" alt="Logo" class="logo">
+                    <img src="../frontend/assets/logo/usg_2.png" alt="Logo" class="logo">
 
                     <!-- Login Form -->
                     <form id="loginForm">

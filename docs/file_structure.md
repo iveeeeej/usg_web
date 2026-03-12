@@ -1,6 +1,6 @@
 # File Tree: usg_web
 
-**Generated:** 3/5/2026, 10:52:52 PM
+**Generated:** 3/12/2026, 12:55:57 PM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
@@ -24,11 +24,9 @@
 │   │   │   └── 🐍 prod.py
 │   │   ├── 🐍 __init__.py
 │   │   ├── 🐍 asgi.py
-│   │   ├── 🐍 old_settings.py
 │   │   ├── 🐍 urls.py
 │   │   └── 🐍 wsgi.py
 │   ├── 📁 logs
-│   ├── 📄 db.sqlite3
 │   └── 🐍 manage.py
 ├── 📁 docs
 │   ├── 📝 00_Foundation_Setup_Documentation.md
@@ -41,6 +39,7 @@
 │   ├── 📝 07_security_and_permissions.md
 │   ├── 📝 08_mobile_integration.md
 │   ├── 📝 09_development_phases.md
+│   ├── 📝 10_agent_development_rules.md
 │   └── 📝 file_structure.md
 └── 📁 frontend
     ├── 📁 assets
@@ -48,6 +47,7 @@
     │   │   ├── 🖼️ sample_img.jpg
     │   │   ├── 🖼️ sample_img2.jpg
     │   │   ├── 🖼️ sample_img3.jpg
+    │   │   ├── 🖼️ sample_img4.png
     │   │   └── 🖼️ societree_img.png
     │   └── 📁 logo
     │       ├── 🖼️ societree.png

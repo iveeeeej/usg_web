@@ -206,3 +206,8 @@ LINE 1: ...."verified_at", "accounts_user"."created_at" FROM "accounts_...
 2026-03-06 19:51:06,722 [WARNING] django.request: Not Found: /favicon.ico
 2026-03-06 20:03:08,268 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
 2026-03-06 20:33:47,586 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-06 22:39:17,138 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-07 22:00:56,918 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-10 20:50:01,348 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-10 21:38:20,439 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-11 11:11:40,500 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
