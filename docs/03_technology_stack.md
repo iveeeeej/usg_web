@@ -138,15 +138,21 @@ Bootstrap is used to support:
 
 ### 3.3 Rendering Style
 
-The officer web frontend follows an **API-driven rendering approach**.
+The officer web frontend currently follows a **partially API-driven rendering approach**.
+
+In the current repository:
+- login and token-based access control are live
+- protected dashboard access validation is live
+- backend APIs for events and announcements are implemented
+- several officer-facing pages remain partially integrated and still function as UI-first scaffolds
 
 This means:
-
 - the frontend does not act primarily as a Django server-rendered dashboard
-- frontend pages interact with the backend through authenticated API requests
-- business rules remain enforced in the backend, not in HTML pages alone
+- backend APIs remain the source of truth for business rules
+- full page-level API integration is still in progress
 
-This aligns with the system’s API-first architecture.
+This aligns with the system's API-first architecture while accurately reflecting the current implementation stage.
+
 
 ---
 
@@ -157,9 +163,11 @@ This aligns with the system’s API-first architecture.
 **Framework:** Flutter  
 **Language:** Dart
 
-Flutter is used for the student-facing mobile application.
+Flutter is the intended framework for the student-facing mobile application of Campus Connect.
 
-The mobile layer is responsible for:
+The Flutter mobile client may be maintained in a separate repository from the backend and officer web frontend. This document therefore describes the system-wide mobile stack and integration direction, not only the contents of the current repository.
+
+The mobile is responsible for:
 
 - viewing events and announcements
 - attending active attendance sessions
@@ -175,8 +183,11 @@ The mobile layer is responsible for:
 
 The mobile app communicates with the same centralized backend used by the officer web interface.
 
-This supports:
+In the current project setup, the backend in this repository is the shared API and data layer for both:
+- the officer web frontend contained in this repository
+- the student mobile application maintained in a separate project when applicable
 
+This supports:
 - consistent authentication
 - shared backend rules
 - single-source-of-truth data handling
@@ -205,19 +216,15 @@ It is chosen because it supports:
 
 **Extension / GIS Support:** PostGIS
 
-PostGIS is included to support geolocation-aware workflows, especially for attendance validation.
+PostGIS is part of the planned geospatial database stack for Phase 3 attendance and geolocation workflows.
 
-This is important because the finalized attendance model depends on:
+In the current repository, PostgreSQL is the active backend database baseline. Application-level attendance geolocation models and PostGIS-backed validation are not yet implemented.
 
-- authenticated student identity
-- active session QR validation
-- geolocation checking
-
-PostGIS allows the backend to support:
-
+When Phase 3 attendance work begins, PostGIS is intended to support:
 - point-based coordinate storage
 - center-radius validation
 - polygon-based geospatial checks if needed later
+
 
 ---
 
@@ -276,14 +283,14 @@ These are useful implementation references, but the technology stack itself shou
 - Bootstrap
 
 ### Mobile
-- Flutter
+- Flutter (student mobile client, may be maintained in a separate repository)
 - Dart
 - REST API (JSON)
 - JWT-based authentication
 
 ### Database
 - PostgreSQL
-- PostGIS
+- PostGIS (planned Phase 3 geolocation support)
 
 ---
 
@@ -323,9 +330,9 @@ Campus Connect uses a practical and scalable stack built around:
 
 - Django + Django REST Framework for backend and APIs
 - JWT for authentication
-- PostgreSQL + PostGIS for relational and geospatial data
+- PostgreSQL for the current backend data layer, with PostGIS planned for Phase 3 attendance geolocation
 - Bootstrap-based web frontend development
-- Flutter for the student mobile application
+- Flutter for the student mobile application, which may be maintained in a separate repository
 - environment-based configuration through `python-dotenv`
 
 This stack is aligned with the project’s current scope, architecture,

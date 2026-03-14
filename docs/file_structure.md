@@ -1,11 +1,24 @@
 # File Tree: usg_web
 
-**Generated:** 3/12/2026, 2:06:31 PM
+**Generated:** 3/13/2026, 9:52:05 PM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
 ├── 📁 backend
 │   ├── 📁 accounts
+│   │   ├── 📁 migrations
+│   │   │   ├── 🐍 0001_initial.py
+│   │   │   ├── 🐍 0002_remove_user_is_verified_remove_user_verified_at.py
+│   │   │   ├── 🐍 0003_add_user_profile_fields.py
+│   │   │   └── 🐍 __init__.py
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 admin.py
+│   │   ├── 🐍 apps.py
+│   │   ├── 🐍 models.py
+│   │   ├── 🐍 permissions.py
+│   │   ├── 🐍 tests.py
+│   │   └── 🐍 views.py
+│   ├── 📁 announcements
 │   │   ├── 📁 migrations
 │   │   │   ├── 🐍 0001_initial.py
 │   │   │   └── 🐍 __init__.py
@@ -14,7 +27,9 @@
 │   │   ├── 🐍 apps.py
 │   │   ├── 🐍 models.py
 │   │   ├── 🐍 permissions.py
+│   │   ├── 🐍 serializers.py
 │   │   ├── 🐍 tests.py
+│   │   ├── 🐍 urls.py
 │   │   └── 🐍 views.py
 │   ├── 📁 config
 │   │   ├── 📁 settings
@@ -26,6 +41,19 @@
 │   │   ├── 🐍 asgi.py
 │   │   ├── 🐍 urls.py
 │   │   └── 🐍 wsgi.py
+│   ├── 📁 events
+│   │   ├── 📁 migrations
+│   │   │   ├── 🐍 0001_initial.py
+│   │   │   └── 🐍 __init__.py
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 admin.py
+│   │   ├── 🐍 apps.py
+│   │   ├── 🐍 models.py
+│   │   ├── 🐍 permissions.py
+│   │   ├── 🐍 serializers.py
+│   │   ├── 🐍 tests.py
+│   │   ├── 🐍 urls.py
+│   │   └── 🐍 views.py
 │   ├── 📁 logs
 │   └── 🐍 manage.py
 ├── 📁 docs

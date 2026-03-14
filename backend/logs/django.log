@@ -211,3 +211,36 @@ LINE 1: ...."verified_at", "accounts_user"."created_at" FROM "accounts_...
 2026-03-10 20:50:01,348 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
 2026-03-10 21:38:20,439 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
 2026-03-11 11:11:40,500 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-12 16:37:53,156 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 19:59:29,204 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 20:09:11,004 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\config\urls.py changed, reloading.
+2026-03-13 20:09:12,036 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 20:09:30,960 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\events\views.py changed, reloading.
+2026-03-13 20:09:32,066 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 20:09:59,617 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\events\models.py changed, reloading.
+2026-03-13 20:10:00,765 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 20:10:30,237 [WARNING] django.request: Bad Request: /api/events/
+2026-03-13 20:10:32,263 [WARNING] django.request: Forbidden: /api/events/
+2026-03-13 20:36:00,211 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\config\settings\base.py changed, reloading.
+2026-03-13 20:36:01,053 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 20:37:00,819 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\config\urls.py changed, reloading.
+2026-03-13 20:37:02,091 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-13 20:37:17,307 [WARNING] django.request: Forbidden: /api/announcements/
+2026-03-13 20:37:20,569 [WARNING] django.request: Bad Request: /api/events/
+2026-03-13 20:37:22,598 [WARNING] django.request: Forbidden: /api/events/
+2026-03-13 21:34:50,185 [WARNING] django.request: Forbidden: /api/announcements/
+2026-03-13 21:34:52,239 [WARNING] django.request: Bad Request: /api/events/
+2026-03-13 21:34:54,280 [WARNING] django.request: Forbidden: /api/events/
+2026-03-14 12:56:55,526 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-14 12:58:21,234 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\accounts\views.py changed, reloading.
+2026-03-14 12:58:22,331 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-14 13:01:44,771 [INFO] django.utils.autoreload: C:\Users\Acer\Projects\web\usg_web\backend\accounts\views.py changed, reloading.
+2026-03-14 13:01:45,671 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-14 13:02:58,533 [WARNING] django.request: Forbidden: /api/officer/dashboard/
+2026-03-14 13:03:01,685 [WARNING] django.request: Forbidden: /api/announcements/
+2026-03-14 13:03:03,746 [WARNING] django.request: Bad Request: /api/events/
+2026-03-14 13:03:05,770 [WARNING] django.request: Forbidden: /api/events/
+2026-03-14 13:06:57,255 [WARNING] django.request: Forbidden: /api/officer/dashboard/
+2026-03-14 13:07:00,360 [WARNING] django.request: Forbidden: /api/announcements/
+2026-03-14 13:07:02,421 [WARNING] django.request: Bad Request: /api/events/
+2026-03-14 13:07:04,431 [WARNING] django.request: Forbidden: /api/events/

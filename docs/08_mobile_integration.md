@@ -13,6 +13,10 @@ centralized backend used by the officer web platform.
 The mobile app is not an independent system. It is a client application that communicates
 with the Campus Connect backend through JWT-secured REST API calls.
 
+The mobile client may be maintained in a separate repository from the backend and officer
+web frontend. This document therefore describes the system-wide mobile integration contract
+and backend communication rules, not only the contents of the current repository.
+
 The mobile layer must remain fully aligned with the core system rules:
 
 - single USG organization only
@@ -555,5 +559,4 @@ It must remain aligned with the finalized system model:
 - visibility into communication, services, records, and summaries
 - no mandatory biometrics in the current core scope
 
-The mobile layer must function as a secure extension of the centralized backend,
-not as a separate source of business truth.
+The mobile layer must function as a secure extension of the centralized backend, even when the Flutter client is maintained in a separate repository from the backend and officer web frontend.

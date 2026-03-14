@@ -33,20 +33,17 @@ It must enforce the finalized Campus Connect model:
 
 ## 2. Current Repository Context
 
-Root Path:
-    c:\Users\Acer\Projects\web\usg_web
+Campus Connect is currently organized across:
+- this repository, which contains `backend/`, `docs/`, and `frontend/`
+- a separate mobile project or repository for the Flutter student application when applicable
 
-Campus Connect is currently organized into three main project areas:
+In this repository:
+- `backend/` is the actual Django project and shared API layer
+- `docs/` contains the project documentation set
+- `frontend/` contains the current officer web interface assets and pages
 
-- `backend/`
-- `docs/`
-- `frontend/`
+The student mobile client is part of the overall system architecture, but it does not need to live inside this repository as long as it communicates with the same backend APIs.
 
-The backend is the actual Django project and API layer.
-
-The `docs/` directory contains the project documentation set.
-
-The `frontend/` directory currently contains the web officer interface assets and pages.
 
 ---
 
@@ -58,6 +55,8 @@ backend/
     accounts/
         migrations/
             0001_initial.py
+            0002_remove_user_is_verified_remove_user_verified_at.py
+            0003_add_user_profile_fields.py
             __init__.py
         __init__.py
         admin.py
@@ -65,6 +64,32 @@ backend/
         models.py
         permissions.py
         tests.py
+        views.py
+    announcements/
+        migrations/
+            0001_initial.py
+            __init__.py
+        __init__.py
+        admin.py
+        apps.py
+        models.py
+        permissions.py
+        serializers.py
+        tests.py
+        urls.py
+        views.py
+    events/
+        migrations/
+            0001_initial.py
+            __init__.py
+        __init__.py
+        admin.py
+        apps.py
+        models.py
+        permissions.py
+        serializers.py
+        tests.py
+        urls.py
         views.py
     config/
         settings/
@@ -82,9 +107,12 @@ backend/
 This is the current actual implemented backend structure.
 
 Important clarification:
-- `old_settings.py` is not part of the current active backend tree
-- `db.sqlite3` is not part of the current active backend tree shown in the latest file structure
+- the working backend directory also contains local environment artifacts such as `.env` and `venv/`, but the layout above is focused on the source code and operational folders used by the Django project
+- legacy files such as `old_settings.py` and `db.sqlite3` are not part of the current backend tree
+- older notes or snapshots that mention those files should be treated as legacy references only
 - environment-based settings are now organized under `config/settings/`
+- user-schema alignment is now reflected in the live migration chain through `0002` and `0003`
+- Phase 2 work has started through the live `events` and `announcements` apps
 
 This means the backend has already moved to a cleaner configuration structure than the older version of this document described.
 
@@ -96,17 +124,19 @@ Campus Connect follows a layered, API-first backend structure.
 
 High-level backend flow:
 
-Officer Web Interface / Mobile Student App
-        ↓
+Officer Web Interface (this repository) / Student Mobile App (separate project)
+        ->
 JWT-authenticated API request
-        ↓
+        ->
 Django REST API
-        ↓
+        ->
 Service / Validation / Permission Logic
-        ↓
+        ->
 Django ORM
-        ↓
-PostgreSQL / PostGIS
+        ->
+PostgreSQL
+
+PostGIS-backed attendance geolocation support belongs to the planned Phase 3 attendance stack and is not yet represented by active attendance models in this repository.
 
 The backend does not exist only to serve raw data.
 It is the enforcement boundary for:
@@ -119,8 +149,13 @@ It is the enforcement boundary for:
 - payment safeguards
 - structured reporting rules
 
-The officer web interface does not rely on Django template rendering as its primary behavior.
-Instead, it communicates with the backend through API requests secured by JWT.
+The officer web interface in this repository does not rely on Django template rendering as its primary behavior.
+
+Its current implementation is partially API-connected:
+- authentication and token-based access control are live
+- protected dashboard access validation is live
+- fuller page-level API integration for officer workflows is still in progress
+
 
 ---
 
@@ -142,6 +177,7 @@ It currently includes:
 
 This app is the appropriate place for:
 - custom User model logic
+- user profile and academic metadata
 - role-based access helpers
 - authentication-related backend behavior tied to the user domain
 - account administration support
@@ -163,13 +199,54 @@ The `settings/` package contains:
 
 This structure supports environment-based configuration and is the correct replacement for a single monolithic settings file.
 
-### 5.3 `backend/logs/`
+### 5.3 `backend/announcements/`
+
+This is the first communication-specific Phase 2 module now implemented in the backend.
+
+It currently includes:
+- `models.py`
+- `serializers.py`
+- `views.py`
+- `permissions.py`
+- `admin.py`
+- `tests.py`
+- `urls.py`
+- migrations
+
+This app is the appropriate place for:
+- announcement records
+- publish/archive status handling
+- authenticated announcement read APIs
+- OFFICER-only announcement management APIs
+
+### 5.4 `backend/events/`
+
+This is the live governance scheduling module currently implemented in the backend.
+
+It currently includes:
+- `models.py`
+- `serializers.py`
+- `views.py`
+- `permissions.py`
+- `admin.py`
+- `tests.py`
+- `urls.py`
+- migrations
+
+This app is the appropriate place for:
+- event records
+- general assembly handling through `event_type`
+- event attachment metadata
+- authenticated event read APIs
+- officer event management APIs
+
+### 5.5 `backend/logs/`
 
 This directory is reserved for backend logs and operational logging output.
 
 It supports the logging strategy already defined elsewhere in the documentation and helps separate runtime logs from source code files.
 
-### 5.4 `backend/manage.py`
+### 5.6 `backend/manage.py`
 
 This remains the standard Django project entry point for:
 - running the development server
@@ -220,6 +297,7 @@ As the backend expands, each Django app should have a clear responsibility bound
 Responsible for:
 - custom User model
 - role and position fields
+- student identity, profile, and academic fields
 - identity-related permissions
 - account administration helpers
 
@@ -501,7 +579,7 @@ These should be treated as future extensions of the backend, not as current core
 
 The Campus Connect backend is the central enforcement and processing layer of the system.
 
-Its current actual repository structure is still in an early modular state, with `accounts`, `config`, `logs`, and `manage.py` already present.
+Its current actual repository structure is still in an early modular state, with `accounts`, `announcements`, `events`, `config`, `logs`, and `manage.py` already present.
 
 Its intended growth direction is a clean modular Django backend aligned with the finalized project scope:
 - governance and communication

@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'accounts',
+    'announcements',
+    'events',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

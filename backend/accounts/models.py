@@ -46,22 +46,34 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     student_id = models.CharField(max_length=20, unique=True)
     email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=150)
+    middle_name = models.CharField(max_length=150, null=True, blank=True)
+    last_name = models.CharField(max_length=150)
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     position = models.CharField(max_length=100, null=True, blank=True)
+    year_level = models.PositiveSmallIntegerField(null=True, blank=True)
+    section = models.CharField(max_length=50, null=True, blank=True)
+    course = models.CharField(max_length=150, null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    is_verified = models.BooleanField(default=False)
-    verified_at = models.DateTimeField(null=True, blank=True)
-
     created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'student_id'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+
+    def get_full_name(self):
+        name_parts = [self.first_name, self.middle_name, self.last_name]
+        full_name = " ".join(part for part in name_parts if part)
+        return full_name.strip()
+
+    def get_short_name(self):
+        return self.first_name
 
     def __str__(self):
-        return self.student_id
+        return f"{self.student_id} - {self.get_full_name()}"

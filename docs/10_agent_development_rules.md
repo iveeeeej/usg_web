@@ -127,7 +127,7 @@ documented including:
 From `04_database_design_principles.md`:
 - UUID primary keys for major entities
 - Foreign key constraints enforced
-- Audit timestamps (created_at, updated_at) on ALL models
+- Audit timestamps (`created_at`, `updated_at`) on editable transactional models; append-only attachment records may use `created_at` only unless updates are expected
 - Normalization up to 3NF
 - Explicit indexing for frequently queried fields
 - Controlled status transitions
@@ -205,16 +205,12 @@ The agent must NOT silently retry or work around errors.
 
 The agent must implement ONLY what is specified in the current phase.
 
-Phase 2 scope (from `09_development_phases.md`):
-- Events module
-- AttendanceSession model
-- QR session generation
-- Geolocation validation (PostGIS)
-- Time cutoff enforcement
-- Duplicate attendance prevention
-- Violation auto-assignment logic
-- Feedback system
-- Corresponding REST API endpoints
+Before implementation begins, the agent must identify the active phase in
+`09_development_phases.md` and restate the exact in-scope deliverables for that phase.
+
+Examples:
+- if the active phase is Phase 2, focus on governance and communication modules
+- if the active phase is Phase 3, focus on attendance and accountability modules
 
 The agent must NOT implement features from later phases.
 

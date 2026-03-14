@@ -79,11 +79,11 @@ Completed / Established:
     • backend/logs/django.log in use
 
 Remaining refinement:
-~ Improve Django admin usability
-    • add list_display
-    • add list filters
-    • add search fields
-    • add cleaner admin forms if needed
+~ Minor Django admin polish if needed
+    • list_display already implemented
+    • list filters already implemented
+    • search fields already implemented
+    • cleaner admin forms remain optional refinement only
 
 ~ Harden environment handling
     • validate production-only settings
@@ -103,7 +103,7 @@ Build the foundational governance and communication modules used by the
 single USG organization for visibility, coordination, and centralized updates.
 
 Status:
-x Not Complete
+~ Partially Complete
 
 Scope:
 - Officer dashboard foundation
@@ -115,31 +115,31 @@ Scope:
 - Notification / system alert foundation
 
 Tasks:
-x Implement Dashboard module
+~ Implement Dashboard module
     • summary cards
     • recent activity feed
     • quick officer visibility into major records
     • event and announcement highlights
 
-x Implement Events module
+√ Implement Events module
     • create, update, publish, archive events
     • store date, time, venue, description
-    • attach required event-related files if applicable
+    • attachment metadata endpoints added for event-related files
 
-x Implement calendar-oriented event scheduling
-    • display USG event schedule
-    • support meeting / assembly visibility
-    • maintain single-organization calendar behavior
+~ Implement calendar-oriented event scheduling
+    • API-level event schedule listing is available
+    • meeting / assembly visibility is supported through filtering and event_type
+    • dedicated calendar-specific presentation layer is still pending
 
-x Implement General Assembly module
-    • create assembly sessions
-    • manage title, date, time, venue, description
-    • target organization-wide or selected internal audiences when needed
+√ Implement General Assembly module
+    • implemented through `Event.event_type = GENERAL_ASSEMBLY`
+    • title, date, time, venue, description, and audience targeting are supported
+    • shared event workflow is now reusable for assembly records
 
-x Implement Announcements module
-    • officers create official announcements
-    • students can view announcements
-    • announcement visibility and status managed centrally
+√ Implement Announcements module
+    • officers create and manage official announcements
+    • students can view published announcements
+    • announcement visibility and status are managed centrally through the API
 
 x Implement Discussion Forum foundation
     • discussion threads
@@ -152,9 +152,31 @@ x Implement notification / alert foundation
     • event-related reminders or updates
     • request status notifications where applicable
 
-x Develop corresponding REST API endpoints
-x Connect officer web interfaces
-x Define basic mobile read/view integration for student-facing communication features
+~ Develop corresponding REST API endpoints
+    • `/api/events/`, `/api/events/{id}/`, and `/api/events/{id}/attachments/` added
+    • `/api/announcements/` and `/api/announcements/{id}/` added
+    • Phase 2 APIs for dashboard, discussions, and notifications are still pending
+~ Connect officer web interfaces
+    • login flow is connected to `/api/token/`
+    • protected dashboard access validation is connected to `/api/officer/dashboard/`
+    • fuller API integration for events, announcements, assemblies, and discussions is still pending
+
+~ Define backend support for basic mobile read/view integration for student-facing communication features
+    • events and announcements APIs are available for student-facing clients
+    • the student mobile application may be implemented in a separate project
+    • client-side mobile implementation status is tracked outside this repository
+
+Progress update (2026-03-13):
+~ `events` app created in the backend
+~ `Event` and `EventAttachment` models implemented
+~ `/api/events/`, `/api/events/{id}/`, and `/api/events/{id}/attachments/` added
+~ authenticated read access and OFFICER-only write access implemented for events
+~ General Assembly support started through `event_type = GENERAL_ASSEMBLY`
+~ event filtering added for `status`, `event_type`, `audience_scope`, and `upcoming`
+~ `announcements` app created in the backend
+~ `Announcement` model implemented
+~ `/api/announcements/` and `/api/announcements/{id}/` added
+~ OFFICER-only announcement writes and published-only student reads implemented
 
 Deliverable:
 A working governance and communication layer that centralizes updates,
@@ -170,6 +192,11 @@ without biometrics.
 
 Status:
 x Not Complete
+
+Current implementation note:
+x Attendance and geolocation modules are not yet implemented in this repository
+~ PostGIS remains part of the planned Phase 3 attendance stack
+
 
 Scope:
 - AttendanceSession model

@@ -16,7 +16,7 @@ This includes:
 
 - Django project structure
 - PostgreSQL database integration
-- Required PostgreSQL extensions (UUID, PostGIS, pgvector if needed)
+- Required PostgreSQL extensions (UUID, PostGIS)
 - Custom User model
 - Role-based access system (OFFICER / STUDENT)
 - JWT authentication
@@ -225,10 +225,22 @@ Role field:
 
 - role (OFFICER / STUDENT)
 
+Current profile and academic fields:
+
+- first_name
+- middle_name (nullable)
+- last_name
+- year_level (nullable)
+- section (nullable)
+- course (nullable)
+- created_at
+- updated_at
+
 Reminder:
 
 - Django `is_staff` / `is_superuser` are for Django Admin only.
 - Application authority is based on `role`.
+- `position` is informational metadata for OFFICER accounts and does not create a separate authorization layer.
 
 AUTH_USER_MODEL is set in settings:
 
@@ -413,7 +425,7 @@ PostgreSQL (current)
 
 ------------------------------------------------------------------------
 
-# 16. Phase 0 Completed Items
+# 16. Phase 1 Completed Items
 
 - Setup Django project structure
 - Implement custom User model
@@ -428,8 +440,126 @@ PostgreSQL (current)
 
 # 17. Next Development Step
 
-Proceed to Phase 2 modules after foundation + infra are stable:
+Proceed to Phase 2 (Governance and Communication Core) after
+foundation + infra are stable:
 
-- Events Module
-- Attendance foundation
-- Mobile integration workflows
+- Dashboard module
+- Events module (including General Assembly via event_type)
+- Calendar / event scheduling view
+- Announcements module
+- Discussion Forum foundation
+- Notification / system alert foundation
+- Corresponding REST API endpoints
+- Officer web interface connections
+
+------------------------------------------------------------------------
+
+# 18. Phase 2 Preparation (Pre-Implementation Cleanup)
+
+Date: 2026-03-12
+
+Before beginning Phase 2 implementation, the following preparation
+steps were completed to bring the codebase into alignment with the
+revised documentation set.
+
+## 18.1 Removed `is_verified` and `verified_at` from User Model
+
+Reason:
+The revised `04_database_design_principles.md` (Section 3.2) specifies
+that `is_verified` and `verified_at` are NOT part of the current core
+User schema. These fields belonged to the older biometric attendance
+direction which has been moved to Phase 9 (Future Enhancements).
+
+Changes:
+- `backend/accounts/models.py`: removed `is_verified` and `verified_at`
+  fields from the User model
+- `backend/accounts/admin.py`: removed the Verification fieldset from
+  CustomUserAdmin that referenced those fields
+- Migration generated and applied:
+  `accounts/migrations/0002_remove_user_is_verified_remove_user_verified_at.py`
+
+Verification:
+- `python manage.py makemigrations` detected field removal correctly
+- `python manage.py migrate` applied successfully
+- `python manage.py check` returned: System check identified no issues
+
+Mistakes: None encountered during this step.
+
+## 18.2 Fixed Stale Documentation References
+
+- Section 16 heading: changed "Phase 0" → "Phase 1" (user applied)
+- Section 17: updated Phase 2 scope from old attendance-focused list
+  to the new Governance and Communication Core module list
+- Section 1: removed `pgvector` from listed PostgreSQL extensions,
+  since pgvector related to the biometric embedding direction which
+  is no longer in the current core scope
+
+## 18.3 Added Current User Profile Fields to Match Revised Schema
+
+Date: 2026-03-13
+
+Reason:
+The revised `04_database_design_principles.md` (Section 3.1) defines a
+larger current-scope `User` schema than the original Phase 1 backend
+implementation. The live backend therefore needed to add the missing
+profile and academic fields so the code, database, and docs all match.
+
+Changes:
+- `backend/accounts/models.py`: added `first_name`, `middle_name`,
+  `last_name`, `year_level`, `section`, `course`, and `updated_at`
+- `backend/accounts/admin.py`: expanded `CustomUserAdmin` fieldsets,
+  list display, filters, and search fields to support the new User fields
+- `backend/accounts/migrations/0003_add_user_profile_fields.py`:
+  created and applied to sync the PostgreSQL schema
+- `backend/accounts/tests.py`: added model tests covering the new fields
+  and full-name behavior
+
+Verification:
+- `python manage.py makemigrations --check --dry-run` returned
+  `No changes detected`
+- `python manage.py test accounts` passed successfully
+- `python manage.py migrate` applied the new User field migration
+
+Mistakes: None encountered during this step.
+
+## 18.4 Started Phase 2 Governance and Communication Backend Modules
+
+Date: 2026-03-13
+
+Reason:
+With the Phase 1 identity and infrastructure work stable, the backend
+began the first active Phase 2 implementation slice from the revised
+roadmap. The goal of this step was to start the governance and
+communication layer without jumping ahead to later phases.
+
+Changes:
+- `backend/events/`: implemented the `Event` and `EventAttachment`
+  models, admin registration, serializers, permissions, views, URLs,
+  tests, and initial migration
+- `backend/announcements/`: implemented the `Announcement` model, admin
+  registration, serializers, permissions, views, URLs, tests, and
+  initial migration
+- `backend/config/settings/base.py`: registered the new Phase 2 apps in
+  `INSTALLED_APPS`
+- `backend/config/urls.py`: mounted the new `/api/events/` and
+  `/api/announcements/` routes
+- `docs/09_development_phases.md`: updated Phase 2 progress and task
+  markers to reflect the completed backend slices
+- `docs/05_backend_structure.md`: updated the actual backend tree to
+  include the new `events` and `announcements` apps
+
+Verification:
+- `python manage.py makemigrations events`
+- `python manage.py makemigrations announcements`
+- `python manage.py migrate`
+- `python manage.py test announcements accounts events`
+- `python manage.py makemigrations --check --dry-run` returned
+  `No changes detected`
+- `python manage.py check` returned: System check identified no issues
+
+Mistakes:
+- The initial implementation pace was too fast relative to the workflow
+  rules in `10_agent_development_rules.md`
+- The correction was to pause, restate the active phase, propose only
+  one small Phase 2 slice, wait for user confirmation, and then continue
+  incrementally
