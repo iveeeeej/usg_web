@@ -153,6 +153,7 @@ This supports the concept paper’s event-related document handling without forc
 `Announcement` should contain:
 - `id` (UUID, PK)
 - `title`
+- `announcement_type`
 - `content`
 - `status`
 - `published_at`

@@ -17,10 +17,14 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(status=Announcement.PUBLISHED)
 
         status_value = self.request.query_params.get('status')
+        announcement_type_value = self.request.query_params.get('announcement_type')
         ordering = self.request.query_params.get('ordering')
 
         if status_value:
             queryset = queryset.filter(status=status_value)
+
+        if announcement_type_value:
+            queryset = queryset.filter(announcement_type=announcement_type_value)
 
         if ordering in {'published_at', '-published_at', 'created_at', '-created_at'}:
             queryset = queryset.order_by(ordering)

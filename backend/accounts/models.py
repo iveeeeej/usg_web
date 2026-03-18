@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.utils import timezone
@@ -77,3 +78,28 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.student_id} - {self.get_full_name()}"
+
+
+class DashboardMessage(models.Model):
+    WHATS_NEW = 'whats_new'
+    DEFAULT_MESSAGE = 'Welcome to a new school year!'
+
+    key = models.CharField(max_length=50, unique=True, default=WHATS_NEW, editable=False)
+    message = models.TextField(default=DEFAULT_MESSAGE)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='updated_dashboard_messages',
+    )
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Dashboard message'
+        verbose_name_plural = 'Dashboard messages'
+
+    def __str__(self):
+        preview = self.message.strip().splitlines()[0] if self.message else self.DEFAULT_MESSAGE
+        return f"{self.key}: {preview[:50]}"

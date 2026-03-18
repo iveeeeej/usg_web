@@ -26,8 +26,8 @@ class AnnouncementApiTests(APITestCase):
         )
         self.base_payload = {
             'title': 'Enrollment Advisory',
+            'announcement_type': Announcement.TYPE_IMPORTANT,
             'content': 'Enrollment support desk will open at 8 AM.',
-            'status': Announcement.PUBLISHED,
         }
 
     def test_officer_can_create_announcement(self):
@@ -36,9 +36,13 @@ class AnnouncementApiTests(APITestCase):
         response = self.client.post('/api/announcements/', self.base_payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['created_by_name'], 'Casey Officer')
+        self.assertEqual(response.data['announcement_type'], Announcement.TYPE_IMPORTANT)
         self.assertEqual(Announcement.objects.count(), 1)
-        self.assertEqual(Announcement.objects.get().created_by, self.officer)
-        self.assertIsNotNone(Announcement.objects.get().published_at)
+        created_announcement = Announcement.objects.get()
+        self.assertEqual(created_announcement.created_by, self.officer)
+        self.assertEqual(created_announcement.status, Announcement.PUBLISHED)
+        self.assertIsNotNone(created_announcement.published_at)
 
     def test_student_cannot_create_announcement(self):
         self.client.force_authenticate(user=self.student)
@@ -47,15 +51,30 @@ class AnnouncementApiTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_officer_create_requires_announcement_type(self):
+        self.client.force_authenticate(user=self.officer)
+
+        invalid_payload = {
+            'title': 'Missing type',
+            'content': 'This should fail validation.',
+        }
+
+        response = self.client.post('/api/announcements/', invalid_payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('announcement_type', response.data)
+
     def test_student_only_sees_published_announcements(self):
         Announcement.objects.create(
             title='Published Announcement',
+            announcement_type=Announcement.TYPE_EVENT,
             content='Visible to students.',
             status=Announcement.PUBLISHED,
             created_by=self.officer,
         )
         Announcement.objects.create(
             title='Draft Announcement',
+            announcement_type=Announcement.TYPE_IMPORTANT,
             content='Officer only.',
             status=Announcement.DRAFT,
             created_by=self.officer,
@@ -67,3 +86,5 @@ class AnnouncementApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['title'], 'Published Announcement')
+        self.assertEqual(response.data[0]['created_by_name'], 'Casey Officer')
+        self.assertEqual(response.data[0]['announcement_type'], Announcement.TYPE_EVENT)

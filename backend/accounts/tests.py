@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 
 from announcements.models import Announcement
 from events.models import Event
-from .models import User
+from .models import DashboardMessage, User
 
 
 class UserModelTests(TestCase):
@@ -67,6 +67,10 @@ class AdminDashboardViewTests(APITestCase):
         )
 
     def test_officer_dashboard_returns_live_stats(self):
+        DashboardMessage.objects.create(
+            message='Enrollment support week starts on Monday.',
+            updated_by=self.officer,
+        )
         Event.objects.create(
             title='Upcoming Event',
             description='Upcoming',
@@ -107,6 +111,14 @@ class AdminDashboardViewTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['officer']['name'], 'Taylor Officer')
+        self.assertEqual(
+            response.data['dashboard_message']['message'],
+            'Enrollment support week starts on Monday.',
+        )
+        self.assertEqual(
+            response.data['dashboard_message']['updated_by_name'],
+            'Taylor Officer',
+        )
         self.assertEqual(response.data['stats']['total_events'], 2)
         self.assertEqual(response.data['stats']['upcoming_events'], 1)
         self.assertEqual(response.data['stats']['published_announcements'], 1)
@@ -124,5 +136,71 @@ class AdminDashboardViewTests(APITestCase):
         self.client.force_authenticate(user=self.student)
 
         response = self.client.get('/api/officer/dashboard/')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class DashboardMessageViewTests(APITestCase):
+    def setUp(self):
+        self.officer = User.objects.create_user(
+            student_id='2026-9101',
+            email='dashboard-message-officer@example.com',
+            password='secure-password',
+            role='OFFICER',
+            position='Secretary',
+            first_name='Morgan',
+            last_name='Editor',
+        )
+        self.student = User.objects.create_user(
+            student_id='2026-9102',
+            email='dashboard-message-student@example.com',
+            password='secure-password',
+            role='STUDENT',
+            first_name='Sam',
+            last_name='Reader',
+        )
+
+    def test_authenticated_user_can_read_dashboard_message(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.get('/api/dashboard-message/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data['message'],
+            DashboardMessage.DEFAULT_MESSAGE,
+        )
+
+    def test_officer_can_update_dashboard_message(self):
+        self.client.force_authenticate(user=self.officer)
+
+        response = self.client.patch(
+            '/api/dashboard-message/',
+            {'message': 'Classes resume next Tuesday. Be ready for check-in.'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data['message'],
+            'Classes resume next Tuesday. Be ready for check-in.',
+        )
+        self.assertEqual(response.data['updated_by_name'], 'Morgan Editor')
+
+        dashboard_message = DashboardMessage.objects.get(key=DashboardMessage.WHATS_NEW)
+        self.assertEqual(
+            dashboard_message.message,
+            'Classes resume next Tuesday. Be ready for check-in.',
+        )
+        self.assertEqual(dashboard_message.updated_by, self.officer)
+
+    def test_student_cannot_update_dashboard_message(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.patch(
+            '/api/dashboard-message/',
+            {'message': 'Students should not be able to edit this.'},
+            format='json',
+        )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

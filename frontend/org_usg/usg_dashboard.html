@@ -27,7 +27,7 @@
         } */
 
         .content-area {
-            padding: 30px;
+            padding: 5px 30px 5px 30px;
             flex: 1;
         }
 
@@ -60,9 +60,9 @@
             justify-content: center;
             margin-bottom: 15px;
             font-size: 1.5rem;
-        }
+        } */
 
-        .stat-card:nth-child(1) .stat-icon {
+        /* .stat-card:nth-child(1) .stat-icon {
             background: rgba(52, 152, 219, 0.1);
             color: #3498db;
             color: #2ecc71;
@@ -95,110 +95,124 @@
             margin-bottom: 5px;
         }
 
-        .dashboard-feedback {
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 20px;
-            background: #fff3cd;
-            color: #664d03;
-            border: 1px solid #ffe69c;
-        }
-
-        .dashboard-feedback.hidden {
-            display: none;
-        }
-
         /* Recent Activity / Announcements */
-        .recent-activity {
+        .whats-new {
             background: white;
+            color: #1e174a;
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
 
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ecf0f1;
+        /* Grid container for the 2+1 layout */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        /* Ensure the right column card stretches to fill the height */
+        .info-grid .right-column .stat-card {
+            height: 100%;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: #3498db;
+            flex-direction: column;
         }
 
-        .announcement-title {
-            color: #1e174a;
-            font-weight: 600;
-            margin-bottom: 5px;
+        .summary-stack,
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .announcement-content {
-            color: #555;
-            margin-bottom: 10px;
-            line-height: 1.6;
+        .summary-item,
+        .recent-item {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: #fcfcfd;
         }
 
-        .announcement-date {
-            color: #888;
+        .summary-label,
+        .recent-meta {
+            color: #6C757D;
             font-size: 0.9rem;
         }
 
-        .announcement-item {
-            padding: 18px 0;
-            border-top: 1px solid #ececec;
-        }
-
-        .announcement-item:first-child {
-            border-top: none;
-            padding-top: 0;
-        }
-
-        .announcement-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .announcement-status {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 999px;
-            padding: 4px 10px;
-            font-size: 0.78rem;
+        .summary-value,
+        .recent-title {
+            color: #1e174a;
+            font-size: 1rem;
             font-weight: 700;
-            letter-spacing: 0.03em;
+            margin: 4px 0 0;
         }
 
-        .status-published {
+        .recent-title {
+            margin-bottom: 6px;
+        }
+
+        .recent-content {
+            color: #343a40;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .dashboard-empty {
+            color: #6C757D;
+            border: 1px dashed #d9d9d9;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .dashboard-link {
+            text-decoration: none;
+        }
+
+        #dashboardWelcomeText {
+            white-space: pre-wrap;
+        }
+
+        .dashboard-message-feedback {
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .dashboard-message-feedback.hidden {
+            display: none;
+        }
+
+        .dashboard-message-feedback.error {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f1aeb5;
+        }
+
+        .dashboard-message-feedback.success {
             background: #d1e7dd;
             color: #0f5132;
+            border: 1px solid #a3cfbb;
         }
 
-        .status-draft {
-            background: #fff3cd;
-            color: #664d03;
+        .dashboard-message-modal textarea {
+            min-height: 180px;
+            resize: vertical;
         }
 
-        .status-archived {
-            background: #e2e3e5;
-            color: #41464b;
-        }
+        /* Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .info-grid {
+                /* On smaller screens, stack them vertically */
+                grid-template-columns: 1fr;
+            }
 
-        .no-announcements {
-            text-align: center;
-            padding: 40px 20px;
-            color: #6C757D;
-        }
-
-        .no-announcements i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #ddd;
+            .info-grid .left-column {
+                margin-bottom: 0;
+            }
         }
 
         @media (max-width: 768px) {
@@ -211,17 +225,16 @@
                 gap: 15px;
             }
 
-            .recent-activity {
+            .stat-card {
+                padding: 20px;
+            }
+
+            .whats-new {
                 padding: 20px;
             }
         }
 
         @media (max-width: 576px) {
-            .activity-icon {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-
             .sidebar-header h4 {
                 font-size: 1rem;
             }
@@ -250,17 +263,9 @@
         });
     }
 
-    function truncateText(value, maxLength = 160) {
-        const text = String(value ?? "").trim();
-        if (text.length <= maxLength) {
-            return text;
-        }
-        return text.slice(0, maxLength - 1).trimEnd() + "…";
-    }
-
     function formatDate(value) {
         if (!value) {
-            return "Saved as draft";
+            return "Date unavailable";
         }
 
         const parsedDate = new Date(value);
@@ -277,69 +282,233 @@
         });
     }
 
-    function renderStats(stats) {
-        document.getElementById("totalEventsValue").textContent = stats.total_events ?? 0;
-        document.getElementById("upcomingEventsValue").textContent = stats.upcoming_events ?? 0;
-        document.getElementById("publishedAnnouncementsValue").textContent = stats.published_announcements ?? 0;
-        document.getElementById("draftAnnouncementsValue").textContent = stats.draft_announcements ?? 0;
+    function setText(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = value;
+        }
     }
 
-    function renderOfficerSummary(officer) {
-        const titleElement = document.getElementById("dashboardTitle");
-        const subtitleElement = document.getElementById("dashboardSubtitle");
+    function formatApiError(errorData) {
+        if (!errorData || typeof errorData !== "object") {
+            return "Unable to save the dashboard update right now.";
+        }
 
-        if (!officer || !officer.name) {
-            titleElement.textContent = "Officer Dashboard";
-            subtitleElement.textContent = "Live backend summary for the current USG workspace.";
+        if (typeof errorData.detail === "string") {
+            return errorData.detail;
+        }
+
+        const firstFieldError = Object.values(errorData).find(function (value) {
+            return Array.isArray(value) && value.length;
+        });
+
+        if (firstFieldError) {
+            return firstFieldError[0];
+        }
+
+        return "Unable to save the dashboard update right now.";
+    }
+
+    function setDashboardMessageFeedback(message, type) {
+        const feedbackElement = document.getElementById("dashboardMessageFeedback");
+        if (!feedbackElement) {
             return;
         }
 
-        titleElement.textContent = "Officer Dashboard";
-        subtitleElement.textContent = officer.position
-            ? `${officer.name} • ${officer.position}`
-            : officer.name;
+        feedbackElement.textContent = message;
+        feedbackElement.className = `dashboard-message-feedback ${type}`;
+        feedbackElement.classList.remove("hidden");
     }
 
-    function renderAnnouncements(announcements) {
-        const container = document.getElementById("announcementsList");
+    function clearDashboardMessageFeedback() {
+        const feedbackElement = document.getElementById("dashboardMessageFeedback");
+        if (!feedbackElement) {
+            return;
+        }
 
-        if (!announcements || announcements.length === 0) {
-            container.innerHTML = `
-                <div class="no-announcements">
-                    <h5 class="mb-2">No announcements yet</h5>
-                    <p class="mb-0">Published and draft announcements will appear here once officers start posting updates.</p>
+        feedbackElement.textContent = "";
+        feedbackElement.className = "dashboard-message-feedback hidden";
+    }
+
+    function renderDashboardMessage(dashboardMessage) {
+        const messageText = dashboardMessage && dashboardMessage.message
+            ? dashboardMessage.message
+            : "Welcome to a new school year!";
+
+        setText("dashboardWelcomeText", messageText);
+
+        const messageInput = document.getElementById("dashboardMessageInput");
+        if (messageInput) {
+            messageInput.value = messageText;
+        }
+    }
+
+    function renderOfficerSummary(officer) {
+        const summaryElement = document.getElementById("officerSummary");
+        if (!summaryElement) {
+            return;
+        }
+
+        const summaryItems = [
+            {
+                label: "Officer",
+                value: officer.name || "Officer account"
+            },
+            {
+                label: "Position",
+                value: officer.position || "Position not set"
+            },
+            {
+                label: "Student ID",
+                value: officer.student_id || "Not available"
+            }
+        ];
+
+        summaryElement.innerHTML = summaryItems.map(function (item) {
+            return `
+                <div class="summary-item">
+                    <div class="summary-label">${escapeHtml(item.label)}</div>
+                    <p class="summary-value">${escapeHtml(item.value)}</p>
                 </div>
+            `;
+        }).join("");
+    }
+
+    function renderRecentAnnouncements(announcements) {
+        const recentElement = document.getElementById("recentAnnouncementsList");
+        if (!recentElement) {
+            return;
+        }
+
+        if (!announcements.length) {
+            recentElement.innerHTML = `
+                <p class="dashboard-empty">
+                    No announcements yet. Publish one from the announcements page to populate this dashboard panel.
+                </p>
             `;
             return;
         }
 
-        container.innerHTML = announcements.map(function (announcement) {
-            const statusClass = {
-                PUBLISHED: "status-published",
-                DRAFT: "status-draft",
-                ARCHIVED: "status-archived"
-            }[announcement.status] || "status-archived";
-
-            const statusLabel = (announcement.status || "UNKNOWN").replaceAll("_", " ");
+        recentElement.innerHTML = announcements.map(function (announcement) {
+            const primaryDate = announcement.published_at || announcement.created_at;
 
             return `
-                <article class="announcement-item">
-                    <div class="announcement-meta">
-                        <span class="announcement-status ${statusClass}">${escapeHtml(statusLabel)}</span>
-                        <span class="announcement-date">${escapeHtml(formatDate(announcement.published_at || announcement.created_at))}</span>
+                <article class="recent-item">
+                    <div class="recent-title">${escapeHtml(announcement.title)}</div>
+                    <div class="recent-meta">
+                        ${escapeHtml(announcement.created_by || "Unknown officer")} | ${escapeHtml(formatDate(primaryDate))}
                     </div>
-                    <h5 class="announcement-title">${escapeHtml(announcement.title)}</h5>
-                    <p class="announcement-content">${escapeHtml(truncateText(announcement.content))}</p>
-                    <p class="announcement-date mb-0">By ${escapeHtml(announcement.created_by || "Unknown officer")}</p>
+                    <p class="recent-content">${escapeHtml(announcement.content)}</p>
                 </article>
             `;
         }).join("");
     }
 
-    function showDashboardError(message) {
-        const errorElement = document.getElementById("dashboardError");
-        errorElement.textContent = message;
-        errorElement.classList.remove("hidden");
+    function renderDashboard(data) {
+        const stats = data.stats || {};
+        const officer = data.officer || {};
+        const dashboardMessage = data.dashboard_message || {};
+        const recentAnnouncements = Array.isArray(data.recent_announcements) ? data.recent_announcements : [];
+
+        renderDashboardMessage(dashboardMessage);
+        setText("dashboardAnnouncementsCount", String(stats.published_announcements ?? 0));
+        setText("dashboardEventsCount", String(stats.total_events ?? 0));
+        setText("dashboardUpcomingEventsCount", String(stats.upcoming_events ?? 0));
+        renderOfficerSummary(officer);
+        renderRecentAnnouncements(recentAnnouncements);
+    }
+
+    function handleAuthFailure() {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "../index.html";
+    }
+
+    function renderDashboardError() {
+        setText("dashboardWelcomeText", "Unable to load live dashboard data right now.");
+        setText("dashboardAnnouncementsCount", "--");
+        setText("dashboardEventsCount", "--");
+        setText("dashboardReportsCount", "--");
+
+        const officerSummary = document.getElementById("officerSummary");
+        if (officerSummary) {
+            officerSummary.innerHTML = `
+                <p class="dashboard-empty">
+                    Officer details are unavailable until the backend connection is restored.
+                </p>
+            `;
+        }
+
+        const recentAnnouncements = document.getElementById("recentAnnouncementsList");
+        if (recentAnnouncements) {
+            recentAnnouncements.innerHTML = `
+                <p class="dashboard-empty">
+                    Recent announcements could not be loaded. Check that the backend server is running.
+                </p>
+            `;
+        }
+    }
+
+    async function saveDashboardMessage(event) {
+        event.preventDefault();
+        clearDashboardMessageFeedback();
+
+        const messageInput = document.getElementById("dashboardMessageInput");
+        const saveButton = document.getElementById("saveDashboardMessageButton");
+        const message = messageInput.value.trim();
+
+        if (!message) {
+            setDashboardMessageFeedback("Please enter a dashboard message before saving.", "error");
+            return;
+        }
+
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+            const response = await fetch(API_BASE_URL + "/api/dashboard-message/", {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                handleAuthFailure();
+                return;
+            }
+
+            const responseData = await response.json().catch(function () {
+                return {};
+            });
+
+            if (!response.ok) {
+                setDashboardMessageFeedback(formatApiError(responseData), "error");
+                return;
+            }
+
+            renderDashboardMessage(responseData);
+
+            const modalElement = document.getElementById("dashboardMessageModal");
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
+            clearDashboardMessageFeedback();
+            await loadDashboard();
+        } catch (error) {
+            console.error("Dashboard message update failed:", error);
+            setDashboardMessageFeedback(
+                "The dashboard message could not be saved because the backend is unavailable.",
+                "error"
+            );
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = "Save Update";
+        }
     }
 
     async function loadDashboard() {
@@ -352,29 +521,31 @@
             });
 
             if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem("access_token");
-                localStorage.removeItem("refresh_token");
-                window.location.href = "../index.html";
+                handleAuthFailure();
                 return;
             }
 
             if (!response.ok) {
-                showDashboardError("Unable to load dashboard data right now. Please try again.");
+                renderDashboardError();
                 return;
             }
 
             const data = await response.json();
-            renderOfficerSummary(data.officer);
-            renderStats(data.stats || {});
-            renderAnnouncements(data.recent_announcements || []);
+            renderDashboard(data);
 
         } catch (error) {
-            console.error("Error:", error);
-            showDashboardError("The dashboard could not reach the backend. Check that the server is running and try again.");
+            console.error("Dashboard load failed:", error);
+            renderDashboardError();
         }
     }
 
-    window.addEventListener("DOMContentLoaded", loadDashboard);
+    window.addEventListener("DOMContentLoaded", function () {
+        const dashboardMessageForm = document.getElementById("dashboardMessageForm");
+        if (dashboardMessageForm) {
+            dashboardMessageForm.addEventListener("submit", saveDashboardMessage);
+        }
+        loadDashboard();
+    });
 </script>
 
 <body>
@@ -789,62 +960,94 @@
 
         <!-- Content Area -->
         <div class="content-area">
-            <div class="mb-4">
-                <h2 class="mb-1" id="dashboardTitle">Officer Dashboard</h2>
-                <p class="text-muted mb-0" id="dashboardSubtitle">Live backend summary for the current USG workspace.</p>
-            </div>
 
-            <div class="dashboard-feedback hidden" id="dashboardError"></div>
+            <div class="whats-new mb-4">
+                <div
+                    class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-3 gap-sm-0">
+                    <div>
+                        <h4 class="mb-1 mb-sm-0">What's New!</h4>
+                        <p class="text-muted mb-0" id="dashboardWelcomeText">Loading latest dashboard update...</p>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-1"
+                        data-bs-toggle="modal" data-bs-target="#dashboardMessageModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-pencil-icon lucide-pencil">
+                            <path
+                                d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                            <path d="m15 5 4 4" />
+                        </svg> Edit
+                    </button>
+                </div>
+            </div>
 
             <!-- Stats Cards -->
             <div class="stats-cards">
                 <div class="stat-card">
-                    <div class="stat-label">Total Events</div>
-                    <div class="stat-value" id="totalEventsValue">--</div>
+                    <div class="stat-label">Announcements</div>
+                    <div class="stat-value" id="dashboardAnnouncementsCount">--</div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-label">Upcoming Events</div>
-                    <div class="stat-value" id="upcomingEventsValue">--</div>
+                    <div class="stat-label">Events</div>
+                    <div class="stat-value" id="dashboardEventsCount">--</div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-label">Published Announcements</div>
-                    <div class="stat-value" id="publishedAnnouncementsValue">--</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-label">Draft Announcements</div>
-                    <div class="stat-value" id="draftAnnouncementsValue">--</div>
+                    <div class="stat-label">Reports</div>
+                    <div class="stat-value" id="dashboardReportsCount">--</div>
                 </div>
             </div>
 
-            <div class="recent-activity">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">Announcements</h4>
-                    <a href="usg_announcement.html" class="btn btn-sm btn-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-view-icon lucide-view">
-                            <path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
-                            <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
-                            <circle cx="12" cy="12" r="1" />
-                            <path
-                                d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0" />
-                        </svg> View All
-                    </a>
+            <div class="info-grid mt-4">
+                <div class="left-column">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Event Summary</div>
+                        <hr>
+                        <div class="summary-stack" id="officerSummary">
+                            <p class="dashboard-empty">Loading officer details...</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="announcementsList">
-                    <div class="no-announcements">
-                        <h5 class="mb-2">Loading announcements...</h5>
-                        <p class="mb-0">The dashboard is pulling the latest updates from the backend.</p>
+
+                <div class="right-column">
+                    <div class="stat-card h-100">
+                        <div class="stat-label">Recent Announcements</div>
+                        <hr>
+                        <div class="recent-list" id="recentAnnouncementsList">
+                            <p class="dashboard-empty">Loading recent announcements...</p>
+                        </div>
                     </div>
                 </div>
             </div>
-
+            
         </div>
 
+    </div>
 
+    <div class="modal fade dashboard-message-modal" id="dashboardMessageModal" tabindex="-1"
+        aria-labelledby="dashboardMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dashboardMessageModalLabel">Edit What's New Message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="dashboardMessageForm">
+                    <div class="modal-body">
+                        <div class="dashboard-message-feedback hidden" id="dashboardMessageFeedback"></div>
+                        <div class="mb-0">
+                            <label for="dashboardMessageInput" class="form-label">Dashboard message</label>
+                            <textarea class="form-control" id="dashboardMessageInput" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-dark" id="saveDashboardMessageButton">Save Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->

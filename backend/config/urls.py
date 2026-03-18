@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from accounts.views import AdminDashboardView
+from accounts.views import AdminDashboardView, DashboardMessageView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('api/officer/dashboard/', AdminDashboardView.as_view()),
+    path('api/dashboard-message/', DashboardMessageView.as_view()),
     path('api/', include('announcements.urls')),
     path('api/', include('events.urls')),
 ]

@@ -1,6 +1,6 @@
 # File Tree: usg_web
 
-**Generated:** 3/13/2026, 9:52:05 PM
+**Generated:** 3/18/2026, 2:02:24 PM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
@@ -10,17 +10,20 @@
 │   │   │   ├── 🐍 0001_initial.py
 │   │   │   ├── 🐍 0002_remove_user_is_verified_remove_user_verified_at.py
 │   │   │   ├── 🐍 0003_add_user_profile_fields.py
+│   │   │   ├── 🐍 0004_dashboardmessage.py
 │   │   │   └── 🐍 __init__.py
 │   │   ├── 🐍 __init__.py
 │   │   ├── 🐍 admin.py
 │   │   ├── 🐍 apps.py
 │   │   ├── 🐍 models.py
 │   │   ├── 🐍 permissions.py
+│   │   ├── 🐍 serializers.py
 │   │   ├── 🐍 tests.py
 │   │   └── 🐍 views.py
 │   ├── 📁 announcements
 │   │   ├── 📁 migrations
 │   │   │   ├── 🐍 0001_initial.py
+│   │   │   ├── 🐍 0002_announcement_announcement_type_and_status_default.py
 │   │   │   └── 🐍 __init__.py
 │   │   ├── 🐍 __init__.py
 │   │   ├── 🐍 admin.py
@@ -90,6 +93,7 @@
     │   │   └── 📁 js
     │   │       └── 📄 sidebar.js
     │   ├── 🌐 usg_announcement.html
+    │   ├── 🐘 usg_announcement.php
     │   ├── 🌐 usg_dashboard.html
     │   ├── 🌐 usg_event.html
     │   ├── 🌐 usg_gen_assembly.html

@@ -142,7 +142,8 @@ The officer web frontend currently follows a **partially API-driven rendering ap
 
 In the current repository:
 - login and token-based access control are live
-- protected dashboard access validation is live
+- officer dashboard summaries and recent announcement rendering are live
+- the officer "What's New" card is backed by a shared backend-stored message and editable through the API
 - backend APIs for events and announcements are implemented
 - several officer-facing pages remain partially integrated and still function as UI-first scaffolds
 

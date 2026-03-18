@@ -6,20 +6,27 @@ from .models import Announcement
 
 class AnnouncementSerializer(serializers.ModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    created_by_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Announcement
         fields = (
             'id',
             'title',
+            'announcement_type',
             'content',
             'status',
             'published_at',
             'created_by',
+            'created_by_name',
             'created_at',
             'updated_at',
         )
         read_only_fields = ('published_at', 'created_by', 'created_at', 'updated_at')
+
+    def get_created_by_name(self, obj):
+        full_name = obj.created_by.get_full_name()
+        return full_name or obj.created_by.student_id
 
     def create(self, validated_data):
         if validated_data.get('status') == Announcement.PUBLISHED:

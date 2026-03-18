@@ -156,9 +156,15 @@ Recommended grouping examples:
 - `/api/token/`
 - `/api/token/refresh/`
 
-### 5.2 Officer-Focused
+### 5.2 Dashboard and Officer-Focused
 - `/api/officer/dashboard/`
+- `/api/dashboard-message/`
 - `/api/officer/analytics/`
+
+`/api/dashboard-message/` is intended as a shared authenticated dashboard-content endpoint.
+It can be read by authenticated clients and updated by OFFICER users so both the officer
+web dashboard and the student mobile dashboard can surface the same current "What's New"
+message when needed.
 
 ### 5.3 Governance and Communication
 - `/api/events/`
@@ -409,7 +415,7 @@ Recommended support where appropriate:
 
 Examples:
 - events filtered by upcoming/completed
-- announcements filtered by active/published
+- announcements filtered by published status or announcement type
 - borrow requests filtered by status
 - payments filtered by student or status
 - reports filtered by type and status

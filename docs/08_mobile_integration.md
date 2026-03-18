@@ -130,6 +130,7 @@ The Home screen acts as the main student entry point.
 It should provide a consolidated view of the most relevant student-facing information,
 such as:
 
+- a shared dashboard "What's New" message from the backend
 - currently active or upcoming events
 - recent announcements
 - active attendance opportunities
@@ -140,6 +141,10 @@ such as:
 
 The Home screen is a visibility layer only.
 It should summarize information from other modules without replacing their full detail views.
+
+When a shared dashboard message is implemented in the backend, the mobile Home screen may
+consume the same authenticated dashboard-message endpoint used by the officer web dashboard
+for current "What's New" text, while still respecting student-visible scope.
 
 ---
 

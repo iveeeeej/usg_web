@@ -87,6 +87,149 @@
             background: #2c2375;
         }
 
+        .section-subtitle {
+            color: #6c757d;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .announcement-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .announcement-log-item {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 18px 20px;
+            background: #fdfdfd;
+        }
+
+        .announcement-log-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .announcement-log-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e174a;
+        }
+
+        .announcement-log-meta {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .announcement-log-content {
+            color: #343a40;
+            line-height: 1.6;
+            margin-bottom: 0;
+            white-space: pre-wrap;
+        }
+
+        .announcement-status {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            flex-shrink: 0;
+        }
+
+        .type-event {
+            background: #fff1e6;
+            color: #b55300;
+        }
+
+        .type-cleaning {
+            background: #f3e8df;
+            color: #6b4f3f;
+        }
+
+        .type-meeting {
+            background: #e2f0ff;
+            color: #0b5ed7;
+        }
+
+        .type-seminar {
+            background: #d9f2f7;
+            color: #0f6f80;
+        }
+
+        .type-workshop {
+            background: #efe6ff;
+            color: #5f3dc4;
+        }
+
+        .type-maintenance {
+            background: #ececec;
+            color: #495057;
+        }
+
+        .type-urgent {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .type-important {
+            background: #fff3cd;
+            color: #7c5c00;
+        }
+
+        .announcement-feedback {
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .announcement-feedback.hidden {
+            display: none;
+        }
+
+        .announcement-feedback.info {
+            background: #e7f1ff;
+            color: #0a58ca;
+            border: 1px solid #b6d4fe;
+        }
+
+        .announcement-feedback.error {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f1aeb5;
+        }
+
+        .announcement-feedback.success {
+            background: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #a3cfbb;
+        }
+
+        .empty-log {
+            text-align: center;
+            color: #6c757d;
+            padding: 32px 12px;
+            border: 1px dashed #d9d9d9;
+            border-radius: 12px;
+        }
+
+        .modal label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .modal textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
 
         /* Custom badge colors for announcement types */
         /* .bg-event {
@@ -106,6 +249,270 @@
         } */
     </style>
 </head>
+
+<script>
+    const API_BASE_URL = "http://127.0.0.1:8000";
+    const token = localStorage.getItem("access_token");
+    const ANNOUNCEMENT_TYPE_LABELS = {
+        event: "Event",
+        cleaning: "Cleaning",
+        meeting: "Meeting",
+        seminar: "Seminar",
+        workshop: "Workshop",
+        maintenance: "Maintenance",
+        urgent: "Urgent",
+        important: "Important"
+    };
+
+    if (!token) {
+        window.location.href = "../index.html";
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (character) {
+            const replacements = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "\"": "&quot;",
+                "'": "&#39;"
+            };
+            return replacements[character];
+        });
+    }
+
+    function formatDate(value) {
+        if (!value) {
+            return "Saved as draft";
+        }
+
+        const parsedDate = new Date(value);
+        if (Number.isNaN(parsedDate.getTime())) {
+            return "Date unavailable";
+        }
+
+        return parsedDate.toLocaleString("en-PH", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+        });
+    }
+
+    function setFeedback(message, type = "info") {
+        const feedbackElement = document.getElementById("announcementFeedback");
+        feedbackElement.textContent = message;
+        feedbackElement.className = `announcement-feedback ${type}`;
+        feedbackElement.classList.remove("hidden");
+    }
+
+    function clearFeedback() {
+        const feedbackElement = document.getElementById("announcementFeedback");
+        feedbackElement.textContent = "";
+        feedbackElement.className = "announcement-feedback hidden";
+    }
+
+    function formatApiError(errorData) {
+        if (!errorData || typeof errorData !== "object") {
+            return "Announcement save failed. Please review the form and try again.";
+        }
+
+        if (typeof errorData.detail === "string") {
+            return errorData.detail;
+        }
+
+        const firstFieldError = Object.values(errorData).find(function (value) {
+            return Array.isArray(value) && value.length;
+        });
+
+        if (firstFieldError) {
+            return firstFieldError[0];
+        }
+
+        return "Announcement save failed. Please review the form and try again.";
+    }
+
+    function normalizeStaticCopy() {
+        const subtitleElement = document.querySelector(".section-subtitle");
+        if (subtitleElement) {
+            subtitleElement.innerHTML = 'Live officer announcement log &middot; <span id="announcementCount">0</span> records';
+        }
+    }
+
+    function formatAnnouncementType(value) {
+        const normalizedValue = String(value || "").toLowerCase();
+        return ANNOUNCEMENT_TYPE_LABELS[normalizedValue] || "Important";
+    }
+
+    function getAnnouncementTypeClass(value) {
+        const normalizedValue = String(value || "").toLowerCase();
+        return {
+            event: "type-event",
+            cleaning: "type-cleaning",
+            meeting: "type-meeting",
+            seminar: "type-seminar",
+            workshop: "type-workshop",
+            maintenance: "type-maintenance",
+            urgent: "type-urgent",
+            important: "type-important"
+        }[normalizedValue] || "type-important";
+    }
+
+    function renderAnnouncements(announcements) {
+        const listElement = document.getElementById("announcementLogList");
+        const titleElement = document.getElementById("announcementCount");
+
+        titleElement.textContent = announcements.length;
+
+        if (!announcements.length) {
+            listElement.innerHTML = `
+                <div class="empty-log">
+                    <h5 class="mb-2">No announcements yet</h5>
+                    <p class="mb-0">Create your first announcement to start the officer communication log.</p>
+                </div>
+            `;
+            return;
+        }
+
+        listElement.innerHTML = announcements.map(function (announcement) {
+            const typeClass = getAnnouncementTypeClass(announcement.announcement_type);
+            const typeLabel = formatAnnouncementType(announcement.announcement_type);
+            const primaryDate = announcement.published_at || announcement.created_at;
+
+            return `
+                <article class="announcement-log-item">
+                    <div class="announcement-log-header">
+                        <div>
+                            <h5 class="announcement-log-title">${escapeHtml(announcement.title)}</h5>
+                            <div class="announcement-log-meta">
+                                By ${escapeHtml(announcement.created_by || "Unknown officer")} • ${escapeHtml(formatDate(primaryDate))}
+                            </div>
+                        </div>
+                        <span class="announcement-status ${typeClass}">${escapeHtml(typeLabel)}</span>
+                    </div>
+                    <p class="announcement-log-content">${escapeHtml(announcement.content)}</p>
+                </article>
+            `;
+        }).join("");
+        listElement.querySelectorAll(".announcement-log-meta").forEach(function (element) {
+            element.textContent = element.textContent.replace(/\s+[^\x00-\x7F]+\s+/, " | ");
+        });
+        listElement.innerHTML = listElement.innerHTML.replaceAll("ƒ?›", "&middot;").replaceAll("\u0007", "&middot;");
+    }
+
+    async function loadAnnouncements() {
+        clearFeedback();
+
+        try {
+            const response = await fetch(API_BASE_URL + "/api/announcements/?ordering=-created_at", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                window.location.href = "../index.html";
+                return;
+            }
+
+            if (!response.ok) {
+                setFeedback("Unable to load announcements right now. Please try again.", "error");
+                return;
+            }
+
+            const data = await response.json();
+            const announcements = Array.isArray(data) ? data.map(function (announcement) {
+                return {
+                    ...announcement,
+                    created_by: announcement.created_by_name || announcement.created_by
+                };
+            }) : [];
+            renderAnnouncements(announcements);
+        } catch (error) {
+            console.error("Announcement load failed:", error);
+            setFeedback("The page could not reach the backend. Check that the server is running.", "error");
+        }
+    }
+
+    async function submitAnnouncement(event) {
+        event.preventDefault();
+        clearFeedback();
+
+        const form = document.getElementById("announcementForm");
+        const submitButton = document.getElementById("submitAnnouncementButton");
+        const payload = {
+            title: document.getElementById("announcementTitleInput").value.trim(),
+            announcement_type: document.getElementById("announcementTypeInput").value,
+            content: document.getElementById("announcementContentInput").value.trim(),
+        };
+
+        if (!payload.title || !payload.announcement_type || !payload.content) {
+            setFeedback("Title, type, and content are required before saving an announcement.", "error");
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving...";
+
+        try {
+            const response = await fetch(API_BASE_URL + "/api/announcements/", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                window.location.href = "../index.html";
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(function () {
+                    return {};
+                });
+                setFeedback(formatApiError(errorData), "error");
+                return;
+            }
+
+            const modalElement = document.getElementById("announcementModal");
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
+            form.reset();
+            setFeedback("Announcement saved successfully.", "success");
+            await loadAnnouncements();
+        } catch (error) {
+            console.error("Announcement submit failed:", error);
+            setFeedback("The announcement could not be saved because the backend is unavailable.", "error");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Save Announcement";
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "../index.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+        normalizeStaticCopy();
+        document.getElementById("announcementForm").addEventListener("submit", submitAnnouncement);
+        loadAnnouncements();
+    });
+</script>
 
 <body>
 
@@ -508,7 +915,7 @@
                             <i class="bi bi-person"></i>
                             <span>Profile</span>
                         </a>
-                        <a href="../index.html">
+                        <a href="#" onclick="logout()">
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Logout</span>
                         </a>
@@ -524,10 +931,11 @@
             <div class="stats-cards">
                 <div class="stat-card stat-card-header">
                     <div class="stat-left">
-                        <h4 class="mb-0">Announcement</h4>
+                        <h4 class="mb-0">Announcements</h4>
+                        <p class="section-subtitle">Live officer announcement log • <span id="announcementCount">0</span> records</p>
                     </div>
                     <div class="stat-right">
-                        <button class="add-btn">
+                        <button class="add-btn" type="button" data-bs-toggle="modal" data-bs-target="#announcementModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
@@ -545,10 +953,58 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Log</h4>
                 </div>
+                <div class="announcement-feedback hidden" id="announcementFeedback"></div>
+                <div class="announcement-log-list" id="announcementLogList">
+                    <div class="empty-log">
+                        <h5 class="mb-2">Loading announcements...</h5>
+                        <p class="mb-0">The page is pulling announcement records from the backend.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
 
+    </div>
+
+    <div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="announcementModalLabel">Create Announcement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="announcementForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="announcementTitleInput" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="announcementTitleInput" maxlength="255" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="announcementTypeInput" class="form-label">Type</label>
+                            <select class="form-select" id="announcementTypeInput" required>
+                                <option value="" selected disabled>Select announcement type</option>
+                                <option value="event">Event</option>
+                                <option value="cleaning">Cleaning</option>
+                                <option value="meeting">Meeting</option>
+                                <option value="seminar">Seminar</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="urgent">Urgent</option>
+                                <option value="important">Important</option>
+                            </select>
+                        </div>
+                        <div class="mb-0">
+                            <label for="announcementContentInput" class="form-label">Content</label>
+                            <textarea class="form-control" id="announcementContentInput" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-dark" id="submitAnnouncementButton">Save Announcement</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
@@ -556,7 +1012,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script src="../org_usg/components/js/sidebar.js"></script>
-    
+
 </body>
 
 </html>

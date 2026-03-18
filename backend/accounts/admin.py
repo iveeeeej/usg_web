@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import DashboardMessage, User
 
 
 class CustomUserAdmin(UserAdmin):
@@ -55,3 +55,16 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+
+
+@admin.register(DashboardMessage)
+class DashboardMessageAdmin(admin.ModelAdmin):
+    list_display = ('key', 'short_message', 'updated_by', 'updated_at')
+    readonly_fields = ('key', 'created_at', 'updated_at')
+    search_fields = ('message',)
+
+    def short_message(self, obj):
+        preview = obj.message.strip().splitlines()[0] if obj.message else ''
+        return preview[:80]
+
+    short_message.short_description = 'Message'

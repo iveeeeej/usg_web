@@ -438,19 +438,16 @@ PostgreSQL (current)
 
 ------------------------------------------------------------------------
 
-# 17. Next Development Step
+# 17. Current Next Development Step
 
-Proceed to Phase 2 (Governance and Communication Core) after
-foundation + infra are stable:
+Continue Phase 2 (Governance and Communication Core) from the current
+implemented baseline:
 
-- Dashboard module
-- Events module (including General Assembly via event_type)
-- Calendar / event scheduling view
-- Announcements module
-- Discussion Forum foundation
-- Notification / system alert foundation
-- Corresponding REST API endpoints
-- Officer web interface connections
+- expand remaining officer web interface connections
+- continue events page integration against the live backend APIs
+- begin Discussion Forum foundation
+- begin notification / system alert foundation
+- keep shared backend data reusable for the separate mobile client
 
 ------------------------------------------------------------------------
 
@@ -563,3 +560,98 @@ Mistakes:
 - The correction was to pause, restate the active phase, propose only
   one small Phase 2 slice, wait for user confirmation, and then continue
   incrementally
+
+## 18.5 Connected Officer Dashboard to Live Backend Data
+
+Date: 2026-03-14
+
+Reason:
+The officer dashboard had working authentication but still relied on
+placeholder content. This step converted the dashboard into a real
+backend-driven Phase 2 slice and introduced a shared "What's New"
+message intended to be reusable by the future mobile dashboard.
+
+Changes:
+- `backend/accounts/models.py`: added the `DashboardMessage` model
+- `backend/accounts/serializers.py`: added serializer support for the
+  shared dashboard message payload
+- `backend/accounts/views.py`: expanded `/api/officer/dashboard/` to
+  return officer summary data, announcement/event counts, recent
+  announcements, and the current dashboard message
+- `backend/accounts/views.py`: added `/api/dashboard-message/` with
+  authenticated reads and OFFICER-only updates
+- `backend/config/urls.py`: mounted the dashboard message endpoint
+- `backend/accounts/admin.py`: registered `DashboardMessage`
+- `backend/accounts/migrations/0004_dashboardmessage.py`: created for
+  the new dashboard message table
+- `backend/accounts/tests.py`: added dashboard message and dashboard API
+  coverage
+- `frontend/org_usg/usg_dashboard.html`: connected live dashboard data
+  and made the "What's New" card editable from the officer interface
+- `docs/03_technology_stack.md`, `docs/05_backend_structure.md`,
+  `docs/06_api_design_guidelines.md`, `docs/08_mobile_integration.md`,
+  and `docs/09_development_phases.md`: updated to record the shared
+  dashboard message behavior
+
+Verification:
+- `python manage.py check`
+- `python manage.py test accounts announcements events`
+- `python manage.py migrate accounts`
+- `python manage.py showmigrations accounts`
+
+Mistakes:
+- The first dashboard request was made before the new `accounts`
+  migration had been applied to the active PostgreSQL database
+- This caused the runtime error:
+  `relation "accounts_dashboardmessage" does not exist`
+- The correction was to run `python manage.py migrate accounts` and
+  verify that `accounts.0004_dashboardmessage` was applied
+- A secondary Windows log rotation `PermissionError` appeared while the
+  500 error was being logged because `backend/logs/django.log` was in
+  use; this was treated as a logging side effect, not the root cause
+
+## 18.6 Added Announcement Type Classification and Immediate Publish Flow
+
+Date: 2026-03-18
+
+Reason:
+The officer announcement form needed to follow the current UI direction
+from `usg_announcement.php` by collecting `type` instead of exposing raw
+workflow `status`. To stay aligned with the backend rules, the solution
+was to store `announcement_type` separately while keeping backend status
+control in place. The user decision for this step was that newly created
+announcements should go live immediately after creation.
+
+Changes:
+- `backend/announcements/models.py`: added `announcement_type` choices
+  and changed the default `status` to `PUBLISHED`
+- `backend/announcements/serializers.py`: exposed `announcement_type`
+  through the API
+- `backend/announcements/views.py`: added optional
+  `announcement_type` filtering support
+- `backend/announcements/admin.py`: updated list display and filters to
+  include announcement type
+- `backend/announcements/tests.py`: updated create, validation,
+  permission, and visibility coverage for the new field/default behavior
+- `backend/announcements/migrations/0002_announcement_announcement_type_and_status_default.py`:
+  created and applied to add the new field and status default
+- `frontend/org_usg/usg_announcement.html`: removed the `Status` field
+  from the create form, added `Type`, submitted `announcement_type`, and
+  changed announcement badges to reflect type labels
+- `docs/04_database_design_principles.md`,
+  `docs/05_backend_structure.md`, `docs/06_api_design_guidelines.md`,
+  and `docs/09_development_phases.md`: updated to reflect the new
+  `announcement_type` field and filtering behavior
+
+Verification:
+- `python manage.py check`
+- `python manage.py test announcements accounts events`
+- `python manage.py migrate announcements`
+- `python manage.py showmigrations announcements`
+
+Mistakes:
+- No implementation mistake was carried forward in this step because the
+  publish behavior was clarified before code changes were made
+- The key decision recorded for this step is:
+  new announcements default to `PUBLISHED` when the form no longer
+  exposes `status`

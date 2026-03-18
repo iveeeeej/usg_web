@@ -116,10 +116,11 @@ Scope:
 
 Tasks:
 ~ Implement Dashboard module
-    • summary cards
-    • recent activity feed
-    • quick officer visibility into major records
-    • event and announcement highlights
+    • summary cards now render live counts for announcements and events
+    • recent announcement feed is connected in the officer dashboard
+    • officer summary details are shown in the dashboard
+    • the "What's New" card is now backed by a shared database record and editable through the web dashboard
+    • deeper analytics and broader dashboard modules are still pending
 
 √ Implement Events module
     • create, update, publish, archive events
@@ -141,6 +142,8 @@ Tasks:
     • students can view published announcements
     • announcement visibility and status are managed centrally through the API
 
+    â€¢ announcement type classification is now stored separately from publish status
+
 x Implement Discussion Forum foundation
     • discussion threads
     • comments / replies
@@ -155,14 +158,18 @@ x Implement notification / alert foundation
 ~ Develop corresponding REST API endpoints
     • `/api/events/`, `/api/events/{id}/`, and `/api/events/{id}/attachments/` added
     • `/api/announcements/` and `/api/announcements/{id}/` added
-    • Phase 2 APIs for dashboard, discussions, and notifications are still pending
+    • `/api/officer/dashboard/` now returns officer summary, dashboard message, stats, and recent announcements
+    • `/api/dashboard-message/` now supports authenticated reads and OFFICER-only updates
+    • Phase 2 APIs for discussions and notifications are still pending
 ~ Connect officer web interfaces
     • login flow is connected to `/api/token/`
-    • protected dashboard access validation is connected to `/api/officer/dashboard/`
+    • dashboard cards and recent announcement panel now render live data from `/api/officer/dashboard/`
+    • the "What's New" card can now edit the shared dashboard message through `/api/dashboard-message/`
     • fuller API integration for events, announcements, assemblies, and discussions is still pending
 
 ~ Define backend support for basic mobile read/view integration for student-facing communication features
     • events and announcements APIs are available for student-facing clients
+    • `/api/dashboard-message/` provides shared authenticated "What's New" content reusable by future mobile dashboard views
     • the student mobile application may be implemented in a separate project
     • client-side mobile implementation status is tracked outside this repository
 
@@ -177,6 +184,17 @@ Progress update (2026-03-13):
 ~ `Announcement` model implemented
 ~ `/api/announcements/` and `/api/announcements/{id}/` added
 ~ OFFICER-only announcement writes and published-only student reads implemented
+
+Progress update (2026-03-14):
+~ `DashboardMessage` model and migration added in `accounts`
+~ `/api/dashboard-message/` added with authenticated reads and OFFICER-only updates
+~ `/api/officer/dashboard/` expanded with shared dashboard message data and live summary payloads
+~ officer dashboard now renders live counts, recent announcements, and an editable backend-backed "What's New" card
+
+Progress update (2026-03-18):
+~ `Announcement` now stores `announcement_type` separately from workflow status
+~ officer announcement creation now defaults to `PUBLISHED` when status is omitted
+~ officer announcement web form now captures `type` instead of exposing raw status selection
 
 Deliverable:
 A working governance and communication layer that centralizes updates,

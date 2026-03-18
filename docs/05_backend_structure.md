@@ -57,12 +57,14 @@ backend/
             0001_initial.py
             0002_remove_user_is_verified_remove_user_verified_at.py
             0003_add_user_profile_fields.py
+            0004_dashboardmessage.py
             __init__.py
         __init__.py
         admin.py
         apps.py
         models.py
         permissions.py
+        serializers.py
         tests.py
         views.py
     announcements/
@@ -111,8 +113,9 @@ Important clarification:
 - legacy files such as `old_settings.py` and `db.sqlite3` are not part of the current backend tree
 - older notes or snapshots that mention those files should be treated as legacy references only
 - environment-based settings are now organized under `config/settings/`
-- user-schema alignment is now reflected in the live migration chain through `0002` and `0003`
+- user-schema alignment is now reflected in the live migration chain through `0002`, `0003`, and `0004`
 - Phase 2 work has started through the live `events` and `announcements` apps
+- the `accounts` app now also contains the shared dashboard message model and serializer used by the officer dashboard and reusable by future mobile dashboard views
 
 This means the backend has already moved to a cleaner configuration structure than the older version of this document described.
 
@@ -154,6 +157,8 @@ The officer web interface in this repository does not rely on Django template re
 Its current implementation is partially API-connected:
 - authentication and token-based access control are live
 - protected dashboard access validation is live
+- live officer dashboard summaries and recent announcement rendering are now connected
+- the officer "What's New" card now reads from and writes to a shared backend-stored dashboard message
 - fuller page-level API integration for officer workflows is still in progress
 
 
@@ -169,6 +174,7 @@ Its current role is to hold the identity and access-control foundation of the sy
 
 It currently includes:
 - `models.py`
+- `serializers.py`
 - `views.py`
 - `permissions.py`
 - `admin.py`
@@ -181,6 +187,8 @@ This app is the appropriate place for:
 - role-based access helpers
 - authentication-related backend behavior tied to the user domain
 - account administration support
+- officer dashboard summary endpoints
+- shared dashboard message storage and update handling for both web and future mobile dashboard consumption
 
 ### 5.2 `backend/config/`
 
@@ -215,6 +223,7 @@ It currently includes:
 
 This app is the appropriate place for:
 - announcement records
+- announcement categorization metadata
 - publish/archive status handling
 - authenticated announcement read APIs
 - OFFICER-only announcement management APIs
