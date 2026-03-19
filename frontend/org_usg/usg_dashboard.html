@@ -41,47 +41,39 @@
 
         .stat-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+        }
+
+        .stats-cards .stat-card {
+            position: relative;
+            min-height: 120px;
+            padding-right: 92px;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
         }
 
-        /* .stat-icon {
+        .stat-icon {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
-            display: flex;
+            border-radius: 16px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        } */
-
-        /* .stat-card:nth-child(1) .stat-icon {
-            background: rgba(52, 152, 219, 0.1);
-            color: #3498db;
-            color: #2ecc71;
+            flex-shrink: 0;
+            border: 1px solid transparent;
         }
 
-        .stat-card:nth-child(2) .stat-icon {
-            background: rgba(46, 204, 113, 0.1);
-            color: #2ecc71;
+        .stats-cards .stat-icon {
+            position: absolute;
+            top: 50%;
+            right: 24px;
+            transform: translateY(-50%);
         }
-
-        .stat-card:nth-child(3) .stat-icon {
-            background: rgba(155, 89, 182, 0.1);
-            color: #9b59b6;
-        }
-
-        .stat-card:nth-child(4) .stat-icon {
-            background: rgba(241, 196, 15, 0.1);
-            color: #f1c40f;
-        } */
 
         .stat-label {
             color: #6C757D;
@@ -99,7 +91,7 @@
         .whats-new {
             background: white;
             color: #1e174a;
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
@@ -229,6 +221,14 @@
                 padding: 20px;
             }
 
+            .stats-cards .stat-card {
+                padding-right: 82px;
+            }
+
+            .stats-cards .stat-icon {
+                right: 20px;
+            }
+
             .whats-new {
                 padding: 20px;
             }
@@ -241,312 +241,6 @@
         }
     </style>
 </head>
-
-<script>
-    const API_BASE_URL = "http://127.0.0.1:8000";
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-        window.location.href = "../index.html";
-    }
-
-    function escapeHtml(value) {
-        return String(value ?? "").replace(/[&<>"']/g, function (character) {
-            const replacements = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                "\"": "&quot;",
-                "'": "&#39;"
-            };
-            return replacements[character];
-        });
-    }
-
-    function formatDate(value) {
-        if (!value) {
-            return "Date unavailable";
-        }
-
-        const parsedDate = new Date(value);
-        if (Number.isNaN(parsedDate.getTime())) {
-            return "Date unavailable";
-        }
-
-        return parsedDate.toLocaleString("en-PH", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit"
-        });
-    }
-
-    function setText(elementId, value) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.textContent = value;
-        }
-    }
-
-    function formatApiError(errorData) {
-        if (!errorData || typeof errorData !== "object") {
-            return "Unable to save the dashboard update right now.";
-        }
-
-        if (typeof errorData.detail === "string") {
-            return errorData.detail;
-        }
-
-        const firstFieldError = Object.values(errorData).find(function (value) {
-            return Array.isArray(value) && value.length;
-        });
-
-        if (firstFieldError) {
-            return firstFieldError[0];
-        }
-
-        return "Unable to save the dashboard update right now.";
-    }
-
-    function setDashboardMessageFeedback(message, type) {
-        const feedbackElement = document.getElementById("dashboardMessageFeedback");
-        if (!feedbackElement) {
-            return;
-        }
-
-        feedbackElement.textContent = message;
-        feedbackElement.className = `dashboard-message-feedback ${type}`;
-        feedbackElement.classList.remove("hidden");
-    }
-
-    function clearDashboardMessageFeedback() {
-        const feedbackElement = document.getElementById("dashboardMessageFeedback");
-        if (!feedbackElement) {
-            return;
-        }
-
-        feedbackElement.textContent = "";
-        feedbackElement.className = "dashboard-message-feedback hidden";
-    }
-
-    function renderDashboardMessage(dashboardMessage) {
-        const messageText = dashboardMessage && dashboardMessage.message
-            ? dashboardMessage.message
-            : "Welcome to a new school year!";
-
-        setText("dashboardWelcomeText", messageText);
-
-        const messageInput = document.getElementById("dashboardMessageInput");
-        if (messageInput) {
-            messageInput.value = messageText;
-        }
-    }
-
-    function renderOfficerSummary(officer) {
-        const summaryElement = document.getElementById("officerSummary");
-        if (!summaryElement) {
-            return;
-        }
-
-        const summaryItems = [
-            {
-                label: "Officer",
-                value: officer.name || "Officer account"
-            },
-            {
-                label: "Position",
-                value: officer.position || "Position not set"
-            },
-            {
-                label: "Student ID",
-                value: officer.student_id || "Not available"
-            }
-        ];
-
-        summaryElement.innerHTML = summaryItems.map(function (item) {
-            return `
-                <div class="summary-item">
-                    <div class="summary-label">${escapeHtml(item.label)}</div>
-                    <p class="summary-value">${escapeHtml(item.value)}</p>
-                </div>
-            `;
-        }).join("");
-    }
-
-    function renderRecentAnnouncements(announcements) {
-        const recentElement = document.getElementById("recentAnnouncementsList");
-        if (!recentElement) {
-            return;
-        }
-
-        if (!announcements.length) {
-            recentElement.innerHTML = `
-                <p class="dashboard-empty">
-                    No announcements yet. Publish one from the announcements page to populate this dashboard panel.
-                </p>
-            `;
-            return;
-        }
-
-        recentElement.innerHTML = announcements.map(function (announcement) {
-            const primaryDate = announcement.published_at || announcement.created_at;
-
-            return `
-                <article class="recent-item">
-                    <div class="recent-title">${escapeHtml(announcement.title)}</div>
-                    <div class="recent-meta">
-                        ${escapeHtml(announcement.created_by || "Unknown officer")} | ${escapeHtml(formatDate(primaryDate))}
-                    </div>
-                    <p class="recent-content">${escapeHtml(announcement.content)}</p>
-                </article>
-            `;
-        }).join("");
-    }
-
-    function renderDashboard(data) {
-        const stats = data.stats || {};
-        const officer = data.officer || {};
-        const dashboardMessage = data.dashboard_message || {};
-        const recentAnnouncements = Array.isArray(data.recent_announcements) ? data.recent_announcements : [];
-
-        renderDashboardMessage(dashboardMessage);
-        setText("dashboardAnnouncementsCount", String(stats.published_announcements ?? 0));
-        setText("dashboardEventsCount", String(stats.total_events ?? 0));
-        setText("dashboardUpcomingEventsCount", String(stats.upcoming_events ?? 0));
-        renderOfficerSummary(officer);
-        renderRecentAnnouncements(recentAnnouncements);
-    }
-
-    function handleAuthFailure() {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        window.location.href = "../index.html";
-    }
-
-    function renderDashboardError() {
-        setText("dashboardWelcomeText", "Unable to load live dashboard data right now.");
-        setText("dashboardAnnouncementsCount", "--");
-        setText("dashboardEventsCount", "--");
-        setText("dashboardReportsCount", "--");
-
-        const officerSummary = document.getElementById("officerSummary");
-        if (officerSummary) {
-            officerSummary.innerHTML = `
-                <p class="dashboard-empty">
-                    Officer details are unavailable until the backend connection is restored.
-                </p>
-            `;
-        }
-
-        const recentAnnouncements = document.getElementById("recentAnnouncementsList");
-        if (recentAnnouncements) {
-            recentAnnouncements.innerHTML = `
-                <p class="dashboard-empty">
-                    Recent announcements could not be loaded. Check that the backend server is running.
-                </p>
-            `;
-        }
-    }
-
-    async function saveDashboardMessage(event) {
-        event.preventDefault();
-        clearDashboardMessageFeedback();
-
-        const messageInput = document.getElementById("dashboardMessageInput");
-        const saveButton = document.getElementById("saveDashboardMessageButton");
-        const message = messageInput.value.trim();
-
-        if (!message) {
-            setDashboardMessageFeedback("Please enter a dashboard message before saving.", "error");
-            return;
-        }
-
-        saveButton.disabled = true;
-        saveButton.textContent = "Saving...";
-
-        try {
-            const response = await fetch(API_BASE_URL + "/api/dashboard-message/", {
-                method: "PATCH",
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ message: message })
-            });
-
-            if (response.status === 401 || response.status === 403) {
-                handleAuthFailure();
-                return;
-            }
-
-            const responseData = await response.json().catch(function () {
-                return {};
-            });
-
-            if (!response.ok) {
-                setDashboardMessageFeedback(formatApiError(responseData), "error");
-                return;
-            }
-
-            renderDashboardMessage(responseData);
-
-            const modalElement = document.getElementById("dashboardMessageModal");
-            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-
-            clearDashboardMessageFeedback();
-            await loadDashboard();
-        } catch (error) {
-            console.error("Dashboard message update failed:", error);
-            setDashboardMessageFeedback(
-                "The dashboard message could not be saved because the backend is unavailable.",
-                "error"
-            );
-        } finally {
-            saveButton.disabled = false;
-            saveButton.textContent = "Save Update";
-        }
-    }
-
-    async function loadDashboard() {
-        try {
-            const response = await fetch(API_BASE_URL + "/api/officer/dashboard/", {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            });
-
-            if (response.status === 401 || response.status === 403) {
-                handleAuthFailure();
-                return;
-            }
-
-            if (!response.ok) {
-                renderDashboardError();
-                return;
-            }
-
-            const data = await response.json();
-            renderDashboard(data);
-
-        } catch (error) {
-            console.error("Dashboard load failed:", error);
-            renderDashboardError();
-        }
-    }
-
-    window.addEventListener("DOMContentLoaded", function () {
-        const dashboardMessageForm = document.getElementById("dashboardMessageForm");
-        if (dashboardMessageForm) {
-            dashboardMessageForm.addEventListener("submit", saveDashboardMessage);
-        }
-        loadDashboard();
-    });
-</script>
 
 <body>
 
@@ -925,9 +619,25 @@
             </button>
 
             <div class="user-info">
-                <div class="notifications" style="color: white;">
+                <div class="calendar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-calendar-days-icon lucide-calendar-days">
+                        <path d="M8 2v4" />
+                        <path d="M16 2v4" />
+                        <rect width="18" height="18" x="3" y="4" rx="2" />
+                        <path d="M3 10h18" />
+                        <path d="M8 14h.01" />
+                        <path d="M12 14h.01" />
+                        <path d="M16 14h.01" />
+                        <path d="M8 18h.01" />
+                        <path d="M12 18h.01" />
+                        <path d="M16 18h.01" />
+                    </svg>
+                </div>
+                <div class="notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="lucide lucide-bell-icon lucide-bell">
                         <path d="M10.268 21a2 2 0 0 0 3.464 0" />
                         <path
@@ -935,9 +645,9 @@
                     </svg>
                 </div>
                 <div class="user-avatar-wrapper" id="userAvatarWrapper">
-                    <div class="user-avatar" style="color: white;">
+                    <div class="user-avatar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="lucide lucide-circle-user-icon lucide-circle-user">
                             <circle cx="12" cy="12" r="10" />
                             <circle cx="12" cy="10" r="3" />
@@ -946,11 +656,11 @@
                     </div>
                     <div class="user-dropdown" id="userDropdown">
                         <a href="#">
-                            <i class="bi bi-person"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             <span>Profile</span>
                         </a>
                         <a href="#" onclick="logout()">
-                            <i class="bi bi-box-arrow-right"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
                             <span>Logout</span>
                         </a>
                     </div>
@@ -986,41 +696,73 @@
                 <div class="stat-card">
                     <div class="stat-label">Announcements</div>
                     <div class="stat-value" id="dashboardAnnouncementsCount">--</div>
+                    <div class="stat-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                            stroke="#f9a702" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-megaphone-icon lucide-megaphone">
+                            <path
+                                d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
+                            <path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14" />
+                            <path d="M8 6v8" />
+                        </svg>
+                    </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-label">Events</div>
                     <div class="stat-value" id="dashboardEventsCount">--</div>
+                    <div class="stat-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                            stroke="#f9a702" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-calendar-range-icon lucide-calendar-range">
+                            <rect width="18" height="18" x="3" y="4" rx="2" />
+                            <path d="M16 2v4" />
+                            <path d="M3 10h18" />
+                            <path d="M8 2v4" />
+                            <path d="M17 14h-6" />
+                            <path d="M13 18H7" />
+                            <path d="M7 14h.01" />
+                            <path d="M17 18h.01" />
+                        </svg>
+                    </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-label">Reports</div>
                     <div class="stat-value" id="dashboardReportsCount">--</div>
+                    <div class="stat-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                            stroke="#f9a702" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-file-text-icon lucide-file-text">
+                            <path
+                                d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                            <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                            <path d="M10 9H8" />
+                            <path d="M16 13H8" />
+                            <path d="M16 17H8" />
+                        </svg>
+                    </div>
                 </div>
             </div>
 
             <div class="info-grid mt-4">
                 <div class="left-column">
                     <div class="stat-card mb-3">
-                        <div class="stat-label">Event Summary</div>
+                        <div class="stat-label">Event Statistics</div>
                         <hr>
-                        <div class="summary-stack" id="officerSummary">
-                            <p class="dashboard-empty">Loading officer details...</p>
-                        </div>
+                        <div class="summary-stack" id="officerSummary"></div>
                     </div>
                 </div>
 
                 <div class="right-column">
                     <div class="stat-card h-100">
-                        <div class="stat-label">Recent Announcements</div>
+                        <div class="stat-label">Event Overview</div>
                         <hr>
-                        <div class="recent-list" id="recentAnnouncementsList">
-                            <p class="dashboard-empty">Loading recent announcements...</p>
-                        </div>
+                        <div class="recent-list" id="recentAnnouncementsList"></div>
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
     </div>
@@ -1057,11 +799,262 @@
     <script src="../org_usg/components/js/sidebar.js"></script>
 
     <script>
+        const API_BASE_URL = "http://127.0.0.1:8000";
+        const token = localStorage.getItem("access_token");
+
+        if (!token) {
+            window.location.href = "../index.html";
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "").replace(/[&<>"']/g, function (character) {
+                const replacements = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    "\"": "&quot;",
+                    "'": "&#39;"
+                };
+                return replacements[character];
+            });
+        }
+
+        function formatDate(value) {
+            if (!value) {
+                return "Date unavailable";
+            }
+
+            const parsedDate = new Date(value);
+            if (Number.isNaN(parsedDate.getTime())) {
+                return "Date unavailable";
+            }
+
+            return parsedDate.toLocaleString("en-PH", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit"
+            });
+        }
+
+        function setText(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = value;
+            }
+        }
+
+        function formatApiError(errorData) {
+            if (!errorData || typeof errorData !== "object") {
+                return "Unable to save the dashboard update right now.";
+            }
+
+            if (typeof errorData.detail === "string") {
+                return errorData.detail;
+            }
+
+            const firstFieldError = Object.values(errorData).find(function (value) {
+                return Array.isArray(value) && value.length;
+            });
+
+            if (firstFieldError) {
+                return firstFieldError[0];
+            }
+
+            return "Unable to save the dashboard update right now.";
+        }
+
+        function setDashboardMessageFeedback(message, type) {
+            const feedbackElement = document.getElementById("dashboardMessageFeedback");
+            if (!feedbackElement) {
+                return;
+            }
+
+            feedbackElement.textContent = message;
+            feedbackElement.className = `dashboard-message-feedback ${type}`;
+            feedbackElement.classList.remove("hidden");
+        }
+
+        function clearDashboardMessageFeedback() {
+            const feedbackElement = document.getElementById("dashboardMessageFeedback");
+            if (!feedbackElement) {
+                return;
+            }
+
+            feedbackElement.textContent = "";
+            feedbackElement.className = "dashboard-message-feedback hidden";
+        }
+
+        function renderDashboardMessage(dashboardMessage) {
+            const messageText = dashboardMessage && dashboardMessage.message
+                ? dashboardMessage.message
+                : "Welcome to a new school year!";
+
+            setText("dashboardWelcomeText", messageText);
+
+            const messageInput = document.getElementById("dashboardMessageInput");
+            if (messageInput) {
+                messageInput.value = messageText;
+            }
+        }
+
+        function renderOfficerSummary(officer) {
+            const summaryElement = document.getElementById("officerSummary");
+            if (!summaryElement) {
+                return;
+            }
+            summaryElement.innerHTML = "";
+        }
+
+        function renderRecentAnnouncements(announcements) {
+            const recentElement = document.getElementById("recentAnnouncementsList");
+            if (!recentElement) {
+                return;
+            }
+            recentElement.innerHTML = "";
+        }
+
+        function renderDashboard(data) {
+            const stats = data.stats || {};
+            const officer = data.officer || {};
+            const dashboardMessage = data.dashboard_message || {};
+            const recentAnnouncements = Array.isArray(data.recent_announcements) ? data.recent_announcements : [];
+
+            renderDashboardMessage(dashboardMessage);
+            setText("dashboardAnnouncementsCount", String(stats.published_announcements ?? 0));
+            setText("dashboardEventsCount", String(stats.total_events ?? 0));
+            setText("dashboardUpcomingEventsCount", String(stats.upcoming_events ?? 0));
+            renderOfficerSummary(officer);
+            renderRecentAnnouncements(recentAnnouncements);
+        }
+
+        function handleAuthFailure() {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            window.location.href = "../index.html";
+        }
+
+        function renderDashboardError() {
+            setText("dashboardWelcomeText", "Unable to load live dashboard data right now.");
+            setText("dashboardAnnouncementsCount", "--");
+            setText("dashboardEventsCount", "--");
+            setText("dashboardReportsCount", "--");
+
+            const officerSummary = document.getElementById("officerSummary");
+            if (officerSummary) {
+                officerSummary.innerHTML = "";
+            }
+
+            const recentAnnouncements = document.getElementById("recentAnnouncementsList");
+            if (recentAnnouncements) {
+                recentAnnouncements.innerHTML = "";
+            }
+        }
+
+        async function saveDashboardMessage(event) {
+            event.preventDefault();
+            clearDashboardMessageFeedback();
+
+            const messageInput = document.getElementById("dashboardMessageInput");
+            const saveButton = document.getElementById("saveDashboardMessageButton");
+            const message = messageInput.value.trim();
+
+            if (!message) {
+                setDashboardMessageFeedback("Please enter a dashboard message before saving.", "error");
+                return;
+            }
+
+            saveButton.disabled = true;
+            saveButton.textContent = "Saving...";
+
+            try {
+                const response = await fetch(API_BASE_URL + "/api/dashboard-message/", {
+                    method: "PATCH",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    handleAuthFailure();
+                    return;
+                }
+
+                const responseData = await response.json().catch(function () {
+                    return {};
+                });
+
+                if (!response.ok) {
+                    setDashboardMessageFeedback(formatApiError(responseData), "error");
+                    return;
+                }
+
+                renderDashboardMessage(responseData);
+
+                const modalElement = document.getElementById("dashboardMessageModal");
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
+                clearDashboardMessageFeedback();
+                await loadDashboard();
+            } catch (error) {
+                console.error("Dashboard message update failed:", error);
+                setDashboardMessageFeedback(
+                    "The dashboard message could not be saved because the backend is unavailable.",
+                    "error"
+                );
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent = "Save Update";
+            }
+        }
+
+        async function loadDashboard() {
+            try {
+                const response = await fetch(API_BASE_URL + "/api/officer/dashboard/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    handleAuthFailure();
+                    return;
+                }
+
+                if (!response.ok) {
+                    renderDashboardError();
+                    return;
+                }
+
+                const data = await response.json();
+                renderDashboard(data);
+
+            } catch (error) {
+                console.error("Dashboard load failed:", error);
+                renderDashboardError();
+            }
+        }
+
         function logout() {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
             window.location.href = "../index.html";
         }
+
+        window.addEventListener("DOMContentLoaded", function () {
+            const dashboardMessageForm = document.getElementById("dashboardMessageForm");
+            if (dashboardMessageForm) {
+                dashboardMessageForm.addEventListener("submit", saveDashboardMessage);
+            }
+            loadDashboard();
+        });
     </script>
 
 </body>

@@ -31343,3 +31343,5 @@ LINE 1: ...t", "accounts_dashboardmessage"."updated_at" FROM "accounts_...
 2026-03-18 13:50:24,332 [WARNING] django.request: Bad Request: /api/events/
 2026-03-18 13:50:26,328 [WARNING] django.request: Forbidden: /api/events/
 2026-03-18 14:03:13,242 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-19 16:32:55,774 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
+2026-03-19 17:34:59,507 [WARNING] django.request: Unauthorized: /api/officer/dashboard/
