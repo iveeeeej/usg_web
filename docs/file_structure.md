@@ -1,6 +1,6 @@
 # File Tree: usg_web
 
-**Generated:** 3/18/2026, 2:02:24 PM
+**Generated:** 3/19/2026, 7:10:55 PM
 **Root Path:** `c:\Users\Acer\Projects\web\usg_web`
 
 ```
@@ -24,6 +24,7 @@
 │   │   ├── 📁 migrations
 │   │   │   ├── 🐍 0001_initial.py
 │   │   │   ├── 🐍 0002_announcement_announcement_type_and_status_default.py
+│   │   │   ├── 🐍 0003_remove_meeting_and_workshop_types.py
 │   │   │   └── 🐍 __init__.py
 │   │   ├── 🐍 __init__.py
 │   │   ├── 🐍 admin.py
@@ -92,8 +93,8 @@
     │   │   │   └── 🎨 sidebar.css
     │   │   └── 📁 js
     │   │       └── 📄 sidebar.js
+    │   ├── 🌐 announcement_sample.html
     │   ├── 🌐 usg_announcement.html
-    │   ├── 🐘 usg_announcement.php
     │   ├── 🌐 usg_dashboard.html
     │   ├── 🌐 usg_event.html
     │   ├── 🌐 usg_gen_assembly.html

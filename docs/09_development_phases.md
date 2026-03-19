@@ -196,6 +196,11 @@ Progress update (2026-03-18):
 ~ officer announcement creation now defaults to `PUBLISHED` when status is omitted
 ~ officer announcement web form now captures `type` instead of exposing raw status selection
 
+Progress update (2026-03-19):
+~ officer announcement cards in the web interface now expose edit and delete actions
+~ officer announcement modal now supports both create and edit flows against `/api/announcements/{id}/`
+~ announcement API coverage now includes update and delete tests for officer users
+
 Deliverable:
 A working governance and communication layer that centralizes updates,
 events, assemblies, and in-system discussion inside one USG platform.

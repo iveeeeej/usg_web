@@ -64,6 +64,61 @@ class AnnouncementApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('announcement_type', response.data)
 
+    def test_removed_announcement_types_are_rejected(self):
+        self.client.force_authenticate(user=self.officer)
+
+        invalid_payload = {
+            'title': 'Old category',
+            'announcement_type': 'meeting',
+            'content': 'This should fail validation.',
+        }
+
+        response = self.client.post('/api/announcements/', invalid_payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('announcement_type', response.data)
+
+    def test_officer_can_update_announcement(self):
+        announcement = Announcement.objects.create(
+            title='Original Announcement',
+            announcement_type=Announcement.TYPE_EVENT,
+            content='Initial content.',
+            status=Announcement.PUBLISHED,
+            created_by=self.officer,
+        )
+        self.client.force_authenticate(user=self.officer)
+
+        response = self.client.patch(
+            f'/api/announcements/{announcement.id}/',
+            {
+                'title': 'Updated Announcement',
+                'content': 'Updated content.',
+                'announcement_type': Announcement.TYPE_IMPORTANT,
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        announcement.refresh_from_db()
+        self.assertEqual(announcement.title, 'Updated Announcement')
+        self.assertEqual(announcement.content, 'Updated content.')
+        self.assertEqual(announcement.announcement_type, Announcement.TYPE_IMPORTANT)
+
+    def test_officer_can_delete_announcement(self):
+        announcement = Announcement.objects.create(
+            title='Delete Me',
+            announcement_type=Announcement.TYPE_EVENT,
+            content='Temporary content.',
+            status=Announcement.PUBLISHED,
+            created_by=self.officer,
+        )
+        self.client.force_authenticate(user=self.officer)
+
+        response = self.client.delete(f'/api/announcements/{announcement.id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Announcement.objects.filter(id=announcement.id).exists())
+
     def test_student_only_sees_published_announcements(self):
         Announcement.objects.create(
             title='Published Announcement',

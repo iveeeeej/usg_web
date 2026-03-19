@@ -70,6 +70,8 @@ backend/
     announcements/
         migrations/
             0001_initial.py
+            0002_announcement_announcement_type_and_status_default.py
+            0003_remove_meeting_and_workshop_types.py
             __init__.py
         __init__.py
         admin.py

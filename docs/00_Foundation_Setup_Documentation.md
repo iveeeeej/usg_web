@@ -655,3 +655,64 @@ Mistakes:
 - The key decision recorded for this step is:
   new announcements default to `PUBLISHED` when the form no longer
   exposes `status`
+
+## 18.7 Removed Meeting and Workshop from Announcement Types
+
+Date: 2026-03-19
+
+Reason:
+The announcement type set was simplified so the officer UI and backend
+only keep the categories that are still part of the current announcement
+workflow.
+
+Changes:
+- `backend/announcements/models.py`: removed `meeting` and `workshop`
+  from `announcement_type` choices
+- `backend/announcements/migrations/0003_remove_meeting_and_workshop_types.py`:
+  remapped existing `meeting` records to `event` and `workshop` records
+  to `seminar`, then updated the allowed choices
+- `backend/announcements/tests.py`: added validation coverage to ensure
+  removed announcement types are rejected
+- `frontend/org_usg/usg_announcement.html`: removed `meeting` and
+  `workshop` from the type selector and type preview logic
+- `docs/05_backend_structure.md`: updated the announcements migration
+  list to include the new migration
+
+Verification:
+- `python manage.py check`
+- `python manage.py test announcements`
+- `python manage.py migrate announcements`
+
+Notes:
+- `meeting` announcements were normalized to `event`
+- `workshop` announcements were normalized to `seminar`
+
+## 18.8 Added Officer Edit/Delete Controls for Announcements
+
+Date: 2026-03-19
+
+Reason:
+The officer announcement page already supported creation, but Phase 2
+announcement management also needs officers to update and remove
+existing announcements directly from the web interface.
+
+Changes:
+- `frontend/org_usg/usg_announcement.html`: added edit and delete
+  action buttons to announcement cards, reused the existing modal for
+  edit mode, and connected update/delete actions to the announcement
+  detail endpoint
+- `backend/announcements/tests.py`: added coverage for officer update
+  and delete actions through `/api/announcements/{id}/`
+- `docs/06_api_design_guidelines.md`: clarified the announcement detail
+  endpoint role in officer announcement management
+- `docs/09_development_phases.md`: recorded the new announcement edit
+  and delete capability as Phase 2 progress
+
+Verification:
+- `python manage.py check`
+- `python manage.py test announcements`
+
+Notes:
+- current permissions still allow any authenticated `OFFICER` user to
+  edit or delete announcements through the existing officer-level access
+  rules

@@ -171,9 +171,15 @@ message when needed.
 - `/api/events/{id}/`
 - `/api/events/{id}/attachments/`
 - `/api/announcements/`
+- `/api/announcements/{id}/`
 - `/api/discussions/`
 - `/api/discussions/{id}/comments/`
 - `/api/notifications/`
+
+For announcements in the current Phase 2 implementation:
+- OFFICER users create announcements through `POST /api/announcements/`
+- OFFICER users manage existing announcements through `/api/announcements/{id}/`
+- STUDENT users only read published announcements through authenticated `GET` requests
 
 ### 5.4 Attendance and Accountability
 - `/api/attendance/sessions/`

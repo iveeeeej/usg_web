@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - USG</title>
+    <title>Announcements - USG</title>
     <link rel="icon" href="../assets/logo/usg_2.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -182,6 +182,51 @@
             white-space: pre-wrap;
         }
 
+        .announcement-log-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .announcement-log-actions {
+            display: inline-flex;
+            gap: 10px;
+        }
+
+        .announcement-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #dee2e6;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #495057;
+            padding: 7px 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .announcement-action-btn:hover {
+            background: #f8f9fa;
+            border-color: #c9ced3;
+            color: #1e174a;
+        }
+
+        .announcement-action-btn.delete {
+            border-color: #f1c6cc;
+            color: #842029;
+            background: #fff8f8;
+        }
+
+        .announcement-action-btn.delete:hover {
+            background: #fdf0f1;
+            border-color: #e7aab2;
+            color: #6f1d27;
+        }
+
         /* Modernized Modal & Inputs */
         .modal-content {
             border: none;
@@ -212,6 +257,7 @@
         .form-floating > label {
             padding: 12px 16px;
         }
+
     </style>
 </head>
 
@@ -219,12 +265,14 @@
 <script>
     const API_BASE_URL = "http://127.0.0.1:8000";
     const token = localStorage.getItem("access_token");
+    let announcementsState = [];
+    let activeAnnouncementId = null;
+    const CREATE_ANNOUNCEMENT_BUTTON_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Publish Announcement';
+    const UPDATE_ANNOUNCEMENT_BUTTON_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Save Changes';
     const ANNOUNCEMENT_TYPE_LABELS = {
         event: "Event",
         cleaning: "Cleaning",
-        meeting: "Meeting",
         seminar: "Seminar",
-        workshop: "Workshop",
         maintenance: "Maintenance",
         urgent: "Urgent",
         important: "Important"
@@ -323,6 +371,104 @@
         }[normalizedValue] || "type-important";
     }
 
+    function getAnnouncementById(announcementId) {
+        return announcementsState.find(function (announcement) {
+            return announcement.id === announcementId;
+        }) || null;
+    }
+
+    function resetAnnouncementFormState() {
+        const announcementForm = document.getElementById("announcementForm");
+        const submitButton = document.getElementById("submitAnnouncementButton");
+        const modalTitle = document.getElementById("announcementModalLabel");
+
+        activeAnnouncementId = null;
+        announcementForm.reset();
+        modalTitle.textContent = "Create Announcement";
+        submitButton.disabled = false;
+        submitButton.innerHTML = CREATE_ANNOUNCEMENT_BUTTON_MARKUP;
+    }
+
+    function openAnnouncementEditor(announcementId) {
+        const announcement = getAnnouncementById(announcementId);
+        if (!announcement) {
+            setFeedback("That announcement could not be loaded for editing.", "error");
+            return;
+        }
+
+        activeAnnouncementId = announcement.id;
+        document.getElementById("announcementModalLabel").textContent = "Edit Announcement";
+        document.getElementById("announcementTitleInput").value = announcement.title || "";
+        document.getElementById("announcementTypeInput").value = announcement.announcement_type || "";
+        document.getElementById("announcementContentInput").value = announcement.content || "";
+        document.getElementById("submitAnnouncementButton").innerHTML = UPDATE_ANNOUNCEMENT_BUTTON_MARKUP;
+
+        const modalElement = document.getElementById("announcementModal");
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modalInstance.show();
+    }
+
+    async function deleteAnnouncement(announcementId) {
+        const announcement = getAnnouncementById(announcementId);
+        if (!announcement) {
+            setFeedback("That announcement could not be found for deletion.", "error");
+            return;
+        }
+
+        const confirmed = window.confirm('Delete "' + announcement.title + '"? This action cannot be undone.');
+        if (!confirmed) {
+            return;
+        }
+
+        clearFeedback();
+
+        try {
+            const response = await fetch(API_BASE_URL + "/api/announcements/" + announcementId + "/", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                window.location.href = "../index.html";
+                return;
+            }
+
+            if (!response.ok) {
+                setFeedback("The announcement could not be deleted right now. Please try again.", "error");
+                return;
+            }
+
+            setFeedback("Announcement deleted successfully.", "success");
+            await loadAnnouncements();
+        } catch (error) {
+            console.error("Announcement delete failed:", error);
+            setFeedback("The announcement could not be deleted because the backend is unavailable.", "error");
+        }
+    }
+
+    function handleAnnouncementLogAction(event) {
+        const actionButton = event.target.closest("[data-announcement-action]");
+        if (!actionButton) {
+            return;
+        }
+
+        const announcementId = actionButton.getAttribute("data-announcement-id");
+        const action = actionButton.getAttribute("data-announcement-action");
+
+        if (action === "edit") {
+            openAnnouncementEditor(announcementId);
+            return;
+        }
+
+        if (action === "delete") {
+            deleteAnnouncement(announcementId);
+        }
+    }
+
     function renderAnnouncements(announcements) {
         const listElement = document.getElementById("announcementLogList");
         const titleElement = document.getElementById("announcementCount");
@@ -344,7 +490,6 @@
             const typeLabel = formatAnnouncementType(announcement.announcement_type);
             const primaryDate = announcement.published_at || announcement.created_at;
 
-            // --- ENHANCED TEMPLATE STRING ADDED HERE ---
             return `
                 <article class="announcement-log-item">
                     <div class="announcement-log-header">
@@ -363,6 +508,18 @@
                         </div>
                     </div>
                     <p class="announcement-log-content">${escapeHtml(announcement.content)}</p>
+                    <div class="announcement-log-footer">
+                        <div class="announcement-log-actions">
+                            <button type="button" class="announcement-action-btn" data-announcement-action="edit" data-announcement-id="${escapeHtml(announcement.id)}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                Edit
+                            </button>
+                            <button type="button" class="announcement-action-btn delete" data-announcement-action="delete" data-announcement-id="${escapeHtml(announcement.id)}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
                 </article>
             `;
         }).join("");
@@ -403,6 +560,7 @@
                     created_by: announcement.created_by_name || announcement.created_by
                 };
             }) : [];
+            announcementsState = announcements;
             renderAnnouncements(announcements);
         } catch (error) {
             console.error("Announcement load failed:", error);
@@ -427,12 +585,17 @@
             return;
         }
 
+        const isEditing = Boolean(activeAnnouncementId);
+        const requestUrl = isEditing
+            ? API_BASE_URL + "/api/announcements/" + activeAnnouncementId + "/"
+            : API_BASE_URL + "/api/announcements/";
+
         submitButton.disabled = true;
-        submitButton.textContent = "Saving...";
+        submitButton.textContent = isEditing ? "Saving changes..." : "Saving...";
 
         try {
-            const response = await fetch(API_BASE_URL + "/api/announcements/", {
-                method: "POST",
+            const response = await fetch(requestUrl, {
+                method: isEditing ? "PATCH" : "POST",
                 headers: {
                     "Authorization": "Bearer " + token,
                     "Content-Type": "application/json"
@@ -461,15 +624,19 @@
                 modalInstance.hide();
             }
 
-            form.reset();
-            setFeedback("Announcement saved successfully.", "success");
+            resetAnnouncementFormState();
+            setFeedback(isEditing ? "Announcement updated successfully." : "Announcement saved successfully.", "success");
             await loadAnnouncements();
         } catch (error) {
             console.error("Announcement submit failed:", error);
             setFeedback("The announcement could not be saved because the backend is unavailable.", "error");
         } finally {
             submitButton.disabled = false;
-            submitButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Publish Announcement`;
+            if (!activeAnnouncementId) {
+                submitButton.innerHTML = CREATE_ANNOUNCEMENT_BUTTON_MARKUP;
+            } else {
+                submitButton.innerHTML = UPDATE_ANNOUNCEMENT_BUTTON_MARKUP;
+            }
         }
     }
 
@@ -480,8 +647,18 @@
     }
 
     window.addEventListener("DOMContentLoaded", function () {
+        const openAnnouncementModalButton = document.getElementById("openAnnouncementModalButton");
+        const announcementForm = document.getElementById("announcementForm");
+        const announcementModal = document.getElementById("announcementModal");
+        const announcementLogList = document.getElementById("announcementLogList");
         normalizeStaticCopy();
-        document.getElementById("announcementForm").addEventListener("submit", submitAnnouncement);
+        openAnnouncementModalButton.addEventListener("click", resetAnnouncementFormState);
+        announcementForm.addEventListener("submit", submitAnnouncement);
+        announcementLogList.addEventListener("click", handleAnnouncementLogAction);
+        announcementModal.addEventListener("hidden.bs.modal", function () {
+            resetAnnouncementFormState();
+        });
+        resetAnnouncementFormState();
         loadAnnouncements();
     });
 </script>
@@ -893,7 +1070,7 @@
                         <p class="section-subtitle"> <span id="announcementCount">0</span> records</p>
                     </div>
                     <div class="stat-right">
-                        <button class="add-btn" type="button" data-bs-toggle="modal" data-bs-target="#announcementModal">
+                        <button class="add-btn" id="openAnnouncementModalButton" type="button" data-bs-toggle="modal" data-bs-target="#announcementModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
@@ -931,7 +1108,7 @@
                         <div class="stat-icon" style="width: 32px; height: 32px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-megaphone"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
                         </div>
-                        <h5 class="modal-title fw-bold" id="announcementModalLabel" style="color: #1e174a;">Draft New Announcement</h5>
+                        <h5 class="modal-title fw-bold" id="announcementModalLabel" style="color: #1e174a;">Create Announcement</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -949,15 +1126,15 @@
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <select class="form-select" id="announcementTypeInput" aria-label="Announcement Type" required>
-                                        <option value="" selected disabled>Select type...</option>
-                                        <option value="event"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4d00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg></span> Event</option>
-                                        <option value="cleaning"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6f4e37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation-icon lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg></span> Cleaning</option>
-                                        <option value="seminar"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9d00ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation-icon lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg></span> Seminar</option>
-                                        <option value="maintenance"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#898989" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench-icon lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg></span> Maintenance</option>
-                                        <option value="urgent"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff2c2c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span> Urgent</option>
-                                        <option value="important"> <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffde21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span> Important</option>
-                                    </select>
-                                    <label for="announcementTypeInput">Category</label>
+                                        <option value="" selected disabled></option>
+                                        <option value="event">Event</option>
+                                        <option value="cleaning">Cleaning</option>
+                                        <option value="seminar">Seminar</option>
+                                        <option value="maintenance">Maintenance</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="important">Important</option>
+                                </select>
+                                    <label for="announcementTypeInput">Type</label>
                                 </div>
                             </div>
                         </div>
