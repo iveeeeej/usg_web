@@ -246,8 +246,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <script src="assets/js/app-config.js"></script>
+    <script src="assets/js/api-client.js"></script>
 
     <script>
+        const API = window.USG_API;
+
         document.getElementById("loginForm").addEventListener("submit", async function (e) {
             e.preventDefault();
 
@@ -260,22 +264,16 @@
             }
 
             try {
-                const response = await fetch("http://127.0.0.1:8000/api/token/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
+                const result = await API.post("/api/token/", {
+                    json: {
                         student_id: student_id,
                         password: password
-                    })
+                    }
                 });
+                const data = result.data || {};
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem("access_token", data.access);
-                    localStorage.setItem("refresh_token", data.refresh);
+                if (result.ok) {
+                    API.setTokens(data);
 
                     window.location.href = "org_usg/usg_dashboard.html";
                 } else {

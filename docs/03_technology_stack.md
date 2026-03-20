@@ -145,11 +145,20 @@ In the current repository:
 - officer dashboard summaries and recent announcement rendering are live
 - the officer "What's New" card is backed by a shared backend-stored message and editable through the API
 - backend APIs for events and announcements are implemented
+- current API-consuming web pages read the backend base URL from
+  `frontend/assets/js/app-config.js`
+- current API-consuming web pages also use
+  `frontend/assets/js/api-client.js` for shared request, auth-header, and
+  token-handling behavior
 - several officer-facing pages remain partially integrated and still function as UI-first scaffolds
 
 This means:
 - the frontend does not act primarily as a Django server-rendered dashboard
 - backend APIs remain the source of truth for business rules
+- frontend API host changes can now be made in one shared frontend config
+  location instead of editing each page separately
+- frontend request behavior for current API pages is also moving toward a
+  shared client helper instead of repeated per-page fetch code
 - full page-level API integration is still in progress
 
 This aligns with the system's API-first architecture while accurately reflecting the current implementation stage.

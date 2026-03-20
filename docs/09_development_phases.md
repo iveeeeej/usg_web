@@ -201,6 +201,22 @@ Progress update (2026-03-19):
 ~ officer announcement modal now supports both create and edit flows against `/api/announcements/{id}/`
 ~ announcement API coverage now includes update and delete tests for officer users
 
+Progress update (2026-03-20):
+~ `frontend/assets/js/app-config.js` added as a shared frontend API base
+  URL config source
+~ `frontend/index.html`, `frontend/org_usg/usg_dashboard.html`, and
+  `frontend/org_usg/usg_announcement.html` now consume the shared
+  frontend API config instead of hardcoding `127.0.0.1:8000`
+~ `frontend/assets/js/api-client.js` added so current API pages can share
+  request helpers, auth headers, token storage, and auth-failure logout
+  behavior
+~ `frontend/org_usg/usg_announcement.html` cleaned up duplicate
+  announcement CSS and now keeps static subtitle copy in HTML instead of
+  rewriting it through JavaScript on page load
+~ officer announcement card actions now clone from an HTML template, and
+  announcement action lookup now normalizes ID types so edit/delete
+  buttons stay reliable when API IDs are numeric
+
 Deliverable:
 A working governance and communication layer that centralizes updates,
 events, assemblies, and in-system discussion inside one USG platform.

@@ -716,3 +716,116 @@ Notes:
 - current permissions still allow any authenticated `OFFICER` user to
   edit or delete announcements through the existing officer-level access
   rules
+
+## 18.9 Added Shared Frontend API Base URL Config
+
+Date: 2026-03-20
+
+Reason:
+The frontend had started hardcoding `http://127.0.0.1:8000` directly in
+multiple pages. That worked for local development but would have made
+future deployment and environment changes harder because every API-driven
+page would need to be edited separately.
+
+Changes:
+- `frontend/assets/js/app-config.js`: added a shared frontend config
+  object that exposes `window.USG_CONFIG.API_BASE_URL`
+- `frontend/index.html`: now reads the token endpoint base URL from the
+  shared frontend config
+- `frontend/org_usg/usg_dashboard.html`: now reads the dashboard and
+  dashboard-message endpoints from the shared frontend config
+- `frontend/org_usg/usg_announcement.html`: now reads announcement list
+  and detail endpoints from the shared frontend config
+- `docs/03_technology_stack.md`, `docs/09_development_phases.md`, and
+  `docs/file_structure.md`: updated to record the shared frontend API
+  config approach
+
+Verification:
+- `node --check frontend/assets/js/app-config.js`
+- confirmed the active frontend pages no longer hardcode
+  `http://127.0.0.1:8000`
+
+Notes:
+- local development still defaults to `http://127.0.0.1:8000`
+- future deployment should update `frontend/assets/js/app-config.js` in
+  one place instead of changing each page manually
+
+## 18.10 Added Shared Frontend API Client Helper
+
+Date: 2026-03-20
+
+Reason:
+After centralizing the frontend API base URL, the remaining API pages
+were still repeating fetch setup logic for JSON payloads, bearer-token
+headers, token storage, and auth-failure logout handling. A shared API
+client was added to reduce copy-paste in future API-driven pages.
+
+Changes:
+- `frontend/assets/js/api-client.js`: added a shared frontend API helper
+  that provides URL building, JSON requests, auth header injection,
+  token storage helpers, and auth-failure redirect handling
+- `frontend/index.html`: now uses the shared API client for
+  `/api/token/` login requests and shared token storage
+- `frontend/org_usg/usg_dashboard.html`: now uses the shared API client
+  for dashboard load and dashboard-message update requests
+- `frontend/org_usg/usg_announcement.html`: now uses the shared API
+  client for announcement list, create, edit, and delete requests
+- `docs/03_technology_stack.md`, `docs/09_development_phases.md`, and
+  `docs/file_structure.md`: updated to record the shared frontend API
+  client pattern
+
+Verification:
+- `node --check frontend/assets/js/api-client.js`
+- `node --check` against the inline scripts in
+  `frontend/org_usg/usg_dashboard.html` and
+  `frontend/org_usg/usg_announcement.html`
+- confirmed the active frontend pages no longer make direct `fetch(...)`
+  calls outside the shared API client helper
+
+Notes:
+- current shared API client scope covers the active login, dashboard, and
+  announcements pages
+- future API-driven pages should load both `app-config.js` and
+  `api-client.js` before their inline page scripts
+
+## 18.11 Tidied Officer Announcement Page Frontend
+
+Date: 2026-03-20
+
+Reason:
+After the announcement page gained create, edit, and delete support, the
+frontend still had some cleanup debt: duplicated announcement CSS,
+button markup that was easier to drift because it was assembled in
+JavaScript, redundant subtitle copy rewriting on load, and an ID type
+mismatch risk between DOM attributes and API payloads.
+
+Changes:
+- `frontend/org_usg/usg_announcement.html`: consolidated duplicate
+  announcement-specific CSS into a single active style block
+- `frontend/org_usg/usg_announcement.html`: moved announcement card
+  action button markup into an HTML template so rendered cards reuse the
+  same button structure as the page markup
+- `frontend/org_usg/usg_announcement.html`: removed the
+  `normalizeStaticCopy()` subtitle rewrite so the header subtitle now has
+  one source of truth in the HTML
+- `frontend/org_usg/usg_announcement.html`: replaced temporary
+  empty-state wording with final officer-facing copy
+- `frontend/org_usg/usg_announcement.html`: normalized announcement ID
+  comparisons in action handlers so edit/delete lookups stay reliable
+  even when API IDs are numeric and DOM attributes are strings
+- `docs/09_development_phases.md`: recorded the announcement page
+  cleanup as part of the current Phase 2 frontend hardening work
+
+Verification:
+- `node --check` against the inline script in
+  `frontend/org_usg/usg_announcement.html`
+- confirmed `normalizeStaticCopy` no longer exists in the announcement
+  page
+- confirmed the announcement page no longer contains the placeholder
+  empty-state copy that was being shown before records existed
+
+Notes:
+- the announcement footer layout was returned to its original visual
+  placement after a later experiment felt visually off during review
+- a live browser click-through is still the best final confirmation for
+  create, edit, delete, filter, and search behavior
