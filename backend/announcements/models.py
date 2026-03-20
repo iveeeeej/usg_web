@@ -6,14 +6,18 @@ from django.utils import timezone
 
 
 class Announcement(models.Model):
+    TYPE_GENERAL = 'general'
     TYPE_EVENT = 'event'
+    TYPE_ACADEMIC = 'academic'
     TYPE_CLEANING = 'cleaning'
     TYPE_SEMINAR = 'seminar'
     TYPE_MAINTENANCE = 'maintenance'
     TYPE_URGENT = 'urgent'
     TYPE_IMPORTANT = 'important'
     TYPE_CHOICES = (
+        (TYPE_GENERAL, 'General'),
         (TYPE_EVENT, 'Event'),
+        (TYPE_ACADEMIC, 'Academic'),
         (TYPE_CLEANING, 'Cleaning'),
         (TYPE_SEMINAR, 'Seminar'),
         (TYPE_MAINTENANCE, 'Maintenance'),

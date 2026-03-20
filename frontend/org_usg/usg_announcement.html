@@ -110,11 +110,13 @@
             flex-shrink: 0;
         }
 
-        .type-event { background: #fff1e6; color: #b55300; }
-        .type-cleaning { background: #f3e8df; color: #6b4f3f; }
-        .type-seminar { background: #d9f2f7; color: #0f6f80; }
+        .type-general { background: rgba(30, 23, 74, 0.1); color: #1e174a; }
+        .type-event { background: #fff1e6; color: #ff4d00; }
+        .type-academic { background: rgba(40, 167, 136, 0.12); color: #2e6f40; }
+        .type-cleaning { background: #f3e8df; color: #6f4e37; }
+        .type-seminar { background: #d9f2f7; color: #4e9fe5; }
         .type-maintenance { background: #ececec; color: #495057; }
-        .type-urgent { background: #f8d7da; color: #842029; }
+        .type-urgent { background: #f8d7da; color: #fa003f; }
         .type-important { background: #fff3cd; color: #7c5c00; }
 
         .announcement-feedback {
@@ -504,7 +506,9 @@
     const CREATE_ANNOUNCEMENT_BUTTON_MARKUP = 'Publish';
     const UPDATE_ANNOUNCEMENT_BUTTON_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Save Changes';
     const ANNOUNCEMENT_TYPE_LABELS = {
+        general: "General",
         event: "Event",
+        academic: "Academic",
         cleaning: "Cleaning",
         seminar: "Seminar",
         maintenance: "Maintenance",
@@ -513,7 +517,9 @@
     };
     const ANNOUNCEMENT_FILTER_LABELS = {
         all: "All",
+        general: "General",
         event: "Event",
+        academic: "Academic",
         cleaning: "Cleaning",
         seminar: "Seminar",
         maintenance: "Maintenance",
@@ -615,7 +621,9 @@
     function getAnnouncementTypeClass(value) {
         const normalizedValue = String(value || "").toLowerCase();
         return {
+            general: "type-general",
             event: "type-event",
+            academic: "type-academic",
             cleaning: "type-cleaning",
             seminar: "type-seminar",
             maintenance: "type-maintenance",
@@ -1413,7 +1421,9 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end filter-dropdown-menu" id="announcementFilterMenu">
                         <li><button class="dropdown-item active" type="button" data-announcement-filter="all">All</button></li>
+                        <li><button class="dropdown-item" type="button" data-announcement-filter="general">General</button></li>
                         <li><button class="dropdown-item" type="button" data-announcement-filter="event">Event</button></li>
+                        <li><button class="dropdown-item" type="button" data-announcement-filter="academic">Academic</button></li>
                         <li><button class="dropdown-item" type="button" data-announcement-filter="cleaning">Cleaning</button></li>
                         <li><button class="dropdown-item" type="button" data-announcement-filter="seminar">Seminar</button></li>
                         <li><button class="dropdown-item" type="button" data-announcement-filter="maintenance">Maintenance</button></li>
@@ -1461,13 +1471,15 @@
                                 <div class="form-floating">
                                     <select class="form-select" id="announcementTypeInput" aria-label="Announcement Type" required>
                                         <option value="" selected disabled></option>
+                                        <option value="general">General</option>
                                         <option value="event">Event</option>
+                                        <option value="academic">Academic</option>
                                         <option value="cleaning">Cleaning</option>
                                         <option value="seminar">Seminar</option>
                                         <option value="maintenance">Maintenance</option>
-                                    <option value="urgent">Urgent</option>
-                                    <option value="important">Important</option>
-                                </select>
+                                        <option value="urgent">Urgent</option>
+                                        <option value="important">Important</option>
+                                    </select>
                                     <label for="announcementTypeInput">Type</label>
                                 </div>
                             </div>

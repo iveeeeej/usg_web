@@ -44,6 +44,22 @@ class AnnouncementApiTests(APITestCase):
         self.assertEqual(created_announcement.status, Announcement.PUBLISHED)
         self.assertIsNotNone(created_announcement.published_at)
 
+    def test_officer_can_create_general_announcement(self):
+        self.client.force_authenticate(user=self.officer)
+
+        response = self.client.post(
+            '/api/announcements/',
+            {
+                'title': 'Office Hours Reminder',
+                'announcement_type': Announcement.TYPE_GENERAL,
+                'content': 'The USG office remains open from 8 AM to 5 PM.',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['announcement_type'], Announcement.TYPE_GENERAL)
+
     def test_student_cannot_create_announcement(self):
         self.client.force_authenticate(user=self.student)
 
