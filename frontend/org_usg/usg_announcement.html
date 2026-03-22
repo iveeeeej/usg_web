@@ -1031,8 +1031,8 @@
         let announcementsState = [];
         let activeAnnouncementId = null;
         let activeAnnouncementFilter = "all";
-        const CREATE_ANNOUNCEMENT_BUTTON_MARKUP = 'Publish';
-        const UPDATE_ANNOUNCEMENT_BUTTON_MARKUP = 'Save';
+        const CREATE_ANNOUNCEMENT_BUTTON_LABEL = 'Publish';
+        const UPDATE_ANNOUNCEMENT_BUTTON_LABEL = 'Save';
         const ANNOUNCEMENT_TYPE_LABELS = {
             general: "General",
             event: "Event",
@@ -1221,7 +1221,7 @@
             announcementForm.reset();
             modalTitle.textContent = "Create Announcement";
             submitButton.disabled = false;
-            submitButton.innerHTML = CREATE_ANNOUNCEMENT_BUTTON_MARKUP;
+            submitButton.textContent = CREATE_ANNOUNCEMENT_BUTTON_LABEL;
         }
 
         function openAnnouncementEditor(announcementId) {
@@ -1236,7 +1236,7 @@
             document.getElementById("announcementTitleInput").value = announcement.title || "";
             document.getElementById("announcementTypeInput").value = announcement.announcement_type || "";
             document.getElementById("announcementContentInput").value = announcement.content || "";
-            document.getElementById("submitAnnouncementButton").innerHTML = UPDATE_ANNOUNCEMENT_BUTTON_MARKUP;
+            document.getElementById("submitAnnouncementButton").textContent = UPDATE_ANNOUNCEMENT_BUTTON_LABEL;
 
             const modalElement = document.getElementById("announcementModal");
             const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
@@ -1272,7 +1272,7 @@
                 }
 
                 setFeedback("Announcement deleted successfully.", "success");
-                await loadAnnouncements();
+                await loadAnnouncements({ clearFeedback: false });
             } catch (error) {
                 console.error("Announcement delete failed:", error);
                 setFeedback("The announcement could not be deleted because the backend is unavailable.", "error");
@@ -1341,7 +1341,7 @@
                 listElement.innerHTML = `
                 <div class="empty-log">
                     <h5 class="mb-2">${hasActiveFilters ? "No announcements match your filter" : "No announcements yet"}</h5>
-                    <p class="mb-0">${hasActiveFilters ? "Try a different search term or announcement type." : "Create your first announcement to share updates with officers."}</p>
+                    <p class="mb-0">${hasActiveFilters ? "Try a different search term or announcement type." : "Create your first announcement to publish an official update."}</p>
                 </div>
             `;
                 return;
@@ -1363,8 +1363,11 @@
                 listElement.appendChild(itemElement);
             });
         }
-        async function loadAnnouncements() {
-            clearFeedback();
+        async function loadAnnouncements(options = {}) {
+            const shouldClearFeedback = options.clearFeedback !== false;
+            if (shouldClearFeedback) {
+                clearFeedback();
+            }
 
             try {
                 const result = await API.get("/api/announcements/?ordering=-created_at", {
@@ -1399,7 +1402,6 @@
             event.preventDefault();
             clearFeedback();
 
-            const form = document.getElementById("announcementForm");
             const submitButton = document.getElementById("submitAnnouncementButton");
             const payload = {
                 title: document.getElementById("announcementTitleInput").value.trim(),
@@ -1450,16 +1452,16 @@
 
                 resetAnnouncementFormState();
                 setFeedback(isEditing ? "Announcement updated successfully." : "Announcement saved successfully.", "success");
-                await loadAnnouncements();
+                await loadAnnouncements({ clearFeedback: false });
             } catch (error) {
                 console.error("Announcement submit failed:", error);
                 setFeedback("The announcement could not be saved because the backend is unavailable.", "error");
             } finally {
                 submitButton.disabled = false;
                 if (!activeAnnouncementId) {
-                    submitButton.innerHTML = CREATE_ANNOUNCEMENT_BUTTON_MARKUP;
+                    submitButton.textContent = CREATE_ANNOUNCEMENT_BUTTON_LABEL;
                 } else {
-                    submitButton.innerHTML = UPDATE_ANNOUNCEMENT_BUTTON_MARKUP;
+                    submitButton.textContent = UPDATE_ANNOUNCEMENT_BUTTON_LABEL;
                 }
             }
         }
