@@ -829,3 +829,33 @@ Notes:
   placement after a later experiment felt visually off during review
 - a live browser click-through is still the best final confirmation for
   create, edit, delete, filter, and search behavior
+
+## 18.12 Added Timed Auto-Dismiss for Officer Announcement Success Feedback
+
+Date: 2026-03-22
+
+Reason:
+The officer announcement page already preserved success feedback after
+list refreshes, but those messages stayed visible until the next user
+action. A small frontend refinement was added so confirmation messages
+clear themselves after a short delay while error messages remain visible
+for user attention.
+
+Changes:
+- `frontend/org_usg/usg_announcement.html`: added a shared feedback
+  timeout tracker so new messages clear any previous auto-dismiss timer
+- `frontend/org_usg/usg_announcement.html`: updated `setFeedback()` and
+  `clearFeedback()` so only `success` and `info` messages may auto-hide,
+  while `error` messages remain persistent
+- `frontend/org_usg/usg_announcement.html`: applied a 3-second
+  auto-dismiss timer to announcement create, edit, and delete success
+  confirmations
+- `docs/09_development_phases.md`: recorded the feedback timer behavior
+  as current Phase 2 announcement-page polish
+
+Verification:
+- `python manage.py check`
+- `node --check` against the inline script in
+  `frontend/org_usg/usg_announcement.html`
+
+Mistakes: None encountered during this step.

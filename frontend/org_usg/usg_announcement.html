@@ -22,7 +22,7 @@
         .stat-icon {
             width: 38px;
             height: 38px;
-            border-radius: 8px;
+            border-radius: 5px;
             background: #1e174a;
             display: flex;
             align-items: center;
@@ -36,7 +36,7 @@
             gap: 6px;
             padding: 6px 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             background: #1e174a;
             color: white;
             font-size: 0.9rem;
@@ -109,7 +109,7 @@
         }
 
         .announcement-feedback {
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 12px 14px;
             margin-bottom: 16px;
         }
@@ -139,7 +139,7 @@
         .announcement-log-item {
             background: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 5px;
             padding: 22px 25px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: box-shadow 0.2s ease;
@@ -214,7 +214,7 @@
             gap: 6px;
             padding: 6px 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             background: #eff6ff;
             color: #3b82f6;
             font-size: 0.9rem;
@@ -244,7 +244,7 @@
             color: #8c8c9e;
             background: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 5px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
@@ -262,7 +262,7 @@
         /* Modernized Modal & Inputs */
         .modal-content {
             border: none;
-            border-radius: 16px;
+            border-radius: 5px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
@@ -276,7 +276,7 @@
         .form-control,
         .form-select {
             border: 1px solid #dee2e6;
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 12px 16px;
             font-size: 0.95rem;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -298,7 +298,7 @@
             align-items: center;
             justify-content: space-between;
             background: white;
-            border-radius: 12px;
+            border-radius: 5px;
             padding: 18px 25px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             margin-bottom: 24px;
@@ -334,7 +334,7 @@
             gap: 8px;
             background: white;
             border: 1px solid #e5e5ee;
-            border-radius: 8px;
+            border-radius: 5px;
             padding: 8px 14px;
         }
 
@@ -364,7 +364,7 @@
             padding: 8px 16px;
             background: white;
             border: 1px solid #e5e5ee;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 0.85rem;
             color: #1e174a;
             cursor: pointer;
@@ -382,14 +382,14 @@
 
         .filter-dropdown-menu {
             border: 1px solid #ececf3;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: 0 10px 24px rgba(30, 23, 74, 0.08);
             padding: 8px;
             min-width: 190px;
         }
 
         .filter-dropdown-menu .dropdown-item {
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 0.88rem;
             padding: 8px 12px;
             color: #4f4f64;
@@ -1009,9 +1009,9 @@
 
                     <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
                         <button type="button" class="btn btn-light px-4 py-2" data-bs-dismiss="modal"
-                            style="border-radius: 8px; font-weight: 500;">Cancel</button>
+                            style="border-radius: 5px; font-weight: 500;">Cancel</button>
                         <button type="submit" class="btn px-4 py-2" id="submitAnnouncementButton"
-                            style="background: #1e174a; color: white; border-radius: 8px; font-weight: 500;">
+                            style="background: #1e174a; color: white; border-radius: 5px; font-weight: 500;">
                         </button>
                     </div>
                 </form>
@@ -1031,6 +1031,7 @@
         let announcementsState = [];
         let activeAnnouncementId = null;
         let activeAnnouncementFilter = "all";
+        let feedbackTimeoutId = null;
         const CREATE_ANNOUNCEMENT_BUTTON_LABEL = 'Publish';
         const UPDATE_ANNOUNCEMENT_BUTTON_LABEL = 'Save';
         const ANNOUNCEMENT_TYPE_LABELS = {
@@ -1101,15 +1102,35 @@
             };
         }
 
-        function setFeedback(message, type = "info") {
+        function setFeedback(message, type = "info", options = {}) {
             const feedbackElement = document.getElementById("announcementFeedback");
+            const autoHideMs = options.autoHideMs || 0;
+            const shouldAutoHide = (type === "success" || type === "info") && autoHideMs > 0;
+
+            if (feedbackTimeoutId) {
+                clearTimeout(feedbackTimeoutId);
+                feedbackTimeoutId = null;
+            }
+
             feedbackElement.textContent = message;
             feedbackElement.className = `announcement-feedback ${type}`;
             feedbackElement.classList.remove("hidden");
+
+            if (shouldAutoHide) {
+                feedbackTimeoutId = window.setTimeout(function () {
+                    clearFeedback();
+                }, autoHideMs);
+            }
         }
 
         function clearFeedback() {
             const feedbackElement = document.getElementById("announcementFeedback");
+
+            if (feedbackTimeoutId) {
+                clearTimeout(feedbackTimeoutId);
+                feedbackTimeoutId = null;
+            }
+
             feedbackElement.textContent = "";
             feedbackElement.className = "announcement-feedback hidden";
         }
@@ -1271,7 +1292,7 @@
                     return;
                 }
 
-                setFeedback("Announcement deleted successfully.", "success");
+                setFeedback("Announcement deleted successfully.", "success", { autoHideMs: 3000 });
                 await loadAnnouncements({ clearFeedback: false });
             } catch (error) {
                 console.error("Announcement delete failed:", error);
@@ -1451,7 +1472,11 @@
                 }
 
                 resetAnnouncementFormState();
-                setFeedback(isEditing ? "Announcement updated successfully." : "Announcement saved successfully.", "success");
+                setFeedback(
+                    isEditing ? "Announcement updated successfully." : "Announcement saved successfully.",
+                    "success",
+                    { autoHideMs: 3000 }
+                );
                 await loadAnnouncements({ clearFeedback: false });
             } catch (error) {
                 console.error("Announcement submit failed:", error);

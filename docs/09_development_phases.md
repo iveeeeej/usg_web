@@ -217,6 +217,12 @@ Progress update (2026-03-20):
   announcement action lookup now normalizes ID types so edit/delete
   buttons stay reliable when API IDs are numeric
 
+Progress update (2026-03-22):
+~ officer announcement feedback now supports timed auto-dismiss for
+  success and info messages while keeping error messages persistent
+~ create, edit, and delete success confirmations on the officer
+  announcement page now auto-hide after a short delay
+
 Deliverable:
 A working governance and communication layer that centralizes updates,
 events, assemblies, and in-system discussion inside one USG platform.
