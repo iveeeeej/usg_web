@@ -117,8 +117,6 @@ Scope:
 Tasks:
 ~ Implement Dashboard module
     • summary cards now render live counts for announcements and events
-    • recent announcement feed is connected in the officer dashboard
-    • officer summary details are shown in the dashboard
     • the "What's New" card is now backed by a shared database record and editable through the web dashboard
     • deeper analytics and broader dashboard modules are still pending
 

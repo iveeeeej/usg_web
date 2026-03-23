@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - USG</title>
+    <link rel="icon" href="../assets/logo/usg_2.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="../org_usg/components/css/base.css">
+    <link rel="stylesheet" href="../org_usg/components/css/navbar.css">
+    <link rel="stylesheet" href="../org_usg/components/css/sidebar.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+        .content-area {
+            padding: 30px;
+            flex: 1;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-header-content">
+                <div class="logo-container">
+                    <img src="../assets/logo/usg_2.png" alt="USG Logo">
+                    <h4>University of Student Government</h4>
+                </div>
+                <button class="btn-close-sidebar" id="closeSidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevron-left-icon lucide-chevron-left">
+                        <path d="m15 18-6-6 6-6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+
+            <!-- Section: Menu -->
+            <div class="sidebar-section">
+                <p class="sidebar-section-title">Menu</p>
+                <ul>
+                    <li>
+                        <a href="usg_dashboard.html" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard">
+                                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Section: Management -->
+            <div class="sidebar-section" data-section="management">
+                <p class="sidebar-section-title collapsible">Management
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
+                <ul>
+                    <li>
+                        <a href="usg_event.html" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-calendar-plus-icon lucide-calendar-plus">
+                                    <path d="M16 19h6" />
+                                    <path d="M16 2v4" />
+                                    <path d="M19 16v6" />
+                                    <path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5" />
+                                    <path d="M3 10h18" />
+                                    <path d="M8 2v4" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Event</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="usg_gen_assembly.html" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-users-icon lucide-users">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">General Assembly</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Section: Community -->
+            <div class="sidebar-section" data-section="community">
+                <p class="sidebar-section-title collapsible">Community
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
+                <ul>
+                    <li>
+                        <a href="usg_announcement.html" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-megaphone-icon lucide-megaphone">
+                                    <path
+                                        d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
+                                    <path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14" />
+                                    <path d="M8 6v8" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Announcement</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="usg_gen_discussion.html" class="nav-link sidebar-link active">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-message-circle-icon lucide-message-circle">
+                                    <path
+                                        d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">General Discussion</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Section: Services -->
+            <div class="sidebar-section" data-section="services">
+                <p class="sidebar-section-title collapsible">Services
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
+                <ul>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-user-plus-icon lucide-user-plus">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <line x1="19" x2="19" y1="8" y2="14" />
+                                    <line x1="22" x2="16" y1="11" y2="11" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Attendance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-triangle-alert-icon lucide-triangle-alert">
+                                    <path
+                                        d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                                    <path d="M12 9v4" />
+                                    <path d="M12 17h.01" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Violations</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-hand-helping-icon lucide-hand-helping">
+                                    <path d="M11 12h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 14" />
+                                    <path
+                                        d="m7 18 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" />
+                                    <path d="m2 13 6 6" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Borrow</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-circle-question-mark-icon lucide-circle-question-mark">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                    <path d="M12 17h.01" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Lost and Found</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-banknote-icon lucide-banknote">
+                                    <rect width="20" height="12" x="2" y="6" rx="2" />
+                                    <circle cx="12" cy="12" r="2" />
+                                    <path d="M6 12h.01M18 12h.01" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Payment</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-map-pinned-icon lucide-map-pinned">
+                                    <path
+                                        d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0" />
+                                    <circle cx="12" cy="8" r="2" />
+                                    <path
+                                        d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Campus Map</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Section: Legislative -->
+            <div class="sidebar-section" data-section="legislative">
+                <p class="sidebar-section-title collapsible">Legislative
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
+                <ul>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-file-text-icon lucide-file-text">
+                                <path
+                                    d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                                <path d="M10 9H8" />
+                                <path d="M16 13H8" />
+                                <path d="M16 17H8" />
+                            </svg>
+                            <span class="sidebar-text">Resolution</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Section: Reports -->
+            <div class="sidebar-section" data-section="reports">
+                <p class="sidebar-section-title collapsible">Reports
+                    <svg class="section-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </p>
+                <ul>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-file-pen-icon lucide-file-pen">
+                                    <path
+                                        d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34" />
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                                    <path
+                                        d="M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">AWFP</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-file-user-icon lucide-file-user">
+                                    <path
+                                        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                                    <path d="M16 22a4 4 0 0 0-8 0" />
+                                    <circle cx="12" cy="15" r="3" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">President's Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-file-chart-column-increasing-icon lucide-file-chart-column-increasing">
+                                    <path
+                                        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                                    <path d="M8 18v-2" />
+                                    <path d="M12 18v-4" />
+                                    <path d="M16 18v-6" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Financial Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-file-spreadsheet-icon lucide-file-spreadsheet">
+                                    <path
+                                        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                                    <path d="M8 13h2" />
+                                    <path d="M14 13h2" />
+                                    <path d="M8 17h2" />
+                                    <path d="M14 17h2" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Auditor's Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link sidebar-link">
+                            <span class="sidebar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-file-check-icon lucide-file-check">
+                                    <path
+                                        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                                    <path d="m9 15 2 2 4-4" />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Accomplishment Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <nav class="top-navbar">
+            <button class="menu-toggle" id="menuToggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-menu-icon lucide-menu">
+                    <path d="M4 5h16" />
+                    <path d="M4 12h16" />
+                    <path d="M4 19h16" />
+                </svg>
+            </button>
+
+            <div class="user-info">
+                <div class="calendar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-calendar-days-icon lucide-calendar-days">
+                        <path d="M8 2v4" />
+                        <path d="M16 2v4" />
+                        <rect width="18" height="18" x="3" y="4" rx="2" />
+                        <path d="M3 10h18" />
+                        <path d="M8 14h.01" />
+                        <path d="M12 14h.01" />
+                        <path d="M16 14h.01" />
+                        <path d="M8 18h.01" />
+                        <path d="M12 18h.01" />
+                        <path d="M16 18h.01" />
+                    </svg>
+                </div>
+                <div class="notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-bell-icon lucide-bell">
+                        <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+                        <path
+                            d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+                    </svg>
+                </div>
+                <div class="user-avatar-wrapper" id="userAvatarWrapper">
+                    <div class="user-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-circle-user-icon lucide-circle-user">
+                            <circle cx="12" cy="12" r="10" />
+                            <circle cx="12" cy="10" r="3" />
+                            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                        </svg>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#">
+                            <i class="bi bi-person"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="../index.html">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+        </div>
+
+
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="../org_usg/components/js/sidebar.js"></script>
+
+</body>
+
+</html>
