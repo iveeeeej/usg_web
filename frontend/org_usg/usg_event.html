@@ -33,26 +33,6 @@
             margin: 0 auto;
         }
 
-        .event-page-header {
-            margin-bottom: 40px;
-        }
-
-        .event-page-header h2 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: #191c1d;
-            letter-spacing: -0.03em;
-            margin-bottom: 8px;
-        }
-
-        .event-page-header p {
-            color: #47454f;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            max-width: 640px;
-            margin: 0;
-        }
-
         /* Card sections */
         .event-card {
             background: #ffffff;
@@ -91,7 +71,7 @@
         .event-card-header h3 {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #191c1d;
+            color: #1e174a;
             letter-spacing: -0.01em;
             margin: 0;
         }
@@ -218,13 +198,9 @@
             transform: scale(1.1);
         }
 
-        .upload-zone .upload-icon-circle .material-symbols-outlined {
-            color: #787680;
-        }
-
         .upload-zone p.upload-title {
             font-weight: 500;
-            color: #191c1d;
+            color: #6C757D;
             margin: 0;
         }
 
@@ -521,10 +497,6 @@
         @media (max-width: 991px) {
             .content-area {
                 padding: 20px;
-            }
-
-            .event-page-header h2 {
-                font-size: 1.75rem;
             }
         }
 
@@ -980,17 +952,6 @@
                             <!-- Basic Information Card -->
                             <section class="event-card">
                                 <div class="event-card-header">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="#1E174A" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-calendar-plus-icon lucide-calendar-plus">
-                                        <path d="M16 19h6" />
-                                        <path d="M16 2v4" />
-                                        <path d="M19 16v6" />
-                                        <path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5" />
-                                        <path d="M3 10h18" />
-                                        <path d="M8 2v4" />
-                                    </svg>
                                     <h3>Create Event</h3>
                                 </div>
 
@@ -998,8 +959,7 @@
                                     <!-- Event Title -->
                                     <div class="event-field">
                                         <label>Title</label>
-                                        <input type="text" class="form-control event-input"
-                                            placeholder="e.g., Annual Research Symposium 2024">
+                                        <input type="text" class="form-control event-input">
                                     </div>
 
                                     <!-- Date & Time Row -->
@@ -1023,16 +983,14 @@
                                         <label>Venue</label>
                                         <div class="venue-wrapper">
                                             <span class="material-symbols-outlined venue-icon">location_on</span>
-                                            <input type="text" class="form-control event-input"
-                                                placeholder="e.g., Grand Auditorium, Building C">
+                                            <input type="text" class="form-control event-input">
                                         </div>
                                     </div>
 
                                     <!-- Description -->
                                     <div class="event-field">
                                         <label>Description</label>
-                                        <textarea class="form-control event-input" rows="6"
-                                            placeholder="Provide a detailed overview of the event's goals, agenda, and speakers..."></textarea>
+                                        <textarea class="form-control event-input" rows="6"></textarea>
                                     </div>
                                 </div>
                             </section>
@@ -1042,10 +1000,10 @@
                                 <div class="attachment-header">
                                     <div class="left">
                                         <div class="icon-box attach-icon">
-                                            <span class="material-symbols-outlined">attach_file</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip-icon lucide-paperclip"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></svg>
                                         </div>
                                         <h3 class="mb-0"
-                                            style="font-size:1.25rem;font-weight:700;color:#191c1d;letter-spacing:-0.01em;">
+                                            style="font-size:1.25rem;font-weight:700;color:#1e174a;;letter-spacing:-0.01em;">
                                             Attachments</h3>
                                     </div>
                                     <span>
@@ -1057,7 +1015,8 @@
                                 <!-- Upload Zone -->
                                 <div class="upload-zone">
                                     <div class="upload-icon-circle">
-                                        <span class="material-symbols-outlined">cloud_upload</span>
+                                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload-icon lucide-cloud-upload"><path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg></span>
+                                        <span>cloud_upload</span>
                                     </div>
                                     <p class="upload-title">Click to upload or drag and drop</p>
                                 </div>
@@ -1074,8 +1033,8 @@
                                             </div>
                                         </div>
                                         <button class="delete-btn">
-                                            <span class="material-symbols-outlined"
-                                                style="font-size:18px;">delete</span>
+                                            <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+                                            <span>delete</span>
                                         </button>
                                     </div>
                                 </div>
