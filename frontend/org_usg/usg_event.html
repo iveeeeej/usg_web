@@ -4,35 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Event - USG</title>
+    <title>Event - USG</title>
     <link rel="icon" href="../assets/logo/usg_2.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="../org_usg/components/css/base.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="../org_usg/components/css/navbar.css">
     <link rel="stylesheet" href="../org_usg/components/css/sidebar.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
         .content-area {
-            padding: 40px;
+            padding: 30px;
             flex: 1;
         }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        /* Event page layout */
-        .event-container {
-            max-width: 1140px;
-            margin: 0 auto;
-        }
-
+        
         /* Card sections */
         .event-card {
             background: #ffffff;
@@ -130,6 +116,8 @@
             transform: translateY(-50%);
             color: rgba(120, 118, 128, 0.4);
             pointer-events: none;
+            width: 20px;
+            height: 20px;
         }
 
         .venue-wrapper .event-input {
@@ -158,10 +146,18 @@
             font-size: 0.875rem;
             cursor: pointer;
             padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .add-file-btn:hover {
             text-decoration: underline;
+        }
+
+        .add-file-btn svg {
+            width: 16px;
+            height: 16px;
         }
 
         .upload-zone {
@@ -192,6 +188,11 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
             margin-bottom: 16px;
             transition: transform 0.2s;
+        }
+
+        .upload-zone .upload-icon-circle svg {
+            width: 24px;
+            height: 24px;
         }
 
         .upload-zone:hover .upload-icon-circle {
@@ -227,6 +228,12 @@
             gap: 12px;
         }
 
+        .file-item .file-icon {
+            width: 20px;
+            height: 20px;
+            color: #ba1a1a;
+        }
+
         .file-item .file-name {
             font-size: 0.875rem;
             font-weight: 600;
@@ -247,6 +254,11 @@
             cursor: pointer;
             padding: 4px;
             transition: color 0.2s;
+        }
+
+        .file-item .delete-btn svg {
+            width: 20px;
+            height: 20px;
         }
 
         .file-item .delete-btn:hover {
@@ -379,8 +391,9 @@
             font-size: 0.875rem;
         }
 
-        .visibility-toggle .material-symbols-outlined {
-            font-size: 14px;
+        .visibility-toggle svg {
+            width: 14px;
+            height: 14px;
         }
 
         /* Pro tip card */
@@ -406,9 +419,11 @@
             gap: 16px;
         }
 
-        .pro-tip-card .tip-content .material-symbols-outlined {
+        .pro-tip-card .tip-content svg {
             color: #818cf8;
             flex-shrink: 0;
+            width: 24px;
+            height: 24px;
         }
 
         .pro-tip-card .tip-content p {
@@ -473,8 +488,9 @@
             gap: 4px;
         }
 
-        .category-tag.add-tag .material-symbols-outlined {
-            font-size: 14px;
+        .category-tag.add-tag svg {
+            width: 14px;
+            height: 14px;
         }
 
         /* Event footer */
@@ -959,7 +975,7 @@
                                     <!-- Event Title -->
                                     <div class="event-field">
                                         <label>Title</label>
-                                        <input type="text" class="form-control event-input">
+                                        <input type="text" class="form-control event-input" placeholder="Enter event title">
                                     </div>
 
                                     <!-- Date & Time Row -->
@@ -982,15 +998,18 @@
                                     <div class="event-field">
                                         <label>Venue</label>
                                         <div class="venue-wrapper">
-                                            <span class="material-symbols-outlined venue-icon">location_on</span>
-                                            <input type="text" class="form-control event-input">
+                                            <svg class="venue-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"/>
+                                                <circle cx="12" cy="8" r="2"/>
+                                            </svg>
+                                            <input type="text" class="form-control event-input" placeholder="Enter event location">
                                         </div>
                                     </div>
 
                                     <!-- Description -->
                                     <div class="event-field">
                                         <label>Description</label>
-                                        <textarea class="form-control event-input" rows="6"></textarea>
+                                        <textarea class="form-control event-input" rows="6" placeholder="Describe the event details, agenda, and important information"></textarea>
                                     </div>
                                 </div>
                             </section>
@@ -1000,41 +1019,57 @@
                                 <div class="attachment-header">
                                     <div class="left">
                                         <div class="icon-box attach-icon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip-icon lucide-paperclip"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>
+                                            </svg>
                                         </div>
-                                        <h3 class="mb-0"
-                                            style="font-size:1.25rem;font-weight:700;color:#1e174a;;letter-spacing:-0.01em;">
-                                            Attachments</h3>
+                                        <h3 class="mb-0" style="font-size:1.25rem;font-weight:700;color:#1e174a;letter-spacing:-0.01em;">
+                                            Attachments
+                                        </h3>
                                     </div>
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e174a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                                    </span>
-                                    <button class="add-file-btn">Add File</button>
+                                    <button class="add-file-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 12h14"/>
+                                            <path d="M12 5v14"/>
+                                        </svg>
+                                        Add File
+                                    </button>
                                 </div>
 
                                 <!-- Upload Zone -->
                                 <div class="upload-zone">
                                     <div class="upload-icon-circle">
-                                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload-icon lucide-cloud-upload"><path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg></span>
-                                        <span>cloud_upload</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 13v8"/>
+                                            <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+                                            <path d="m8 17 4-4 4 4"/>
+                                        </svg>
                                     </div>
                                     <p class="upload-title">Click to upload or drag and drop</p>
+                                    <p class="upload-hint">PDF, DOC, DOCX, JPG, PNG (Max 10MB)</p>
                                 </div>
 
                                 <!-- Uploaded File Example -->
-                                <div class="mt-4">
+                                <div class="mt-4 d-none" id="fileList">
                                     <div class="file-item">
                                         <div class="file-info">
-                                            <span class="material-symbols-outlined"
-                                                style="color:#ba1a1a;">picture_as_pdf</span>
+                                            <svg class="file-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+                                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+                                            </svg>
                                             <div>
-                                                <p class="file-name">sarf.pdf</p>
-                                                <p class="file-meta">2.4 MB • Uploaded 2m ago</p>
+                                                <p class="file-name">sample-document.pdf</p>
+                                                <p class="file-meta">2.4 MB • Uploaded just now</p>
                                             </div>
                                         </div>
                                         <button class="delete-btn">
-                                            <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
-                                            <span>delete</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M10 11v6"/>
+                                                <path d="M14 11v6"/>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                                <path d="M3 6h18"/>
+                                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                            </svg>
                                         </button>
                                     </div>
                                 </div>
@@ -1096,7 +1131,9 @@
                                         <span class="label">Visibility</span>
                                         <button class="visibility-toggle">
                                             <span>Public</span>
-                                            <span class="material-symbols-outlined">expand_more</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="m6 9 6 6 6-6"/>
+                                            </svg>
                                         </button>
                                     </div>
                                 </div>
@@ -1106,11 +1143,13 @@
                             <div class="pro-tip-card">
                                 <h4>Pro Tip</h4>
                                 <div class="tip-content">
-                                    <span class="material-symbols-outlined">lightbulb</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                        <path d="M9 18h6"/>
+                                        <path d="M10 22h4"/>
+                                    </svg>
                                     <p>
-                                        Adding a clear <b>Description</b> and <b>Venue</b> helps attendees find your
-                                        event
-                                        faster and increases participation rates by up to 40%.
+                                        Adding a clear <b>Description</b> and <b>Venue</b> helps attendees find your event faster and increases participation rates.
                                     </p>
                                 </div>
                             </div>
